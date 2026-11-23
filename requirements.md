@@ -26,7 +26,7 @@ Obiettivo: Trasformare un software engineer in un AI Engineer capace di orchestr
 | 7 | Pattern di sviluppo agentico | 10 h | Agente con strumenti, limiti e conferma umana |
 | 8 | Produzione, sicurezza e governance | 6 h | Checklist di rilascio e threat model del progetto |
 
-I moduli sono progressivi: ogni consegna riusa il lavoro dei moduli precedenti. Il materiale di approfondimento di ogni modulo è nella cartella [moduli/](moduli/), con la versione HTML in [moduli/html/](moduli/html/index.html) e la versione inglese in [moduli/html/en/](moduli/html/en/index.html).
+I moduli sono progressivi: ogni consegna riusa il lavoro dei moduli precedenti. Il materiale di approfondimento di ogni modulo è in italiano nella cartella [moduli/IT/](moduli/IT/) (Markdown e HTML) e in inglese nella cartella [moduli/EN/](moduli/EN/) (HTML).
 
 ### Progetto finale
 
@@ -293,7 +293,7 @@ Goal: Turn a software engineer into an AI Engineer able to orchestrate language 
 | 7 | Agentic development patterns | 10 h | Agent with tools, limits and human confirmation |
 | 8 | Production, security and governance | 6 h | Release checklist and threat model for the project |
 
-The modules are progressive: each deliverable reuses the work of the previous modules. The supporting material for each module is in the [moduli/](moduli/) folder, with the HTML version in [moduli/html/](moduli/html/index.html) and the English version in [moduli/html/en/](moduli/html/en/index.html).
+The modules are progressive: each deliverable reuses the work of the previous modules. The supporting material for each module is in Italian in the [moduli/IT/](moduli/IT/) folder (Markdown and HTML) and in English in the [moduli/EN/](moduli/EN/) folder (HTML).
 
 ### Final project
 
