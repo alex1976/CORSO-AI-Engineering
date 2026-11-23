@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="color-scheme" content="dark">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Module 7: Agentic Development Patterns</title>
+<link rel="alternate" hreflang="it" href="../modulo-7-pattern-agentici.html"><link rel="alternate" hreflang="en" href="modulo-7-pattern-agentici.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#09090b;--card:#18181b;--surface-2:#1f1f23;--ink:#fafafa;--ink-2:#d4d4d8;--muted:#a1a1aa;--line:#27272a;--accent:#93c5fd;--accent-soft:#172033;--ok:#4ade80;--ok-soft:#0f2a1c;--warn:#fbbf24;--warn-soft:#2a2008;--code:#18181b;--shadow-sm:0 1px 2px rgba(0,0,0,.4);--shadow-md:0 4px 12px -2px rgba(0,0,0,.5);color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.625 Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--card);position:sticky;top:0;z-index:1;box-shadow:var(--shadow-sm)}
+.top a{color:var(--ink);font-weight:600;text-decoration:none;transition:color .2s ease-in-out}
+.top a:hover{color:var(--accent)}
+.top span{color:var(--muted);font-size:14px}
+.top{flex-wrap:wrap}
+.top-r{display:flex;align-items:center;gap:16px}
+.top .lang{display:flex;gap:4px}
+.top .lang a{color:var(--muted);font-size:13px;padding:4px 8px;border-radius:6px;transition:color .2s ease-in-out,background-color .2s ease-in-out}
+.top .lang a:hover{color:var(--ink);background:var(--surface-2)}
+.top .lang a[aria-current="page"]{color:var(--ink);background:var(--surface-2)}
+.page{max-width:768px;margin:0 auto;padding:32px 16px 16px}
+h1{font-size:clamp(2rem,1.6rem + 2vw,2.25rem);font-weight:700;line-height:1.2;letter-spacing:-.02em;margin:.25em 0 .5em}
+h2{font-size:1.5rem;font-weight:600;line-height:1.3;letter-spacing:-.01em;margin:48px 0 16px;padding-top:24px;border-top:1px solid var(--line)}
+h3{font-size:1.25rem;font-weight:600;line-height:1.35;margin:32px 0 12px;color:var(--ink-2)}
+ul,ol{padding-left:24px}
+li{margin:4px 0}
+a{color:var(--accent);text-underline-offset:3px;transition:color .2s ease-in-out}
+code{background:var(--code);padding:2px 6px;border-radius:6px;font-size:.9em;font-family:ui-monospace,"Cascadia Code",Consolas,monospace}
+pre{background:var(--code);padding:16px;border-radius:12px;overflow-x:auto;border:1px solid var(--line);font-size:14px;line-height:1.6;box-shadow:var(--shadow-sm)}
+pre code{background:none;padding:0;font-size:1em;border-radius:0}
+blockquote{margin:24px 0;padding:12px 16px;border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:0 8px 8px 0;color:var(--ink-2)}
+blockquote p{margin:4px 0}
+hr{border:0;border-top:1px solid var(--line);margin:48px 0}
+.tw{overflow-x:auto;margin:24px 0;border:1px solid var(--line);border-radius:12px;background:var(--card);box-shadow:var(--shadow-sm)}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:.95em}
+th,td{border-bottom:1px solid var(--line);padding:12px 16px;text-align:left;vertical-align:top}
+tr:last-child td{border-bottom:0}
+th{background:var(--surface-2);font-weight:600;color:var(--ink-2)}
+.fig{margin:32px 0;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:var(--shadow-sm)}
+.fig figcaption{color:var(--muted);font-size:14px;margin-top:12px;text-align:center}
+.diagwrap{overflow-x:auto}
+.diag{display:block;width:100%;min-width:520px;height:auto}
+.diag rect.n{fill:var(--card);stroke:var(--muted);stroke-width:1.2}
+.diag rect.a{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.5}
+.diag rect.g{fill:var(--ok-soft);stroke:var(--ok);stroke-width:1.5}
+.diag rect.w{fill:var(--warn-soft);stroke:var(--warn);stroke-width:1.5}
+.diag rect.b{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.2}
+.diag rect.ov{fill:var(--warn-soft);stroke:var(--warn);stroke-width:1.2;stroke-dasharray:4 3}
+.diag rect.dash{fill:none;stroke:var(--muted);stroke-width:1.3;stroke-dasharray:6 5}
+.diag text.t{fill:var(--ink);font:600 13.5px Inter,system-ui,sans-serif}
+.diag text.s{fill:var(--ink-2);font:12px Inter,system-ui,sans-serif}
+.diag line.ar,.diag path.ar{stroke:var(--muted);stroke-width:1.5;fill:none}
+.diag line.ac{stroke:var(--accent);stroke-width:1.5;stroke-dasharray:5 4}
+.diag .mk{fill:var(--muted)}
+.diag circle.dot.a{fill:var(--accent)}
+.diag circle.dot.w{fill:var(--warn)}
+.diag circle.q{fill:var(--ok);stroke:var(--card);stroke-width:2}
+.diag circle.v{fill:var(--accent);fill-opacity:.12;stroke:var(--accent);stroke-width:1.5}
+.diag circle.v2{fill:var(--warn);fill-opacity:.12;stroke:var(--warn);stroke-width:1.5}
+.diag circle.v3{fill:var(--ok);fill-opacity:.12;stroke:var(--ok);stroke-width:1.5}
+li input[type=checkbox]{margin-right:8px;accent-color:var(--accent)}
+ul:has(> li > input[type=checkbox]){list-style:none;padding-left:4px}
+.pn{display:flex;gap:16px;max-width:768px;margin:0 auto;padding:16px 16px 48px}
+.pn a{flex:1;padding:16px;border:1px solid var(--line);border-radius:12px;background:var(--card);text-decoration:none;color:var(--ink);box-shadow:var(--shadow-sm);transition:transform .2s ease-in-out,border-color .2s ease-in-out,box-shadow .2s ease-in-out}
+.pn a:hover{transform:translateY(-2px);border-color:var(--accent);box-shadow:var(--shadow-md)}
+.pn a span{display:block;color:var(--muted);font-size:14px;margin-bottom:4px}
+.pn a.next{text-align:right}
+.idx{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin-top:24px}
+.idx a{display:block;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;text-decoration:none;color:var(--ink);box-shadow:var(--shadow-sm);transition:transform .2s ease-in-out,border-color .2s ease-in-out,box-shadow .2s ease-in-out}
+.idx a:hover{transform:translateY(-2px);border-color:var(--accent);box-shadow:var(--shadow-md)}
+.idx a p{margin:4px 0 0;color:var(--muted);font-size:14px}
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{transition:none!important;transform:none!important}}
+</style>
+</head>
+<body>
+<header class="top"><a href="index.html">AI Engineering Course</a><div class="top-r"><span>Modules 1-8</span><nav class="lang" aria-label="Language"><a href="../modulo-7-pattern-agentici.html" lang="it" hreflang="it">IT</a><a href="modulo-7-pattern-agentici.html" lang="en" hreflang="en" aria-current="page">EN</a></nav></div></header>
+<main class="page"><h1>Module 7: Agentic Development Patterns</h1>
+<h2>Learning objectives</h2>
+<p>By the end of the module you will be able to:</p>
+<ul>
+<li>tell an agent from a workflow and choose the level of autonomy that suits the problem;</li>
+<li>implement the ReAct loop with tool calling and execution limits;</li>
+<li>choose among the composition patterns (chaining, routing, parallelization, orchestrator-workers, evaluator-optimizer);</li>
+<li>design control mechanisms: human confirmations, permissions, guardrails, observability;</li>
+<li>manage an agent's memory and context for long tasks;</li>
+<li>assess when a multi-agent system is justified and when it is needless complexity.</li>
+</ul>
+<h2>1. Agent or workflow?</h2><figure class="fig"><div class="diagwrap"><svg class="diag" viewBox="0 0 720 270" role="img" aria-label="Workflow versus agent"><defs><marker id="arr23" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk" d="M0,0 L10,5 L0,10 z"/></marker></defs><rect class="n" x="10" y="10" width="350" height="250" rx="12"/><text class="t" x="25" y="36" text-anchor="start">Workflow: fixed path</text><rect class="n" x="25" y="80" width="72" height="44" rx="10"/><text class="t" x="61" y="107" text-anchor="middle">Extract</text><line class="ar" x1="97" y1="102" x2="106" y2="102" marker-end="url(#arr23)"/><rect class="n" x="106" y="80" width="72" height="44" rx="10"/><text class="t" x="142" y="107" text-anchor="middle">Validate</text><line class="ar" x1="178" y1="102" x2="187" y2="102" marker-end="url(#arr23)"/><rect class="n" x="187" y="80" width="72" height="44" rx="10"/><text class="t" x="223" y="107" text-anchor="middle">Save</text><line class="ar" x1="259" y1="102" x2="268" y2="102" marker-end="url(#arr23)"/><rect class="n" x="268" y="80" width="72" height="44" rx="10"/><text class="t" x="304" y="107" text-anchor="middle">Notify</text><text class="s" x="25" y="160" text-anchor="start">The code decides the order of the steps</text><rect class="n" x="370" y="10" width="340" height="250" rx="12"/><text class="t" x="385" y="36" text-anchor="start">Agent: path decided by the model</text><rect class="a" x="500" y="70" width="120" height="50" rx="10"/><text class="t" x="560" y="100" text-anchor="middle">LLM</text><rect class="n" x="385" y="190" width="96" height="44" rx="10"/><text class="t" x="433" y="217" text-anchor="middle">Orders</text><rect class="n" x="497" y="190" width="96" height="44" rx="10"/><text class="t" x="545" y="217" text-anchor="middle">Contracts</text><rect class="n" x="609" y="190" width="96" height="44" rx="10"/><text class="t" x="657" y="217" text-anchor="middle">Master data</text><line class="ar" x1="560" y1="120" x2="433" y2="190" marker-end="url(#arr23)"/><line class="ar" x1="560" y1="120" x2="545" y2="190" marker-end="url(#arr23)"/><line class="ar" x1="560" y1="120" x2="657" y2="190" marker-end="url(#arr23)"/><text class="s" x="385" y="260" text-anchor="start">Tools chosen at runtime, step by step</text></svg></div><figcaption>Workflow: the code fixes the steps. Agent: the model chooses the tools</figcaption></figure>
+<p>The starting point is a distinction that avoids many design mistakes:</p>
+<ul>
+<li><strong>Workflow</strong>: the path through the steps is defined by the code. The LLM performs individual steps (classify, extract, summarize). The flow is predictable, testable, cheap.</li>
+<li><strong>Agent</strong>: the LLM dynamically decides which tools to use, in which order, and when to stop. The flow emerges from the conversation with the tools.</li>
+</ul>
+<p>An agent is not &quot;smarter&quot; than a workflow. It is more flexible and less predictable. When the path is known, the workflow almost always wins.</p>
+<p>Example. For processing an invoice received by email:</p>
+<ul>
+<li><em>Workflow</em>: extract the PDF → extract the fields → validate the VAT → save in the management system → notify. Every step is fixed.</li>
+<li><em>Agent</em>: you receive the request &quot;check this invoice and flag anything that doesn&#39;t add up&quot;. The path depends on what you find: if the supplier is not in the master data you look for an order, if the amount does not match you look for the contract, and so on.</li>
+</ul>
+<p>Exercise: take five tasks from your work and classify them as workflow, agent, or &quot;no LLM needed&quot;. For each agent, explain which decision the model makes that the code cannot make in advance.</p>
+<h2>2. The base loop: ReAct and tool use</h2><figure class="fig"><div class="diagwrap"><svg class="diag" viewBox="0 0 720 215" role="img" aria-label="ReAct loop"><defs><marker id="arr24" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk" d="M0,0 L10,5 L0,10 z"/></marker></defs><rect class="n" x="8" y="60" width="153.5" height="60" rx="10"/><text class="t" x="84.75" y="82" text-anchor="middle">Reason</text><text class="s" x="84.75" y="102" text-anchor="middle">decides the step</text><line class="ar" x1="161.5" y1="90" x2="191.5" y2="90" marker-end="url(#arr24)"/><rect class="a" x="191.5" y="60" width="153.5" height="60" rx="10"/><text class="t" x="268.25" y="82" text-anchor="middle">Act</text><text class="s" x="268.25" y="102" text-anchor="middle">calls a tool</text><line class="ar" x1="345" y1="90" x2="375" y2="90" marker-end="url(#arr24)"/><rect class="n" x="375" y="60" width="153.5" height="60" rx="10"/><text class="t" x="451.75" y="82" text-anchor="middle">Observe</text><text class="s" x="451.75" y="102" text-anchor="middle">reads the result</text><line class="ar" x1="528.5" y1="90" x2="558.5" y2="90" marker-end="url(#arr24)"/><rect class="g" x="558.5" y="60" width="153.5" height="60" rx="10"/><text class="t" x="635.25" y="82" text-anchor="middle">Final answer</text><text class="s" x="635.25" y="102" text-anchor="middle">end of the loop</text><path class="ar" d="M451.75,120 L451.75,170 L84.75,170 L84.75,122" marker-end="url(#arr24)"/><text class="s" x="268" y="192" text-anchor="middle">new step: the model reasons again</text></svg></div><figcaption>The ReAct loop: reason, act, observe, until it answers</figcaption></figure>
+<p>ReAct (Reason + Act) is the cycle on which most agents are based. The model alternates three phases:</p>
+<ol>
+<li><strong>Reasoning</strong>: it decides the next step.</li>
+<li><strong>Action</strong>: it calls a tool with structured arguments.</li>
+<li><strong>Observation</strong>: it receives the result and updates its understanding.</li>
+</ol>
+<p>The cycle ends when the model produces a final answer instead of a tool call.</p>
+<h3>Minimal implementation</h3>
+<pre><code class="language-python">def esegui_agente(llm, strumenti: dict, richiesta: str, max_passi: int = 8) -&gt; str:
+    messaggi = [{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: richiesta}]
+
+    for _ in range(max_passi):
+        risposta = llm.genera(
+            system=SYSTEM_PROMPT,
+            messaggi=messaggi,
+            strumenti=descrizioni(strumenti),   # name, purpose, parameter schema
+        )
+
+        if not risposta.chiamate_strumenti:
+            return risposta.testo               # final answer
+
+        for chiamata in risposta.chiamate_strumenti:
+            funzione = strumenti[chiamata.nome]
+            try:
+                esito = funzione(**chiamata.argomenti)
+            except Exception as errore:
+                esito = {&quot;errore&quot;: str(errore)}  # the model can correct itself
+            messaggi.append({&quot;role&quot;: &quot;tool&quot;, &quot;nome&quot;: chiamata.nome, &quot;contenuto&quot;: esito})
+
+    raise RuntimeError(&quot;Step limit reached without a final answer&quot;)
+</code></pre>
+<p>Things to note:</p>
+<ul>
+<li>the <strong>step limit</strong> is mandatory: without it a loop may never terminate and burn through the budget;</li>
+<li><strong>tool errors</strong> go back to the model as an observation instead of crashing the loop: the model often corrects the arguments;</li>
+<li>the <strong>tool description</strong> is part of the prompt. A vague name or an ambiguous schema produces wrong calls.</li>
+</ul>
+<h3>Designing a tool</h3>
+<p>A well-designed tool:</p>
+<ul>
+<li>has a clear verb-object name (<code>cerca_ordine</code>, not <code>gestisci</code>);</li>
+<li>describes when to use it and when not to;</li>
+<li>has typed parameters with explicit allowed values;</li>
+<li>returns compact, structured results, not entire databases;</li>
+<li>has no hidden side effects: an irreversible action must be declared as such.</li>
+</ul>
+<p>Exercise: design three tools for a helpdesk assistant (for example <code>cerca_cliente</code>, <code>leggi_stato_ticket</code>, <code>apri_ticket</code>). For each, write the description for the model and the parameter schema. Then ask yourself: which of these can do damage if the model uses it badly?</p>
+<h2>3. Composition patterns</h2>
+<p>Not every problem requires an agent. The following patterns are building blocks to combine.</p>
+<h3>Prompt chaining</h3>
+<p>The task is split into sequential steps, each with a dedicated prompt. The output of one step is the input of the next.</p>
+<p>Use case: generating a reply to a negative review in three steps: (1) classify the problem, (2) check the policies to see which remedy to apply, (3) write the reply in the brand&#39;s tone. Each step can be tested separately.</p>
+<h3>Routing</h3>
+<p>A classifier routes the request to a specialized path: a prompt, a smaller or cheaper model for simple cases, a dedicated flow for sensitive cases.</p>
+<p>Use case: a helpdesk that sends invoice questions to the document RAG, refund requests to a workflow with approval, and out-of-scope requests to a human operator.</p>
+<h3>Parallelization</h3>
+<p>Several independent calls are executed in parallel:</p>
+<ul>
+<li><strong>Sectioning</strong>: the task is divided into independent parts (analyzing different sections of a contract) and the results are aggregated.</li>
+<li><strong>Voting</strong>: the same task is run multiple times, with the results compared or voted on, to increase reliability on critical decisions.</li>
+</ul>
+<h3>Orchestrator-workers</h3><figure class="fig"><div class="diagwrap"><svg class="diag" viewBox="0 0 720 260" role="img" aria-label="Orchestrator-workers"><defs><marker id="arr25" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk" d="M0,0 L10,5 L0,10 z"/></marker></defs><rect class="a" x="250" y="20" width="220" height="50" rx="10"/><text class="t" x="360" y="42" text-anchor="middle">Orchestrator</text><text class="s" x="360" y="62" text-anchor="middle">decomposes and synthesizes</text><line class="ar" x1="360" y1="70" x2="120" y2="120" marker-end="url(#arr25)"/><line class="ar" x1="360" y1="70" x2="360" y2="120" marker-end="url(#arr25)"/><line class="ar" x1="360" y1="70" x2="600" y2="120" marker-end="url(#arr25)"/><rect class="n" x="20" y="120" width="200" height="56" rx="10"/><text class="t" x="120" y="142" text-anchor="middle">Worker A</text><text class="s" x="120" y="162" text-anchor="middle">technical requirements</text><rect class="n" x="260" y="120" width="200" height="56" rx="10"/><text class="t" x="360" y="142" text-anchor="middle">Worker B</text><text class="s" x="360" y="162" text-anchor="middle">economic requirements</text><rect class="n" x="500" y="120" width="200" height="56" rx="10"/><text class="t" x="600" y="142" text-anchor="middle">Worker C</text><text class="s" x="600" y="162" text-anchor="middle">deadlines and penalties</text><line class="ar" x1="120" y1="176" x2="330" y2="210" marker-end="url(#arr25)"/><line class="ar" x1="360" y1="176" x2="360" y2="210" marker-end="url(#arr25)"/><line class="ar" x1="600" y1="176" x2="390" y2="210" marker-end="url(#arr25)"/><rect class="g" x="250" y="210" width="220" height="40" rx="10"/><text class="t" x="360" y="235" text-anchor="middle">Final synthesis</text></svg></div><figcaption>An orchestrator delegates to specialized workers and synthesizes the results</figcaption></figure>
+<p>An orchestrator analyzes the request, decides which sub-tasks are needed and assigns them to workers, which can be specialized agents or simple calls. The orchestrator synthesizes the results.</p>
+<p>Use case: analysis of a tender notice. The orchestrator delegates to the workers: technical requirements, economic requirements, deadlines, penalties. Each worker works on a subset of the document, and the orchestrator produces the synthesis.</p>
+<h3>Evaluator-optimizer</h3>
+<p>A generator produces a draft, an evaluator compares it against explicit criteria and sends back feedback. The cycle continues until an acceptance criterion is met or an iteration limit is reached.</p>
+<p>Use case: generating a product description for an e-commerce site, with an evaluator that checks length, presence of the mandatory features, and absence of unverified claims. The evaluator should use deterministic checks where possible (length, forbidden words) and the model only for the semantic criteria.</p>
+<h2>4. Control and reliability patterns</h2><figure class="fig"><div class="diagwrap"><svg class="diag" viewBox="0 0 720 280" role="img" aria-label="Layered controls"><defs><marker id="arr26" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk" d="M0,0 L10,5 L0,10 z"/></marker></defs><rect class="dash" x="20" y="20" width="680" height="240" rx="14"/><text class="t" x="34" y="42" text-anchor="start">Limits: maximum steps, budget, timeout</text><rect class="dash" x="60" y="50" width="600" height="180" rx="14"/><text class="t" x="74" y="72" text-anchor="start">Permissions: least privilege</text><rect class="dash" x="100" y="80" width="520" height="120" rx="14"/><text class="t" x="114" y="102" text-anchor="start">Guardrails: input and output schemas</text><rect class="a" x="140" y="110" width="440" height="60" rx="14"/><text class="t" x="154" y="132" text-anchor="start">Human confirmation</text><text class="t" x="360" y="160" text-anchor="middle">Sensitive action (e.g. sending an email)</text></svg></div><figcaption>Layered controls: every action passes through all the barriers before being executed</figcaption></figure>
+<p>An agent that acts in the world (sends emails, modifies data, runs code) requires controls. The model must not be the only party responsible for security.</p>
+<h3>Human-in-the-loop</h3>
+<p>The agent stops and asks for confirmation before irreversible or costly actions. The approval point must be designed:</p>
+<ul>
+<li>which actions require confirmation (sending, deletion, payment, permission changes);</li>
+<li>what the approver sees (proposed action, rationale, data involved);</li>
+<li>what happens if nobody approves within a given time (cancellation, non-execution by default).</li>
+</ul>
+<p>Common mistake: asking for confirmation at every step, until the agent becomes useless. Ask for confirmation on actions that have external or irreversible effects, not for reading.</p>
+<h3>Permissions and least privilege</h3><figure class="fig"><div class="diagwrap"><svg class="diag" viewBox="0 0 720 350" role="img" aria-label="Three risky capabilities"><defs><marker id="arr27" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk" d="M0,0 L10,5 L0,10 z"/></marker></defs><circle class="v" cx="300" cy="130" r="105"/><circle class="v2" cx="420" cy="130" r="105"/><circle class="v3" cx="360" cy="230" r="105"/><text class="t" x="255" y="105" text-anchor="middle">Private data</text><text class="t" x="468" y="98" text-anchor="middle">Untrusted</text><text class="t" x="468" y="116" text-anchor="middle">content</text><text class="t" x="360" y="300" text-anchor="middle">External communication</text><text class="t" x="360" y="172" text-anchor="middle">risk</text></svg></div><figcaption>The three capabilities that, combined, expose an agent to data exfiltration</figcaption></figure>
+<p>Each tool declares what it can do and the harness limits its access: read-only or also write, only certain tables, only certain folders, limited service credentials. An agent that reads emails must not also be able to send them, unless it is necessary.</p>
+<p>Beware of prompt injection (already introduced in module 2): if the agent reads untrusted content (web pages, emails, documents), that content may contain instructions to use the tools in a harmful way. An effective defense lies not in the prompt but in permissions and confirmations.</p>
+<p>A useful rule for assessing risk: an agent is particularly exposed when it combines three capabilities together:</p>
+<ol>
+<li>access to private data (emails, internal documents, databases);</li>
+<li>exposure to untrusted content (web pages, attachments, third-party messages);</li>
+<li>the ability to communicate externally (send emails, call URLs, write to shared systems).</li>
+</ol>
+<p>With all three, an instruction hidden in content the agent reads can lead it to exfiltrate private data. If the use case requires all of them, at least one must be mediated by a human confirmation or a deterministic check, for example a list of allowed recipients.</p>
+<h3>Guardrails</h3>
+<p>Validations on input and output:</p>
+<ul>
+<li>parameter schema before the tool is executed;</li>
+<li>policy filters on actions (for example, no sending to external domains);</li>
+<li>check of the final output before displaying or sending it.</li>
+</ul>
+<h3>Limits and budgets</h3>
+<ul>
+<li>maximum number of steps;</li>
+<li>token and cost budget per request;</li>
+<li>timeout for each tool and for the whole execution;</li>
+<li>explicit exit conditions (for example: after two failed attempts, hand over to a human with a summary).</li>
+</ul>
+<h3>Observability</h3>
+<p>For an agent, logging is not optional. Record every step: visible reasoning, call, arguments, outcome, tokens, duration. When an agent makes a mistake, without the full trace you cannot tell whether the problem was the model, the tool, or the tool description.</p>
+<p>Exercise: take the loop example from section 2 and add: a token budget limit, a human confirmation for a tool of your choice, and a structured log of every step. Write a test case that verifies the agent stops when the budget is exhausted.</p>
+<h2>5. Memory and context</h2>
+<p>An agent working on long tasks accumulates messages, tool results and reasoning. The context grows and the cost rises. Management strategies are needed.</p>
+<h3>Short-term memory</h3>
+<p>The session history in the context. Strategies:</p>
+<ul>
+<li><strong>truncation</strong>: the oldest messages are discarded (simple, but information is lost);</li>
+<li><strong>summarization</strong>: every N steps the model summarizes the history into a compact block that replaces the original messages;</li>
+<li><strong>compact results</strong>: the tool returns only the useful fields, not entire objects.</li>
+</ul>
+<h3>Long-term memory</h3>
+<p>Facts and preferences saved externally (files, databases, vector stores) and retrieved when needed. Example: a user&#39;s preferences on report format, saved and loaded at the start of the session.</p>
+<p>Warning: a long-term memory can store incorrect or outdated information. An update policy is needed and, if it contains personal data, a legal basis and a way to delete it.</p>
+<h3>Context engineering</h3>
+<p>Carefully choosing what to put in the context at each step. What the model does not see it cannot use, but what it sees in excess distracts it. It is the skill that links module 2 (prompts), module 4 (retrieval) and this module (memory).</p>
+<h3>Sub-agents</h3>
+<p>An isolated task is handed to an agent with its own clean context. The sub-agent explores (for example searches the code or the documents), then returns only the condensed result to the main agent. The main context stays light.</p>
+<p>Use case: a coding agent that needs to understand how a large module works. A sub-agent reads dozens of files and returns a one-page description; the main agent does not have to load all the files into its own context.</p>
+<h2>6. Protocols and reuse</h2>
+<h3>MCP (Model Context Protocol)</h3>
+<p>An open standard through which a harness discovers and uses tools, resources and prompts exposed by external servers. The advantage is reuse: a server that exposes a CRM&#39;s data can be used by any compatible client, without a custom integration for every model-application pair.</p>
+<p>Exercise: look up the protocol documentation and describe in your own words, in half a page, the difference between a tool integration built directly in the code and an integration through an MCP server. What advantages and what risks does the use of third-party servers introduce?</p>
+<h3>Skills and reusable instructions</h3>
+<p>Procedures and domain knowledge gathered in files (a description, instructions, optional scripts) that the agent loads only when the task requires them. This keeps the context light and makes the expertise shareable across projects.</p>
+<p>Use case: a &quot;meeting minutes drafting&quot; skill with the company format, the list of mandatory elements and the tone rules. The agent loads it when it receives a transcript, not in every conversation.</p>
+<h2>7. Multi-agent: when and why</h2><figure class="fig"><div class="diagwrap"><svg class="diag" viewBox="0 0 720 300" role="img" aria-label="Supervisor and handoff"><defs><marker id="arr28" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk" d="M0,0 L10,5 L0,10 z"/></marker></defs><rect class="a" x="260" y="20" width="200" height="50" rx="10"/><text class="t" x="360" y="42" text-anchor="middle">Supervisor</text><text class="s" x="360" y="62" text-anchor="middle">routes and decides when to end</text><line class="ar" x1="360" y1="70" x2="130" y2="120" marker-end="url(#arr28)"/><line class="ar" x1="360" y1="70" x2="360" y2="120" marker-end="url(#arr28)"/><line class="ar" x1="360" y1="70" x2="590" y2="120" marker-end="url(#arr28)"/><rect class="n" x="40" y="120" width="180" height="50" rx="10"/><text class="t" x="130" y="150" text-anchor="middle">Worker: research</text><rect class="n" x="270" y="120" width="180" height="50" rx="10"/><text class="t" x="360" y="150" text-anchor="middle">Worker: writing</text><rect class="n" x="500" y="120" width="180" height="50" rx="10"/><text class="t" x="590" y="150" text-anchor="middle">Worker: verification</text><text class="t" x="20" y="220" text-anchor="start">Handoff: control changes hands</text><rect class="n" x="40" y="236" width="170" height="44" rx="10"/><text class="t" x="125" y="263" text-anchor="middle">Agent A</text><line class="ar" x1="210" y1="258" x2="275" y2="258" marker-end="url(#arr28)"/><rect class="n" x="275" y="236" width="170" height="44" rx="10"/><text class="t" x="360" y="263" text-anchor="middle">Agent B</text><line class="ar" x1="445" y1="258" x2="510" y2="258" marker-end="url(#arr28)"/><rect class="n" x="510" y="236" width="170" height="44" rx="10"/><text class="t" x="595" y="263" text-anchor="middle">Agent C</text></svg></div><figcaption>A supervisor that routes the work, and handoff between agents in sequence</figcaption></figure>
+<p>A multi-agent system has several agents with distinct roles that collaborate. The most common forms:</p>
+<ul>
+<li><strong>Supervisor</strong>: a coordinator receives the request, routes it to the workers and decides when the task is complete.</li>
+<li><strong>Handoff</strong>: an agent, recognizing that another skill is needed, passes control of the conversation to another agent.</li>
+<li><strong>Role pipeline</strong>: for example a planner, an executor and a reviewer in sequence.</li>
+</ul>
+<p>Advantages: specialization of prompts and tools, separate contexts, the possibility of using different models for different roles.</p>
+<p>Costs: more calls (hence more cost and latency), more points of failure, communication between agents that can lose information, harder debugging.</p>
+<p>Rule of thumb: start from a single agent with well-designed tools. Move to multi-agent only when you measure that the single agent does not hold up for clear reasons: context too large for a single agent, roles with incompatible permissions, parallelism required.</p>
+<h3>Use case to develop</h3>
+<p>An assistant for analyzing a tender notice. Compare three architectures: (a) a single agent with four tools (reads the document, searches for requirements, calculates deadlines, writes the summary); (b) orchestrator-workers with three workers; (c) a fixed workflow with chaining. For each, define: estimated cost, latency, error risks and how you would measure them with the module 6 dataset.</p>
+<h2>8. Evaluating an agent</h2>
+<p>An agent is evaluated like a RAG system (module 6), with two differences: the result depends on a sequence of decisions, and the path matters as much as the final answer.</p>
+<h3>Metrics</h3>
+<ul>
+<li><strong>Success rate</strong>: percentage of tasks completed correctly. The success criterion must be defined for each case, ideally verifiable by code (the ticket was created with the right fields, the file contains the expected result).</li>
+<li><strong>Efficiency</strong>: number of steps, tokens and cost per completed task. Two agents with the same success rate can differ by an order of magnitude in cost.</li>
+<li><strong>Trajectory</strong>: did the agent use the right tools, with correct arguments, without superfluous or dangerous actions?</li>
+<li><strong>Robustness</strong>: does the same task run several times give consistent outcomes? With a temperature above zero, an agent that succeeds 1 time out of 3 is not reliable.</li>
+<li><strong>Security</strong>: on adversarial cases (instructions hidden in a document it reads), the agent must not perform unauthorized actions.</li>
+</ul>
+<h3>Structure of a test case</h3>
+<pre><code class="language-json">{
+  &quot;id&quot;: &quot;helpdesk-007&quot;,
+  &quot;richiesta&quot;: &quot;Customer 4411 says the order hasn&#39;t arrived, check it and open a ticket if needed&quot;,
+  &quot;stato_iniziale&quot;: {&quot;ordine_4411&quot;: {&quot;stato&quot;: &quot;shipped&quot;, &quot;giorni_dalla_spedizione&quot;: 12}},
+  &quot;atteso&quot;: {
+    &quot;strumenti_obbligatori&quot;: [&quot;cerca_ordine&quot;, &quot;apri_ticket&quot;],
+    &quot;strumenti_vietati&quot;: [&quot;rimborsa_ordine&quot;],
+    &quot;verifica_finale&quot;: &quot;a ticket exists with category SPEDIZIONE for customer 4411&quot;
+  },
+  &quot;max_passi&quot;: 6
+}
+</code></pre>
+<p>In tests, the tools work on a simulated environment (test database, fake services): the agent must not touch real systems during evaluation.</p>
+<h3>Exercise</h3>
+<p>Write ten test cases in the format above for the final project agent, including two adversarial cases. Run each case three times and report: success rate, average steps, average cost, and the cases in which the trajectory contains a forbidden tool.</p>
+<h2>9. When NOT to use an agent</h2>
+<ul>
+<li>The path through the steps is known in advance: a deterministic workflow is more reliable.</li>
+<li>The cost of an error is high and the task is repeatable: a pipeline with validations and tests is worth more than an autonomous agent.</li>
+<li>An immediate, low-latency answer is needed: every reasoning and tool step adds time.</li>
+<li>There is not yet a way to evaluate the behavior: without a dataset and metrics you cannot know whether the agent is getting better or worse.</li>
+</ul>
+<p>Guiding principle: start from the simplest workflow that works, increase autonomy only where needed, and measure the effect with the module 6 evaluation.</p>
+<h2>Suggested final project</h2>
+<p>Build an agent for a real problem in your field (helpdesk, order management, HR support, document search). Deliverable:</p>
+<ul>
+<li>the rationale for choosing agent vs workflow, with an honest comparison;</li>
+<li>the list of tools with descriptions and permissions;</li>
+<li>the loop with step and budget limits;</li>
+<li>at least one human confirmation for a sensitive action;</li>
+<li>the log of three complete runs;</li>
+<li>a suite of ten test cases, including a prompt injection attempt through content read by the agent.</li>
+</ul>
+<h2>Further reading</h2>
+<ul>
+<li><a href="https://arxiv.org/abs/2210.03629" target="_blank" rel="noopener">Yao et al., &quot;ReAct: Synergizing Reasoning and Acting in Language Models&quot; (2022)</a>: the reasoning-action loop underlying tool use.</li>
+<li><a href="https://www.anthropic.com/research/building-effective-agents" target="_blank" rel="noopener">Anthropic, &quot;Building effective agents&quot; (2024)</a>: the distinction between workflows and agents and an overview of the patterns discussed in this module.</li>
+<li><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" target="_blank" rel="noopener">Anthropic, &quot;Effective context engineering for AI agents&quot;</a>: context management, memory and sub-agents.</li>
+<li><a href="https://lilianweng.github.io/posts/2023-06-23-agent/" target="_blank" rel="noopener">Lilian Weng, &quot;LLM Powered Autonomous Agents&quot; (2023)</a>: an overview of planning, memory and tool use.</li>
+<li><a href="https://modelcontextprotocol.io" target="_blank" rel="noopener">Model Context Protocol</a>: specification and documentation of the MCP protocol.</li>
+</ul>
+</main>
+<nav class="pn"><a href="modulo-6-valutazione-ottimizzazione.html"><span>Previous</span>Dataset, metrics, RAGAS, hallucinations, tuning</a><a class="next" href="modulo-8-produzione-sicurezza-governance.html"><span>Next</span>Architecture, LLMOps, costs, security, privacy and the AI Act</a></nav>
+</body>
+</html>

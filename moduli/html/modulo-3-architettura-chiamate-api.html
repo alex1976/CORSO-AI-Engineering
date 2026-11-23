@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="color-scheme" content="dark">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Modulo 3: Architettura e Chiamate API</title>
+<link rel="alternate" hreflang="it" href="modulo-3-architettura-chiamate-api.html"><link rel="alternate" hreflang="en" href="en/modulo-3-architettura-chiamate-api.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#09090b;--card:#18181b;--surface-2:#1f1f23;--ink:#fafafa;--ink-2:#d4d4d8;--muted:#a1a1aa;--line:#27272a;--accent:#93c5fd;--accent-soft:#172033;--ok:#4ade80;--ok-soft:#0f2a1c;--warn:#fbbf24;--warn-soft:#2a2008;--code:#18181b;--shadow-sm:0 1px 2px rgba(0,0,0,.4);--shadow-md:0 4px 12px -2px rgba(0,0,0,.5);color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.625 Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--card);position:sticky;top:0;z-index:1;box-shadow:var(--shadow-sm)}
+.top a{color:var(--ink);font-weight:600;text-decoration:none;transition:color .2s ease-in-out}
+.top a:hover{color:var(--accent)}
+.top span{color:var(--muted);font-size:14px}
+.top{flex-wrap:wrap}
+.top-r{display:flex;align-items:center;gap:16px}
+.top .lang{display:flex;gap:4px}
+.top .lang a{color:var(--muted);font-size:13px;padding:4px 8px;border-radius:6px;transition:color .2s ease-in-out,background-color .2s ease-in-out}
+.top .lang a:hover{color:var(--ink);background:var(--surface-2)}
+.top .lang a[aria-current="page"]{color:var(--ink);background:var(--surface-2)}
+.page{max-width:768px;margin:0 auto;padding:32px 16px 16px}
+h1{font-size:clamp(2rem,1.6rem + 2vw,2.25rem);font-weight:700;line-height:1.2;letter-spacing:-.02em;margin:.25em 0 .5em}
+h2{font-size:1.5rem;font-weight:600;line-height:1.3;letter-spacing:-.01em;margin:48px 0 16px;padding-top:24px;border-top:1px solid var(--line)}
+h3{font-size:1.25rem;font-weight:600;line-height:1.35;margin:32px 0 12px;color:var(--ink-2)}
+ul,ol{padding-left:24px}
+li{margin:4px 0}
+a{color:var(--accent);text-underline-offset:3px;transition:color .2s ease-in-out}
+code{background:var(--code);padding:2px 6px;border-radius:6px;font-size:.9em;font-family:ui-monospace,"Cascadia Code",Consolas,monospace}
+pre{background:var(--code);padding:16px;border-radius:12px;overflow-x:auto;border:1px solid var(--line);font-size:14px;line-height:1.6;box-shadow:var(--shadow-sm)}
+pre code{background:none;padding:0;font-size:1em;border-radius:0}
+blockquote{margin:24px 0;padding:12px 16px;border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:0 8px 8px 0;color:var(--ink-2)}
+blockquote p{margin:4px 0}
+hr{border:0;border-top:1px solid var(--line);margin:48px 0}
+.tw{overflow-x:auto;margin:24px 0;border:1px solid var(--line);border-radius:12px;background:var(--card);box-shadow:var(--shadow-sm)}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:.95em}
+th,td{border-bottom:1px solid var(--line);padding:12px 16px;text-align:left;vertical-align:top}
+tr:last-child td{border-bottom:0}
+th{background:var(--surface-2);font-weight:600;color:var(--ink-2)}
+.fig{margin:32px 0;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:var(--shadow-sm)}
+.fig figcaption{color:var(--muted);font-size:14px;margin-top:12px;text-align:center}
+.diagwrap{overflow-x:auto}
+.diag{display:block;width:100%;min-width:520px;height:auto}
+.diag rect.n{fill:var(--card);stroke:var(--muted);stroke-width:1.2}
+.diag rect.a{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.5}
+.diag rect.g{fill:var(--ok-soft);stroke:var(--ok);stroke-width:1.5}
+.diag rect.w{fill:var(--warn-soft);stroke:var(--warn);stroke-width:1.5}
+.diag rect.b{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.2}
+.diag rect.ov{fill:var(--warn-soft);stroke:var(--warn);stroke-width:1.2;stroke-dasharray:4 3}
+.diag rect.dash{fill:none;stroke:var(--muted);stroke-width:1.3;stroke-dasharray:6 5}
+.diag text.t{fill:var(--ink);font:600 13.5px Inter,system-ui,sans-serif}
+.diag text.s{fill:var(--ink-2);font:12px Inter,system-ui,sans-serif}
+.diag line.ar,.diag path.ar{stroke:var(--muted);stroke-width:1.5;fill:none}
+.diag line.ac{stroke:var(--accent);stroke-width:1.5;stroke-dasharray:5 4}
+.diag .mk{fill:var(--muted)}
+.diag circle.dot.a{fill:var(--accent)}
+.diag circle.dot.w{fill:var(--warn)}
+.diag circle.q{fill:var(--ok);stroke:var(--card);stroke-width:2}
+.diag circle.v{fill:var(--accent);fill-opacity:.12;stroke:var(--accent);stroke-width:1.5}
+.diag circle.v2{fill:var(--warn);fill-opacity:.12;stroke:var(--warn);stroke-width:1.5}
+.diag circle.v3{fill:var(--ok);fill-opacity:.12;stroke:var(--ok);stroke-width:1.5}
+li input[type=checkbox]{margin-right:8px;accent-color:var(--accent)}
+ul:has(> li > input[type=checkbox]){list-style:none;padding-left:4px}
+.pn{display:flex;gap:16px;max-width:768px;margin:0 auto;padding:16px 16px 48px}
+.pn a{flex:1;padding:16px;border:1px solid var(--line);border-radius:12px;background:var(--card);text-decoration:none;color:var(--ink);box-shadow:var(--shadow-sm);transition:transform .2s ease-in-out,border-color .2s ease-in-out,box-shadow .2s ease-in-out}
+.pn a:hover{transform:translateY(-2px);border-color:var(--accent);box-shadow:var(--shadow-md)}
+.pn a span{display:block;color:var(--muted);font-size:14px;margin-bottom:4px}
+.pn a.next{text-align:right}
+.idx{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin-top:24px}
+.idx a{display:block;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;text-decoration:none;color:var(--ink);box-shadow:var(--shadow-sm);transition:transform .2s ease-in-out,border-color .2s ease-in-out,box-shadow .2s ease-in-out}
+.idx a:hover{transform:translateY(-2px);border-color:var(--accent);box-shadow:var(--shadow-md)}
+.idx a p{margin:4px 0 0;color:var(--muted);font-size:14px}
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{transition:none!important;transform:none!important}}
+</style>
+</head>
+<body>
+<header class="top"><a href="index.html">Corso AI Engineering</a><div class="top-r"><span>Moduli 1-8</span><nav class="lang" aria-label="Lingua"><a href="modulo-3-architettura-chiamate-api.html" lang="it" hreflang="it" aria-current="page">IT</a><a href="en/modulo-3-architettura-chiamate-api.html" lang="en" hreflang="en">EN</a></nav></div></header>
+<main class="page"><h1>Modulo 3: Architettura e Chiamate API</h1>
+<h2>Obiettivi di apprendimento</h2>
+<p>Al termine del modulo sarai in grado di:</p>
+<ul>
+<li>costruire una richiesta a un LLM tramite API con i ruoli corretti e i parametri essenziali;</li>
+<li>stimare costi e latenza di una chiamata prima di eseguirla;</li>
+<li>classificare gli errori delle API e decidere quali ritentare;</li>
+<li>implementare un retry con exponential backoff e jitter;</li>
+<li>consumare una risposta in streaming e mostrarla in tempo reale;</li>
+<li>progettare un livello di astrazione che permetta di cambiare provider senza riscrivere l&#39;applicazione.</li>
+</ul>
+<h2>Premessa: una chiamata LLM è una chiamata di rete costosa e imprevedibile</h2>
+<p>Chi arriva dal software tradizionale è abituato a chiamate HTTP con latenza di pochi millisecondi, costo fisso e risposta deterministica. Una chiamata a un LLM è diversa: può durare da alcune centinaia di millisecondi a decine di secondi, il costo dipende dal numero di token, la risposta cambia tra una chiamata e l&#39;altra e il provider può rispondere con errori di capacità anche quando la tua richiesta è valida.</p>
+<p>Gestire le chiamate significa quindi gestire tre cose: costi, latenza e fallimenti.</p>
+<h2>1. Anatomia di una richiesta</h2><figure class="fig"><div class="diagwrap"><svg class="diag" viewBox="0 0 720 260" role="img" aria-label="Anatomia di una richiesta"><defs><marker id="arr9" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk" d="M0,0 L10,5 L0,10 z"/></marker></defs><rect class="n" x="20" y="30" width="430" height="226" rx="12"/><text class="t" x="36" y="54" text-anchor="start">Richiesta</text><rect class="n" x="40" y="66" width="390" height="34" rx="10"/><text class="t" x="235" y="88" text-anchor="middle">model: da variabile d'ambiente</text><rect class="a" x="40" y="108" width="390" height="34" rx="10"/><text class="t" x="235" y="130" text-anchor="middle">system: regole persistenti</text><rect class="n" x="40" y="150" width="390" height="34" rx="10"/><text class="t" x="235" y="172" text-anchor="middle">messages: user / assistant</text><rect class="n" x="40" y="192" width="390" height="34" rx="10"/><text class="t" x="235" y="214" text-anchor="middle">parametri: temperature, max_tokens</text><rect class="a" x="500" y="100" width="200" height="90" rx="10"/><text class="t" x="600" y="122" text-anchor="middle">Provider</text><text class="s" x="600" y="142" text-anchor="middle">API di chat</text><line class="ar" x1="450" y1="145" x2="500" y2="145" marker-end="url(#arr9)"/><text class="s" x="600" y="220" text-anchor="middle">risposta: testo + token usati</text></svg></div><figcaption>Una richiesta è una lista di campi, non solo un testo</figcaption></figure>
+<p>La maggior parte delle API di chat ha una struttura simile. Anche se i nomi dei campi cambiano tra provider, i concetti sono questi:</p>
+<ul>
+<li><strong>Modello</strong>: identificatore della versione da usare. Va trattato come una dipendenza: versionato, documentato, sostituibile.</li>
+<li><strong>Messaggi</strong>: una lista ordinata di turni, ciascuno con un ruolo.<ul>
+<li><code>system</code>: istruzioni persistenti e regole.</li>
+<li><code>user</code>: input dell&#39;utente o dell&#39;applicazione.</li>
+<li><code>assistant</code>: risposte precedenti del modello, quando si simula una conversazione.</li>
+</ul>
+</li>
+<li><strong>Parametri di generazione</strong>: temperatura, top-p, numero massimo di token in output, sequenze di stop.</li>
+<li><strong>Strumenti (opzionali)</strong>: definizioni di funzioni che il modello può chiedere di invocare (vedi modulo 7).</li>
+<li><strong>Formato di risposta (opzionale)</strong>: schema JSON atteso, vedi modulo 2.</li>
+</ul>
+<p>Esempio minimo in Python, con un client generico (il nome del client e dei campi varia da provider a provider; adatta alla documentazione che usi):</p>
+<pre><code class="language-python">import os
+
+def chiedi_al_modello(client, domanda: str) -&gt; str:
+    risposta = client.chat(
+        model=os.environ[&quot;LLM_MODEL&quot;],   # il modello è configurazione, non codice
+        system=&quot;Rispondi in italiano, in modo conciso.&quot;,
+        messages=[{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: domanda}],
+        temperature=0.2,
+        max_tokens=400,
+    )
+    return risposta.text
+</code></pre>
+<p>Nota: il nome del modello viene da una variabile d&#39;ambiente. Cambiare modello (o provider) non dovrebbe richiedere una modifica al codice applicativo.</p>
+<h3>Esercizio</h3>
+<p>Scrivi lo stesso prompt con e senza <code>system</code>. Osserva quali regole il modello segue meglio quando sono nel system prompt rispetto a quando sono nel primo messaggio utente, e perché.</p>
+<h2>2. Costi, latenza e token</h2>
+<h3>Costo</h3>
+<p>Il costo di una chiamata è, in forma semplificata:</p>
+<pre><code>costo = (token_input × prezzo_input) + (token_output × prezzo_output)
+</code></pre>
+<p>Due dettagli spesso ignorati:</p>
+<ul>
+<li>l&#39;output costa di solito più dell&#39;input;</li>
+<li>ogni chiamata reinvia la storia della conversazione: una chat di venti turni paga ogni volta anche i turni precedenti. Il costo cresce più che linearmente con la lunghezza della sessione.</li>
+</ul>
+<p>Molti provider offrono sconti per il prompt caching (riutilizzo di prefissi identici) e per l&#39;elaborazione in batch. Verifica sempre la documentazione aggiornata: prezzi e condizioni cambiano spesso.</p>
+<h3>Latenza</h3>
+<p>Due metriche da misurare separatamente:</p>
+<ul>
+<li><strong>Time-to-first-token (TTFT)</strong>: quanto passa prima che arrivi il primo pezzo di risposta. Dominata dal prefill del prompt.</li>
+<li><strong>Throughput</strong>: token al secondo durante la generazione. Determina quanto dura una risposta lunga.</li>
+</ul>
+<p>Per la UX conta soprattutto il TTFT: uno streaming che parte in fretta sembra più veloce anche se il tempo totale è uguale.</p>
+<h3>Esercizio di stima</h3>
+<p>Per un&#39;applicazione che riassume documenti, stima: token medi di input (documento più system prompt), token medi di output, numero di richieste al giorno. Calcola il costo mensile con i prezzi del provider che scegli. Poi chiediti: quale parte del costo potresti ridurre tagliando il contesto senza perdere qualità?</p>
+<h2>3. Gestione degli errori</h2>
+<p>Gli errori delle API si dividono in categorie con comportamenti diversi:</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Tipo</th>
+<th>Esempio</th>
+<th>Azione</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Errore di richiesta</td>
+<td>400, input malformato, contesto troppo lungo</td>
+<td>Non ritentare: correggi la richiesta</td>
+</tr>
+<tr>
+<td>Autenticazione</td>
+<td>401, 403</td>
+<td>Non ritentare: verifica le credenziali</td>
+</tr>
+<tr>
+<td>Limite di frequenza</td>
+<td>429, quota superata</td>
+<td>Ritenta con backoff</td>
+</tr>
+<tr>
+<td>Errore lato provider</td>
+<td>500, 502, 503, 529 (sovraccarico)</td>
+<td>Ritenta con backoff, poi fallback</td>
+</tr>
+<tr>
+<td>Timeout</td>
+<td>La risposta non arriva in tempo</td>
+<td>Ritenta con cautela, limita le dimensioni</td>
+</tr>
+</tbody></table></div>
+<p>Attenzione: un retry aggressivo su un provider sovraccarico peggiora la situazione per tutti. Per questo serve il backoff.</p>
+<h3>Exponential backoff con jitter</h3><figure class="fig"><div class="diagwrap"><svg class="diag" viewBox="0 0 720 280" role="img" aria-label="Exponential backoff con jitter"><defs><marker id="arr10" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk" d="M0,0 L10,5 L0,10 z"/></marker></defs><text class="t" x="40" y="28" text-anchor="start">Attesa massima per tentativo</text><line class="ar" x1="60" y1="240" x2="700" y2="240"/><rect class="b" x="90" y="229" width="70" height="11" rx="4"/><text class="s" x="125" y="221" text-anchor="middle">max 1s</text><text class="s" x="125" y="262" text-anchor="middle">tentativo 1</text><rect class="b" x="210" y="218" width="70" height="22" rx="4"/><text class="s" x="245" y="210" text-anchor="middle">max 2s</text><text class="s" x="245" y="262" text-anchor="middle">tentativo 2</text><rect class="b" x="330" y="196" width="70" height="44" rx="4"/><text class="s" x="365" y="188" text-anchor="middle">max 4s</text><text class="s" x="365" y="262" text-anchor="middle">tentativo 3</text><rect class="b" x="450" y="152" width="70" height="88" rx="4"/><text class="s" x="485" y="144" text-anchor="middle">max 8s</text><text class="s" x="485" y="262" text-anchor="middle">tentativo 4</text><rect class="b" x="570" y="64" width="70" height="176" rx="4"/><text class="s" x="605" y="56" text-anchor="middle">max 16s</text><text class="s" x="605" y="262" text-anchor="middle">tentativo 5</text></svg></div><figcaption>Attese crescenti: ogni attesa reale è estratta a caso tra zero e il massimo (jitter)</figcaption></figure>
+<pre><code class="language-python">import random
+import time
+
+def con_retry(operazione, max_tentativi=5, base=1.0, massimo=30.0):
+    for tentativo in range(max_tentativi):
+        try:
+            return operazione()
+        except ErroreRitentabile:          # 429, 5xx, timeout
+            if tentativo == max_tentativi - 1:
+                raise
+            attesa = min(massimo, base * (2 ** tentativo))
+            time.sleep(random.uniform(0, attesa))   # full jitter
+</code></pre>
+<p>Il jitter evita che molti client ritentino tutti nello stesso istante, creando picchi sincronizzati. Se il provider restituisce un header esplicito di attesa (ad esempio <code>retry-after</code>), quello ha la precedenza sul calcolo locale.</p>
+<h3>Esercizio</h3>
+<p>Simula un servizio che fallisce con probabilità 70% e restituisce 429 o 503. Implementa il retry sopra e misura: quante chiamate totali servono per avere una risposta, e quanto tempo totale impiega il client. Poi confronta con un retry senza backoff.</p>
+<h2>4. Streaming</h2><figure class="fig"><div class="diagwrap"><svg class="diag" viewBox="0 0 720 200" role="img" aria-label="Timeline dello streaming"><defs><marker id="arr11" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk" d="M0,0 L10,5 L0,10 z"/></marker></defs><line class="ar" x1="40" y1="120" x2="690" y2="120"/><line class="ar" x1="40" y1="116" x2="40" y2="124"/><text class="s" x="40" y="140" text-anchor="middle">0s</text><line class="ar" x1="168" y1="116" x2="168" y2="124"/><text class="s" x="168" y="140" text-anchor="middle">1s</text><line class="ar" x1="296" y1="116" x2="296" y2="124"/><text class="s" x="296" y="140" text-anchor="middle">2s</text><line class="ar" x1="424" y1="116" x2="424" y2="124"/><text class="s" x="424" y="140" text-anchor="middle">3s</text><line class="ar" x1="552" y1="116" x2="552" y2="124"/><text class="s" x="552" y="140" text-anchor="middle">4s</text><line class="ar" x1="680" y1="116" x2="680" y2="124"/><text class="s" x="680" y="140" text-anchor="middle">5s</text><line class="ar" x1="40" y1="60" x2="40" y2="120"/><text class="s" x="44" y="52" text-anchor="start">richiesta</text><line class="ac" x1="142" y1="60" x2="142" y2="120"/><text class="s" x="146" y="52" text-anchor="start">primo token (TTFT)</text><line class="ar" x1="654" y1="60" x2="654" y2="120"/><text class="s" x="650" y="52" text-anchor="end">fine</text><rect class="g" x="142.4" y="92" width="9" height="26" rx="2"/><rect class="g" x="174.4" y="92" width="9" height="26" rx="2"/><rect class="g" x="206.4" y="92" width="9" height="26" rx="2"/><rect class="g" x="238.4" y="92" width="9" height="26" rx="2"/><rect class="g" x="270.4" y="92" width="9" height="26" rx="2"/><rect class="g" x="302.4" y="92" width="9" height="26" rx="2"/><rect class="g" x="334.4" y="92" width="9" height="26" rx="2"/><rect class="g" x="366.4" y="92" width="9" height="26" rx="2"/><rect class="g" x="398.4" y="92" width="9" height="26" rx="2"/><rect class="g" x="430.4" y="92" width="9" height="26" rx="2"/><rect class="g" x="462.4" y="92" width="9" height="26" rx="2"/><rect class="g" x="494.4" y="92" width="9" height="26" rx="2"/><rect class="g" x="526.4" y="92" width="9" height="26" rx="2"/><rect class="g" x="558.4" y="92" width="9" height="26" rx="2"/><rect class="g" x="590.4" y="92" width="9" height="26" rx="2"/><rect class="g" x="622.4" y="92" width="9" height="26" rx="2"/><text class="s" x="360" y="180" text-anchor="middle">Ogni rettangolo è un frammento ricevuto dallo stream: la UI lo mostra subito</text></svg></div><figcaption>Timeline di una risposta in streaming: conta il tempo al primo token, non solo la durata totale</figcaption></figure>
+<p>Lo streaming permette di ricevere la risposta mentre viene generata, di solito tramite Server-Sent Events o un protocollo analogo. Il client riceve eventi con piccoli frammenti di testo che va accumulati e visualizzati.</p>
+<p>Punti di attenzione:</p>
+<ul>
+<li>gestire la chiusura anomala della connessione a metà risposta;</li>
+<li>mostrare uno stato intermedio (cursore, indicatore) se la risposta è lenta a iniziare;</li>
+<li>decidere cosa succede se l&#39;utente annulla: interrompere la richiesta lato client non sempre interrompe il calcolo lato provider, quindi può avere senso anche un timeout lato server;</li>
+<li>non applicare la validazione di output strutturato finché la risposta non è completa.</li>
+</ul>
+<p>Esempio di flusso in pseudocodice:</p>
+<pre><code class="language-text">per ogni frammento ricevuto dallo stream:
+    accumula il testo
+    invia il frammento alla UI
+al termine:
+    valida l&#39;output completo (se strutturato)
+    salva nel log: token usati, TTFT, durata totale
+</code></pre>
+<h3>Caso d&#39;uso da sviluppare</h3>
+<p>Una pagina web con chat che mostra la risposta in streaming. Implementa il flusso lato server che inoltra i frammenti al browser, registra TTFT e token usati per ogni richiesta, e gestisce l&#39;annullamento da parte dell&#39;utente.</p>
+<h2>5. Astrazione sul provider</h2><figure class="fig"><div class="diagwrap"><svg class="diag" viewBox="0 0 720 250" role="img" aria-label="Astrazione sul provider"><defs><marker id="arr12" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk" d="M0,0 L10,5 L0,10 z"/></marker></defs><rect class="n" x="230" y="20" width="260" height="50" rx="10"/><text class="t" x="360" y="42" text-anchor="middle">Applicazione</text><text class="s" x="360" y="62" text-anchor="middle">usa solo l'interfaccia</text><line class="ar" x1="360" y1="70" x2="360" y2="100" marker-end="url(#arr12)"/><rect class="a" x="230" y="100" width="260" height="50" rx="10"/><text class="t" x="360" y="122" text-anchor="middle">ModelloLLM (interfaccia)</text><text class="s" x="360" y="142" text-anchor="middle">genera(system, messaggi, opzioni)</text><line class="ar" x1="330" y1="150" x2="120" y2="180" marker-end="url(#arr12)"/><line class="ar" x1="360" y1="150" x2="360" y2="180" marker-end="url(#arr12)"/><line class="ar" x1="390" y1="150" x2="600" y2="180" marker-end="url(#arr12)"/><rect class="n" x="20" y="180" width="200" height="56" rx="10"/><text class="t" x="120" y="213" text-anchor="middle">Adapter provider A</text><rect class="n" x="260" y="180" width="200" height="56" rx="10"/><text class="t" x="360" y="213" text-anchor="middle">Adapter provider B</text><rect class="n" x="500" y="180" width="200" height="56" rx="10"/><text class="t" x="600" y="202" text-anchor="middle">Adapter open source</text><text class="s" x="600" y="222" text-anchor="middle">via provider terzo</text></svg></div><figcaption>Il resto dell'applicazione dipende solo dall'interfaccia, non dal provider</figcaption></figure>
+<p>Un&#39;applicazione che chiama direttamente le API di un provider in mille punti diventa costosa da cambiare. Una buona pratica è definire un&#39;interfaccia interna:</p>
+<pre><code class="language-python">from typing import Protocol
+
+class ModelloLLM(Protocol):
+    def genera(self, system: str, messaggi: list[dict], **opzioni) -&gt; &quot;Risposta&quot;: ...
+</code></pre>
+<p>Ogni provider (OpenAI, Anthropic, un modello open source servito tramite Groq o Together AI) ha un&#39;implementazione di questa interfaccia. Il resto dell&#39;applicazione dipende solo dall&#39;interfaccia.</p>
+<p>Attenzione però a non nascondere troppo: le differenze reali (gestione degli strumenti, formato dei messaggi, comportamento con l&#39;output strutturato, limiti di contesto) esistono e vanno testate. Un&#39;astrazione che ignora queste differenze produce bug difficili da diagnosticare.</p>
+<h3>Confronto tra provider: criteri, non verdetti</h3>
+<p>Quando confronti provider e modelli, valuta almeno:</p>
+<ul>
+<li>qualità sul tuo compito (non sui benchmark generici): misura con il tuo dataset, modulo 6;</li>
+<li>costo per task completato, non per token;</li>
+<li>latenza p50 e p95 nel tuo scenario;</li>
+<li>disponibilità, limiti di frequenza e regione dei dati;</li>
+<li>supporto a strumenti, output strutturato, streaming, dimensione del contesto;</li>
+<li>condizioni contrattuali sull&#39;uso dei dati.</li>
+</ul>
+<p>Esercizio: scegli tre modelli (uno chiuso, uno aperto servito da un provider terzo, uno più piccolo ed economico) e definisci la tabella di confronto con questi criteri. Non serve completarla con dati reali: il punto è decidere quali misure contano prima di guardare i risultati.</p>
+<h2>6. Osservabilità</h2>
+<p>Ogni chiamata dovrebbe lasciare una traccia: modello usato, versione del prompt, token input e output, TTFT, durata totale, esito, numero di retry, costo stimato. Senza questi dati non sai quanto costa una funzionalità né dove si rompe.</p>
+<p>Consiglio pratico: assegna a ogni richiesta un identificativo e registralo insieme alla risposta. Quando un utente segnala un problema, potrai ricostruire esattamente che cosa è successo.</p>
+<h2>7. Ottimizzazione dei costi</h2>
+<p>Il costo di una funzionalità LLM si controlla con scelte di architettura, non solo negoziando il prezzo.</p>
+<ul>
+<li><strong>Prompt caching</strong>: se molte richieste condividono un prefisso lungo e identico (system prompt, documentazione, esempi few-shot), molti provider permettono di riutilizzarne il calcolo a un costo ridotto. Regola pratica: metti le parti stabili all&#39;inizio del prompt e quelle variabili alla fine.</li>
+<li><strong>Elaborazione batch</strong>: per compiti non interattivi (classificare 50.000 ticket storici) le API batch costano meno, in cambio di tempi di completamento più lunghi.</li>
+<li><strong>Modello giusto per il compito</strong>: un modello piccolo per classificare e smistare, quello grande solo per la generazione complessa.</li>
+<li><strong>Controllo dell&#39;output</strong>: <code>max_tokens</code> adeguato, istruzioni sulla lunghezza, output strutturato al posto di testo libero quando il destinatario è un programma.</li>
+<li><strong>Contesto essenziale</strong>: in una chat lunga, riassumere la storia invece di rimandarla per intero.</li>
+</ul>
+<h3>Esercizio</h3>
+<p>Riprendi la stima di costo della sezione 2. Calcola l&#39;effetto di tre interventi: caching del system prompt, passaggio a un modello piccolo per il 70% delle richieste semplici, riduzione del 30% dei token di output. Quale intervento rende di più nel tuo caso?</p>
+<h2>8. Sicurezza di chiavi, dati e budget</h2>
+<ul>
+<li><strong>Chiavi API</strong>: mai nel codice né nel repository. Usa variabili d&#39;ambiente in sviluppo e un secret manager in produzione. Una chiave per ambiente (sviluppo, test, produzione) facilita la revoca.</li>
+<li><strong>Chiavi lato client</strong>: un&#39;applicazione web o mobile non deve mai chiamare il provider direttamente con la chiave. Le chiamate passano dal tuo backend, che autentica l&#39;utente e applica i limiti.</li>
+<li><strong>Budget</strong>: imposta limiti di spesa sul provider e limiti per utente nel backend. Un bug in un loop può generare migliaia di chiamate in pochi minuti.</li>
+<li><strong>Dati inviati</strong>: tutto ciò che è nel prompt viene inviato al provider. Verifica le condizioni contrattuali (conservazione, uso per addestramento, regione) e valuta il mascheramento dei dati personali prima dell&#39;invio. Il tema è approfondito nel modulo 8.</li>
+</ul>
+<h3>Esercizio</h3>
+<p>Scrivi un piccolo backend (ad esempio FastAPI) che espone <code>/chat</code> e inoltra la richiesta al provider. Aggiungi: lettura della chiave da variabile d&#39;ambiente, limite di dieci richieste al minuto per utente, rifiuto delle richieste con input oltre una soglia di token.</p>
+<h2>Letture di approfondimento</h2>
+<ul>
+<li><a href="https://docs.claude.com" target="_blank" rel="noopener">Documentazione dei provider scelti</a>: sezioni su rate limit, errori, streaming e prezzi (verificare sempre la versione corrente).</li>
+<li><a href="https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/" target="_blank" rel="noopener">AWS Architecture Blog, &quot;Exponential Backoff And Jitter&quot;</a>: la teoria del retry con backoff e jitter.</li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events" target="_blank" rel="noopener">MDN, &quot;Using server-sent events&quot;</a>: come funziona lo streaming di risposte dal server.</li>
+<li><a href="https://opentelemetry.io/docs/specs/semconv/gen-ai/" target="_blank" rel="noopener">OpenTelemetry, &quot;Semantic conventions for Generative AI&quot;</a>: convenzioni standard per tracciare chiamate a modelli.</li>
+</ul>
+</main>
+<nav class="pn"><a href="modulo-2-fondamenti-prompt-engineering.html"><span>Precedente</span>Anatomia del prompt, few-shot, CoT, output strutturato</a><a class="next" href="modulo-4-sistema-rag.html"><span>Successivo</span>Ingestione, chunking, embedding, retrieval</a></nav>
+</body>
+</html>

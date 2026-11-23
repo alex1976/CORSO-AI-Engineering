@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="color-scheme" content="dark">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Modulo 6: Valutazione e Ottimizzazione</title>
+<link rel="alternate" hreflang="it" href="modulo-6-valutazione-ottimizzazione.html"><link rel="alternate" hreflang="en" href="en/modulo-6-valutazione-ottimizzazione.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#09090b;--card:#18181b;--surface-2:#1f1f23;--ink:#fafafa;--ink-2:#d4d4d8;--muted:#a1a1aa;--line:#27272a;--accent:#93c5fd;--accent-soft:#172033;--ok:#4ade80;--ok-soft:#0f2a1c;--warn:#fbbf24;--warn-soft:#2a2008;--code:#18181b;--shadow-sm:0 1px 2px rgba(0,0,0,.4);--shadow-md:0 4px 12px -2px rgba(0,0,0,.5);color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.625 Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--card);position:sticky;top:0;z-index:1;box-shadow:var(--shadow-sm)}
+.top a{color:var(--ink);font-weight:600;text-decoration:none;transition:color .2s ease-in-out}
+.top a:hover{color:var(--accent)}
+.top span{color:var(--muted);font-size:14px}
+.top{flex-wrap:wrap}
+.top-r{display:flex;align-items:center;gap:16px}
+.top .lang{display:flex;gap:4px}
+.top .lang a{color:var(--muted);font-size:13px;padding:4px 8px;border-radius:6px;transition:color .2s ease-in-out,background-color .2s ease-in-out}
+.top .lang a:hover{color:var(--ink);background:var(--surface-2)}
+.top .lang a[aria-current="page"]{color:var(--ink);background:var(--surface-2)}
+.page{max-width:768px;margin:0 auto;padding:32px 16px 16px}
+h1{font-size:clamp(2rem,1.6rem + 2vw,2.25rem);font-weight:700;line-height:1.2;letter-spacing:-.02em;margin:.25em 0 .5em}
+h2{font-size:1.5rem;font-weight:600;line-height:1.3;letter-spacing:-.01em;margin:48px 0 16px;padding-top:24px;border-top:1px solid var(--line)}
+h3{font-size:1.25rem;font-weight:600;line-height:1.35;margin:32px 0 12px;color:var(--ink-2)}
+ul,ol{padding-left:24px}
+li{margin:4px 0}
+a{color:var(--accent);text-underline-offset:3px;transition:color .2s ease-in-out}
+code{background:var(--code);padding:2px 6px;border-radius:6px;font-size:.9em;font-family:ui-monospace,"Cascadia Code",Consolas,monospace}
+pre{background:var(--code);padding:16px;border-radius:12px;overflow-x:auto;border:1px solid var(--line);font-size:14px;line-height:1.6;box-shadow:var(--shadow-sm)}
+pre code{background:none;padding:0;font-size:1em;border-radius:0}
+blockquote{margin:24px 0;padding:12px 16px;border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:0 8px 8px 0;color:var(--ink-2)}
+blockquote p{margin:4px 0}
+hr{border:0;border-top:1px solid var(--line);margin:48px 0}
+.tw{overflow-x:auto;margin:24px 0;border:1px solid var(--line);border-radius:12px;background:var(--card);box-shadow:var(--shadow-sm)}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:.95em}
+th,td{border-bottom:1px solid var(--line);padding:12px 16px;text-align:left;vertical-align:top}
+tr:last-child td{border-bottom:0}
+th{background:var(--surface-2);font-weight:600;color:var(--ink-2)}
+.fig{margin:32px 0;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:var(--shadow-sm)}
+.fig figcaption{color:var(--muted);font-size:14px;margin-top:12px;text-align:center}
+.diagwrap{overflow-x:auto}
+.diag{display:block;width:100%;min-width:520px;height:auto}
+.diag rect.n{fill:var(--card);stroke:var(--muted);stroke-width:1.2}
+.diag rect.a{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.5}
+.diag rect.g{fill:var(--ok-soft);stroke:var(--ok);stroke-width:1.5}
+.diag rect.w{fill:var(--warn-soft);stroke:var(--warn);stroke-width:1.5}
+.diag rect.b{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.2}
+.diag rect.ov{fill:var(--warn-soft);stroke:var(--warn);stroke-width:1.2;stroke-dasharray:4 3}
+.diag rect.dash{fill:none;stroke:var(--muted);stroke-width:1.3;stroke-dasharray:6 5}
+.diag text.t{fill:var(--ink);font:600 13.5px Inter,system-ui,sans-serif}
+.diag text.s{fill:var(--ink-2);font:12px Inter,system-ui,sans-serif}
+.diag line.ar,.diag path.ar{stroke:var(--muted);stroke-width:1.5;fill:none}
+.diag line.ac{stroke:var(--accent);stroke-width:1.5;stroke-dasharray:5 4}
+.diag .mk{fill:var(--muted)}
+.diag circle.dot.a{fill:var(--accent)}
+.diag circle.dot.w{fill:var(--warn)}
+.diag circle.q{fill:var(--ok);stroke:var(--card);stroke-width:2}
+.diag circle.v{fill:var(--accent);fill-opacity:.12;stroke:var(--accent);stroke-width:1.5}
+.diag circle.v2{fill:var(--warn);fill-opacity:.12;stroke:var(--warn);stroke-width:1.5}
+.diag circle.v3{fill:var(--ok);fill-opacity:.12;stroke:var(--ok);stroke-width:1.5}
+li input[type=checkbox]{margin-right:8px;accent-color:var(--accent)}
+ul:has(> li > input[type=checkbox]){list-style:none;padding-left:4px}
+.pn{display:flex;gap:16px;max-width:768px;margin:0 auto;padding:16px 16px 48px}
+.pn a{flex:1;padding:16px;border:1px solid var(--line);border-radius:12px;background:var(--card);text-decoration:none;color:var(--ink);box-shadow:var(--shadow-sm);transition:transform .2s ease-in-out,border-color .2s ease-in-out,box-shadow .2s ease-in-out}
+.pn a:hover{transform:translateY(-2px);border-color:var(--accent);box-shadow:var(--shadow-md)}
+.pn a span{display:block;color:var(--muted);font-size:14px;margin-bottom:4px}
+.pn a.next{text-align:right}
+.idx{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin-top:24px}
+.idx a{display:block;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;text-decoration:none;color:var(--ink);box-shadow:var(--shadow-sm);transition:transform .2s ease-in-out,border-color .2s ease-in-out,box-shadow .2s ease-in-out}
+.idx a:hover{transform:translateY(-2px);border-color:var(--accent);box-shadow:var(--shadow-md)}
+.idx a p{margin:4px 0 0;color:var(--muted);font-size:14px}
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{transition:none!important;transform:none!important}}
+</style>
+</head>
+<body>
+<header class="top"><a href="index.html">Corso AI Engineering</a><div class="top-r"><span>Moduli 1-8</span><nav class="lang" aria-label="Lingua"><a href="modulo-6-valutazione-ottimizzazione.html" lang="it" hreflang="it" aria-current="page">IT</a><a href="en/modulo-6-valutazione-ottimizzazione.html" lang="en" hreflang="en">EN</a></nav></div></header>
+<main class="page"><h1>Modulo 6: Valutazione e Ottimizzazione</h1>
+<h2>Obiettivi di apprendimento</h2>
+<p>Al termine del modulo sarai in grado di:</p>
+<ul>
+<li>costruire un dataset di valutazione (golden dataset) rappresentativo del caso d&#39;uso;</li>
+<li>distinguere le metriche di retrieval da quelle di generazione e capire quale problema misura ciascuna;</li>
+<li>usare un framework come RAGAS per misurare fedeltà ai documenti, pertinenza e precisione del contesto;</li>
+<li>valutare in modo affidabile con LLM-as-a-judge, riconoscendone i limiti;</li>
+<li>rilevare le allucinazioni e ottimizzare il system prompt in modo misurabile.</li>
+</ul>
+<h2>Premessa: senza misura non c&#39;è miglioramento</h2>
+<p>Un prompt o un sistema RAG che &quot;sembra funzionare&quot; su tre domande è un esperimento, non un prodotto. Le risposte di un LLM variano, i casi difficili sono rari e il tuo intuito tende a testare i casi che già conosci. La valutazione trasforma l&#39;impressione in un numero che puoi confrontare prima e dopo ogni modifica.</p>
+<p>Regola pratica: nessuna modifica al prompt, al chunking o al modello va considerata un miglioramento finché non la misuri su un dataset fisso.</p>
+<h2>1. Il dataset di valutazione</h2><figure class="fig"><div class="diagwrap"><svg class="diag" viewBox="0 0 720 170" role="img" aria-label="Composizione del dataset"><defs><marker id="arr20" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk" d="M0,0 L10,5 L0,10 z"/></marker></defs><text class="t" x="20" y="40" text-anchor="start">30 casi di esempio, proporzioni consigliate</text><rect class="a" x="20" y="56" width="340" height="60" rx="4"/><text class="t" x="190" y="92" text-anchor="middle">15 diretti</text><rect class="g" x="360" y="56" width="113.33333333333334" height="60" rx="4"/><text class="t" x="416.6666666666667" y="92" text-anchor="middle">5 sinonimi</text><rect class="w" x="473.33333333333337" y="56" width="113.33333333333334" height="60" rx="4"/><text class="t" x="530" y="92" text-anchor="middle">5 negativi</text><rect class="n" x="586.6666666666667" y="56" width="113.33333333333334" height="60" rx="4"/><text class="t" x="643.3333333333334" y="92" text-anchor="middle">5 avversari</text><text class="s" x="20" y="150" text-anchor="start">Casi negativi e avversari sono obbligatori: senza di essi non misuri le allucinazioni</text></svg></div><figcaption>Composizione consigliata di un dataset di 30 casi</figcaption></figure>
+<p>Il golden dataset è un insieme di casi con questa struttura minima:</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: &quot;E18-001&quot;,
+  &quot;domanda&quot;: &quot;Cosa significa l&#39;errore E18?&quot;,
+  &quot;risposta_attesa&quot;: &quot;Problema di scarico dell&#39;acqua; pulire il filtro.&quot;,
+  &quot;fonte_attesa&quot;: {&quot;documento&quot;: &quot;manuale_lavatrice.pdf&quot;, &quot;pagina&quot;: 12},
+  &quot;tipo&quot;: &quot;diretta&quot;,
+  &quot;difficolta&quot;: &quot;facile&quot;
+}
+</code></pre>
+<p>Come costruirlo:</p>
+<ul>
+<li><strong>Casi reali</strong>: domande effettive, anonimizzate, dai log o dal servizio clienti. Sono i più preziosi.</li>
+<li><strong>Casi sintetici</strong>: generati a partire dai frammenti del documento, ad esempio chiedendo a un modello di scrivere una domanda a cui il frammento risponde. Utili per coprire il corpus, ma da rivedere a mano: possono essere banali o ambigui.</li>
+<li><strong>Casi negativi</strong>: domande che il documento non copre. Sono obbligatori: senza di essi non misuri il comportamento più pericoloso, l&#39;allucinazione.</li>
+<li><strong>Casi avversari</strong>: sinonimi, errori di battitura, domande ambigue, tentativi di prompt injection.</li>
+</ul>
+<p>Dimensione: per un prototipo bastano 30-50 casi, bilanciati tra tipi e difficoltà. Per la produzione servono centinaia di casi, aggiornati man mano che emergono errori reali.</p>
+<p>Regola fondamentale: non modificare il dataset per farlo passare. Se un caso fallisce, la domanda è se il sistema è sbagliato o se il caso è sbagliato. Decidi caso per caso e documenta la decisione.</p>
+<h3>Esercizio</h3>
+<p>Costruisci un dataset di 30 casi per il tuo progetto: 15 diretti, 5 con sinonimi, 5 negativi, 5 avversari. Per ogni caso scrivi la fonte attesa, non solo la risposta. Fai revisionare il dataset da un collega prima di usarlo.</p>
+<h2>2. Separare retrieval e generazione</h2><figure class="fig"><div class="diagwrap"><svg class="diag" viewBox="0 0 720 185" role="img" aria-label="Metriche per stadio"><defs><marker id="arr21" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk" d="M0,0 L10,5 L0,10 z"/></marker></defs><text class="s" x="20" y="30" text-anchor="start">blu: metriche di retrieval · verde: metriche di generazione</text><rect class="n" x="8" y="50" width="120.8" height="74" rx="10"/><text class="t" x="68.4" y="92" text-anchor="middle">Domanda</text><line class="ar" x1="128.8" y1="87" x2="153.8" y2="87" marker-end="url(#arr21)"/><rect class="a" x="153.8" y="50" width="120.8" height="74" rx="10"/><text class="t" x="214.20000000000002" y="72" text-anchor="middle">Retrieval</text><text class="s" x="214.20000000000002" y="92" text-anchor="middle">Recall@k, MRR</text><line class="ar" x1="274.6" y1="87" x2="299.6" y2="87" marker-end="url(#arr21)"/><rect class="a" x="299.6" y="50" width="120.8" height="74" rx="10"/><text class="t" x="360" y="72" text-anchor="middle">Contesto</text><text class="s" x="360" y="92" text-anchor="middle">Precision@k</text><line class="ar" x1="420.40000000000003" y1="87" x2="445.40000000000003" y2="87" marker-end="url(#arr21)"/><rect class="g" x="445.40000000000003" y="50" width="120.8" height="74" rx="10"/><text class="t" x="505.8" y="72" text-anchor="middle">Generazione</text><text class="s" x="505.8" y="92" text-anchor="middle">fedeltà, correttezza</text><line class="ar" x1="566.2" y1="87" x2="591.2" y2="87" marker-end="url(#arr21)"/><rect class="g" x="591.2" y="50" width="120.8" height="74" rx="10"/><text class="t" x="651.6" y="72" text-anchor="middle">Risposta</text><text class="s" x="651.6" y="92" text-anchor="middle">rifiuto sui negativi</text><text class="s" x="360" y="166" text-anchor="middle">Se la risposta è sbagliata, controlla prima il recall: il frammento giusto c'era?</text></svg></div><figcaption>Misurare ogni stadio separatamente: se la risposta è errata, sai quale stadio ha fallito</figcaption></figure>
+<p>Un errore frequente è valutare solo la risposta finale. Se la risposta è sbagliata, non sai se la colpa è del retrieval (il frammento giusto non è stato trovato) o della generazione (il frammento c&#39;era ma il modello non lo ha usato bene). Servono metriche separate.</p>
+<h3>Metriche di retrieval</h3>
+<ul>
+<li><strong>Recall@k</strong>: il frammento corretto è tra i primi k risultati? È la metrica più importante: se non viene recuperato, nessun prompt lo salverà.</li>
+<li><strong>Precision@k</strong>: quanti dei k frammenti sono davvero pertinenti? Misura il rumore nel contesto.</li>
+<li><strong>MRR (Mean Reciprocal Rank)</strong>: quanto in alto compare il frammento giusto, in media. Utile per valutare il reranker.</li>
+</ul>
+<h3>Metriche di generazione</h3>
+<ul>
+<li><strong>Fedeltà (faithfulness)</strong>: ogni affermazione della risposta è supportata dai frammenti forniti?</li>
+<li><strong>Pertinenza della risposta (answer relevance)</strong>: la risposta risponde davvero alla domanda?</li>
+<li><strong>Correttezza</strong>: la risposta coincide con la risposta attesa nel dataset?</li>
+<li><strong>Rifiuto appropriato</strong>: sui casi negativi, il sistema dichiara di non sapere?</li>
+</ul>
+<h2>3. RAGAS</h2>
+<p>RAGAS è un framework che calcola metriche per sistemi RAG, in parte con l&#39;aiuto di un LLM. Le metriche più usate sono:</p>
+<ul>
+<li><strong>Faithfulness</strong>: la risposta è sostenuta dal contesto recuperato?</li>
+<li><strong>Answer relevancy</strong>: la risposta è pertinente alla domanda?</li>
+<li><strong>Context precision</strong>: i frammenti recuperati sono pertinenti e ben ordinati?</li>
+<li><strong>Context recall</strong>: il contesto recuperato contiene le informazioni necessarie per la risposta attesa?</li>
+</ul>
+<p>Come usarlo:</p>
+<ol>
+<li>esegui il sistema su tutti i casi del dataset, salvando domanda, frammenti recuperati e risposta;</li>
+<li>passa questi dati a RAGAS insieme alla risposta attesa dove necessaria;</li>
+<li>confronta le metriche tra due versioni del sistema, non cercare un valore assoluto.</li>
+</ol>
+<p>Attenzione: le metriche di RAGAS usano un LLM come giudice, quindi hanno una propria variabilità e un proprio costo. Usa lo stesso modello giudice in tutti i confronti e, se possibile, verifica a campione i punteggi a mano.</p>
+<h2>4. LLM-as-a-judge</h2>
+<p>Per valutare risposte aperte, spesso si usa un modello come giudice. Il giudice riceve domanda, risposta, criteri e, se disponibili, la risposta attesa, e restituisce un punteggio o un&#39;etichetta.</p>
+<p>Buone pratiche:</p>
+<ul>
+<li><strong>Criteri espliciti</strong>: &quot;La risposta è corretta se contiene l&#39;informazione X. Non è penalizzante un diverso livello di dettaglio.&quot; Senza criteri il giudice applica i propri.</li>
+<li><strong>Output strutturato</strong>: punteggio e motivazione in JSON, vedi modulo 2.</li>
+<li><strong>Confronto a coppie</strong>: spesso è più affidabile chiedere quale di due risposte è migliore piuttosto che assegnare un voto assoluto.</li>
+<li><strong>Bias noti</strong>: i giudici tendono a preferire risposte più lunghe, più formali e quelle scritte dallo stesso modello. Controllali confrontando con valutazione umana.</li>
+<li><strong>Calibrazione</strong>: valida il giudice su 50 casi giudicati da una persona. Se l&#39;accordo è basso, il giudice non è affidabile per quel compito.</li>
+</ul>
+<h3>Esempio di prompt giudice per la fedeltà</h3>
+<pre><code class="language-text">Sei un valutatore. Devi stabilire se la RISPOSTA è interamente supportata dai FRAMMENTI.
+
+Procedura:
+1. Elenca le affermazioni fattuali contenute nella RISPOSTA.
+2. Per ognuna, indica se è supportata da almeno un frammento (sì/no) e quale.
+3. Un&#39;affermazione è supportata solo se il frammento la dice esplicitamente o la implica in modo diretto.
+   Le conoscenze generali non contano come supporto.
+
+Rispondi solo con JSON:
+{&quot;affermazioni&quot;: [{&quot;testo&quot;: &quot;...&quot;, &quot;supportata&quot;: true, &quot;frammento&quot;: 2}],
+ &quot;punteggio&quot;: &lt;numero di affermazioni supportate / totale&gt;,
+ &quot;verdetto&quot;: &quot;fedele&quot; | &quot;parzialmente fedele&quot; | &quot;non fedele&quot;}
+
+FRAMMENTI:
+{frammenti}
+
+RISPOSTA:
+{risposta}
+</code></pre>
+<p>Nota la struttura: il giudice scompone prima la risposta in affermazioni, poi verifica ciascuna. È più affidabile di una domanda generica come &quot;la risposta è fedele? Voto da 1 a 10&quot;, e la motivazione per affermazione rende il punteggio verificabile da una persona.</p>
+<h3>Esercizio</h3>
+<p>Applica il prompt giudice a 20 risposte del tuo sistema. Valuta tu stesso le stesse 20 risposte con la scheda della sezione 5. Calcola in quanti casi il verdetto del giudice coincide con il tuo. Analizza i casi di disaccordo: è il giudice troppo severo, troppo indulgente, o il criterio è ambiguo?</p>
+<h2>5. Valutazione umana</h2>
+<p>La valutazione umana resta il riferimento. Non deve essere eseguita su tutto, ma su un campione rappresentativo e sui casi in cui il giudice automatico è incerto.</p>
+<p>Una scheda di valutazione semplice:</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Criterio</th>
+<th>Scala</th>
+<th>Domanda guida</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Correttezza</td>
+<td>0 / 1 / 2</td>
+<td>La risposta contiene l&#39;informazione giusta?</td>
+</tr>
+<tr>
+<td>Fedeltà</td>
+<td>0 / 1 / 2</td>
+<td>Ogni affermazione è nel manuale?</td>
+</tr>
+<tr>
+<td>Utilità</td>
+<td>0 / 1 / 2</td>
+<td>Il cliente sa che cosa fare dopo?</td>
+</tr>
+<tr>
+<td>Sicurezza</td>
+<td>sì / no</td>
+<td>Il sistema ha proposto operazioni pericolose?</td>
+</tr>
+</tbody></table></div>
+<p>Misura anche l&#39;accordo tra due valutatori umani: se due persone non concordano, il criterio è ambiguo e va riscritto.</p>
+<h2>6. Allucinazioni</h2>
+<p>Un&#39;allucinazione è un&#39;affermazione non supportata dalle fonti o falsa, presentata con sicurezza. Nel RAG si distinguono due forme:</p>
+<ul>
+<li><strong>Allucinazione di contesto</strong>: la risposta contraddice o aggiunge informazioni ai frammenti recuperati.</li>
+<li><strong>Allucinazione da assenza</strong>: il contesto non contiene la risposta, ma il modello risponde comunque.</li>
+</ul>
+<p>Tecniche di rilevamento:</p>
+<ul>
+<li>verifica di fedeltà frase per frase, con il giudice o con RAGAS;</li>
+<li>controllo delle citazioni: la pagina citata contiene davvero l&#39;informazione?</li>
+<li>test negativi sistematici: il sistema deve rifiutare le domande fuori dal corpus;</li>
+<li>confronto con una risposta di riferimento per le informazioni numeriche (date, quantità, codici), che sono le più rischiose.</li>
+</ul>
+<p>Mitigazioni:</p>
+<ul>
+<li>migliorare il retrieval, perché un contesto migliore riduce le allucinazioni da assenza;</li>
+<li>soglia di pertinenza e risposta di rifiuto;</li>
+<li>prompt che richiede citazioni e vieta affermazioni non supportate;</li>
+<li>temperatura bassa per compiti di estrazione e risposta documentale;</li>
+<li>verifica deterministica dove possibile (ad esempio controllare che un codice d&#39;errore citato esista nel manuale).</li>
+</ul>
+<h2>7. Prompt tuning e system prompt</h2><figure class="fig"><div class="diagwrap"><svg class="diag" viewBox="0 0 720 200" role="img" aria-label="Ciclo di prompt tuning"><defs><marker id="arr22" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk" d="M0,0 L10,5 L0,10 z"/></marker></defs><rect class="n" x="8" y="40" width="120.8" height="74" rx="10"/><text class="t" x="68.4" y="62" text-anchor="middle">Baseline</text><text class="s" x="68.4" y="82" text-anchor="middle">prompt attuale</text><line class="ar" x1="128.8" y1="77" x2="153.8" y2="77" marker-end="url(#arr22)"/><rect class="a" x="153.8" y="40" width="120.8" height="74" rx="10"/><text class="t" x="214.20000000000002" y="62" text-anchor="middle">Modifica un elemento</text><text class="s" x="214.20000000000002" y="82" text-anchor="middle">un solo cambio</text><line class="ar" x1="274.6" y1="77" x2="299.6" y2="77" marker-end="url(#arr22)"/><rect class="n" x="299.6" y="40" width="120.8" height="74" rx="10"/><text class="t" x="360" y="62" text-anchor="middle">Riesegui sul dataset</text><text class="s" x="360" y="82" text-anchor="middle">dataset fisso</text><line class="ar" x1="420.40000000000003" y1="77" x2="445.40000000000003" y2="77" marker-end="url(#arr22)"/><rect class="n" x="445.40000000000003" y="40" width="120.8" height="74" rx="10"/><text class="t" x="505.8" y="62" text-anchor="middle">Confronta metriche</text><text class="s" x="505.8" y="82" text-anchor="middle">anche le secondarie</text><line class="ar" x1="566.2" y1="77" x2="591.2" y2="77" marker-end="url(#arr22)"/><rect class="g" x="591.2" y="40" width="120.8" height="74" rx="10"/><text class="t" x="651.6" y="62" text-anchor="middle">Tieni o scarta</text><text class="s" x="651.6" y="82" text-anchor="middle">versiona il prompt</text><path class="ar" d="M651.6,114 L651.6,160 L214.20000000000002,160 L214.20000000000002,116" marker-end="url(#arr22)"/><text class="s" x="432.90000000000003" y="182" text-anchor="middle">ripeti con una nuova modifica</text></svg></div><figcaption>Ciclo di tuning: una sola modifica alla volta, sempre sullo stesso dataset</figcaption></figure>
+<p>Il system prompt è la parte del prompt più persistente e quindi quella che più conviene ottimizzare. L&#39;obiettivo indicato nel corso è limitare la creatività del modello e farlo attenere ai fatti, ma il tuning va fatto per misura, non per tentativi a sensazione.</p>
+<p>Processo consigliato:</p>
+<ol>
+<li>definisci la metrica principale (ad esempio fedeltà media e tasso di rifiuto corretto sui casi negativi);</li>
+<li>stabilisci una baseline con il prompt attuale sul dataset fisso;</li>
+<li>modifica un solo elemento alla volta (un vincolo, un esempio, il formato);</li>
+<li>riesegui e confronta, controllando anche le metriche secondarie per evitare regressioni;</li>
+<li>versiona il prompt con un identificativo e registra i risultati.</li>
+</ol>
+<p>Leve tipiche:</p>
+<ul>
+<li><strong>Vincoli espliciti</strong> sulle fonti: &quot;usa solo i frammenti&quot;, &quot;non usare conoscenze generali&quot;.</li>
+<li><strong>Comportamento di rifiuto</strong>: formula esatta da usare quando l&#39;informazione manca.</li>
+<li><strong>Temperatura</strong>: più bassa per la fedeltà, con verifica che la risposta non diventi meccanica o incompleta.</li>
+<li><strong>Lunghezza e formato</strong>: risposte più brevi riducono le affermazioni non verificabili, ma possono perdere utilità.</li>
+<li><strong>Esempi few-shot</strong>: utili per il formato delle citazioni e per i casi di rifiuto.</li>
+</ul>
+<p>Trappola: un vincolo molto restrittivo può aumentare i rifiuti su domande legittime. Monitora sempre sia la fedeltà sia il tasso di risposte utili.</p>
+<h3>Esercizio di tuning</h3>
+<p>Parti dal prompt del modulo 5. Misura su un dataset di 30 casi: fedeltà, tasso di rifiuto corretto sui negativi, tasso di risposta su domande legittime. Poi prova tre varianti e confrontale. Scrivi una nota di una pagina su quale modifica ha prodotto il miglioramento più grande e quale effetto collaterale ha avuto.</p>
+<h2>8. Qualità, costo e latenza insieme</h2>
+<p>Una variante che migliora la fedeltà del 2% ma raddoppia il costo o la latenza non è necessariamente migliore. Ogni esecuzione della suite di valutazione dovrebbe riportare, accanto alle metriche di qualità:</p>
+<ul>
+<li>token medi di input e output per richiesta;</li>
+<li>costo medio per richiesta e per mille richieste;</li>
+<li>latenza p50 e p95, e il tempo al primo token se l&#39;interfaccia usa lo streaming.</li>
+</ul>
+<p>Esempio di report di confronto:</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Variante</th>
+<th>Recall@3</th>
+<th>Fedeltà</th>
+<th>Rifiuto corretto</th>
+<th>Costo / 1000 rich.</th>
+<th>Latenza p95</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Baseline</td>
+<td>0,72</td>
+<td>0,81</td>
+<td>0,60</td>
+<td>1,00 (riferimento)</td>
+<td>2,1 s</td>
+</tr>
+<tr>
+<td>+ ricerca ibrida</td>
+<td>0,84</td>
+<td>0,85</td>
+<td>0,60</td>
+<td>1,02</td>
+<td>2,3 s</td>
+</tr>
+<tr>
+<td>+ reranking</td>
+<td>0,88</td>
+<td>0,88</td>
+<td>0,65</td>
+<td>1,10</td>
+<td>2,9 s</td>
+</tr>
+</tbody></table></div>
+<p>I valori sono illustrativi. La decisione dipende dal caso d&#39;uso: per un assistente interattivo 2,9 secondi possono essere accettabili, per un suggerimento in tempo reale durante la digitazione no.</p>
+<h2>9. Monitoraggio in produzione</h2>
+<p>La valutazione non finisce con il rilascio. In produzione:</p>
+<ul>
+<li>registra ogni domanda, i frammenti usati e la risposta, rispettando le regole sulla privacy dei dati;</li>
+<li>raccogli feedback esplicito (utile/non utile) e implicito (il cliente riformula la domanda, apre un ticket);</li>
+<li>campiona periodicamente le risposte per la valutazione umana;</li>
+<li>trasforma ogni errore reale in un nuovo caso del dataset;</li>
+<li>esegui la suite di valutazione ad ogni modifica, come un test di regressione.</li>
+</ul>
+<h2>Caso d&#39;uso da sviluppare</h2>
+<p>Prendi il prototipo del modulo 5 e costruisci:</p>
+<ul>
+<li>un dataset di 30 casi con fonte attesa;</li>
+<li>uno script che esegue il sistema su tutto il dataset e produce una tabella con recall@3, fedeltà, tasso di rifiuto corretto;</li>
+<li>tre varianti di prompt o di parametri di chunking, confrontate sulle stesse metriche, con costo e latenza (sezione 8);</li>
+<li>una breve analisi di tre fallimenti, classificati come problema di retrieval o di generazione.</li>
+</ul>
+<h2>Letture di approfondimento</h2>
+<ul>
+<li><a href="https://arxiv.org/abs/2309.15217" target="_blank" rel="noopener">Es et al., &quot;RAGAS: Automated Evaluation of Retrieval Augmented Generation&quot; (2023)</a>: il paper di riferimento sulle metriche RAGAS.</li>
+<li><a href="https://docs.ragas.io" target="_blank" rel="noopener">Documentazione di RAGAS</a>: implementazione delle metriche di retrieval e generazione.</li>
+<li><a href="https://arxiv.org/abs/2306.05685" target="_blank" rel="noopener">Zheng et al., &quot;Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena&quot; (2023)</a>: affidabilità e bias dei giudici basati su LLM.</li>
+<li><a href="https://www.promptfoo.dev/docs/intro/" target="_blank" rel="noopener">Documentazione di Promptfoo</a>: test automatici e regressione dei prompt.</li>
+</ul>
+</main>
+<nav class="pn"><a href="modulo-5-esempio-pratico-rag.html"><span>Precedente</span>Assistente per il manuale di una lavatrice</a><a class="next" href="modulo-7-pattern-agentici.html"><span>Successivo</span>Agenti, workflow, pattern di composizione e controllo</a></nav>
+</body>
+</html>

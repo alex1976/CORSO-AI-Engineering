@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="color-scheme" content="dark">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Modulo 8: Produzione, Sicurezza e Governance</title>
+<link rel="alternate" hreflang="it" href="modulo-8-produzione-sicurezza-governance.html"><link rel="alternate" hreflang="en" href="en/modulo-8-produzione-sicurezza-governance.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#09090b;--card:#18181b;--surface-2:#1f1f23;--ink:#fafafa;--ink-2:#d4d4d8;--muted:#a1a1aa;--line:#27272a;--accent:#93c5fd;--accent-soft:#172033;--ok:#4ade80;--ok-soft:#0f2a1c;--warn:#fbbf24;--warn-soft:#2a2008;--code:#18181b;--shadow-sm:0 1px 2px rgba(0,0,0,.4);--shadow-md:0 4px 12px -2px rgba(0,0,0,.5);color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.625 Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--card);position:sticky;top:0;z-index:1;box-shadow:var(--shadow-sm)}
+.top a{color:var(--ink);font-weight:600;text-decoration:none;transition:color .2s ease-in-out}
+.top a:hover{color:var(--accent)}
+.top span{color:var(--muted);font-size:14px}
+.top{flex-wrap:wrap}
+.top-r{display:flex;align-items:center;gap:16px}
+.top .lang{display:flex;gap:4px}
+.top .lang a{color:var(--muted);font-size:13px;padding:4px 8px;border-radius:6px;transition:color .2s ease-in-out,background-color .2s ease-in-out}
+.top .lang a:hover{color:var(--ink);background:var(--surface-2)}
+.top .lang a[aria-current="page"]{color:var(--ink);background:var(--surface-2)}
+.page{max-width:768px;margin:0 auto;padding:32px 16px 16px}
+h1{font-size:clamp(2rem,1.6rem + 2vw,2.25rem);font-weight:700;line-height:1.2;letter-spacing:-.02em;margin:.25em 0 .5em}
+h2{font-size:1.5rem;font-weight:600;line-height:1.3;letter-spacing:-.01em;margin:48px 0 16px;padding-top:24px;border-top:1px solid var(--line)}
+h3{font-size:1.25rem;font-weight:600;line-height:1.35;margin:32px 0 12px;color:var(--ink-2)}
+ul,ol{padding-left:24px}
+li{margin:4px 0}
+a{color:var(--accent);text-underline-offset:3px;transition:color .2s ease-in-out}
+code{background:var(--code);padding:2px 6px;border-radius:6px;font-size:.9em;font-family:ui-monospace,"Cascadia Code",Consolas,monospace}
+pre{background:var(--code);padding:16px;border-radius:12px;overflow-x:auto;border:1px solid var(--line);font-size:14px;line-height:1.6;box-shadow:var(--shadow-sm)}
+pre code{background:none;padding:0;font-size:1em;border-radius:0}
+blockquote{margin:24px 0;padding:12px 16px;border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:0 8px 8px 0;color:var(--ink-2)}
+blockquote p{margin:4px 0}
+hr{border:0;border-top:1px solid var(--line);margin:48px 0}
+.tw{overflow-x:auto;margin:24px 0;border:1px solid var(--line);border-radius:12px;background:var(--card);box-shadow:var(--shadow-sm)}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:.95em}
+th,td{border-bottom:1px solid var(--line);padding:12px 16px;text-align:left;vertical-align:top}
+tr:last-child td{border-bottom:0}
+th{background:var(--surface-2);font-weight:600;color:var(--ink-2)}
+.fig{margin:32px 0;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:var(--shadow-sm)}
+.fig figcaption{color:var(--muted);font-size:14px;margin-top:12px;text-align:center}
+.diagwrap{overflow-x:auto}
+.diag{display:block;width:100%;min-width:520px;height:auto}
+.diag rect.n{fill:var(--card);stroke:var(--muted);stroke-width:1.2}
+.diag rect.a{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.5}
+.diag rect.g{fill:var(--ok-soft);stroke:var(--ok);stroke-width:1.5}
+.diag rect.w{fill:var(--warn-soft);stroke:var(--warn);stroke-width:1.5}
+.diag rect.b{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.2}
+.diag rect.ov{fill:var(--warn-soft);stroke:var(--warn);stroke-width:1.2;stroke-dasharray:4 3}
+.diag rect.dash{fill:none;stroke:var(--muted);stroke-width:1.3;stroke-dasharray:6 5}
+.diag text.t{fill:var(--ink);font:600 13.5px Inter,system-ui,sans-serif}
+.diag text.s{fill:var(--ink-2);font:12px Inter,system-ui,sans-serif}
+.diag line.ar,.diag path.ar{stroke:var(--muted);stroke-width:1.5;fill:none}
+.diag line.ac{stroke:var(--accent);stroke-width:1.5;stroke-dasharray:5 4}
+.diag .mk{fill:var(--muted)}
+.diag circle.dot.a{fill:var(--accent)}
+.diag circle.dot.w{fill:var(--warn)}
+.diag circle.q{fill:var(--ok);stroke:var(--card);stroke-width:2}
+.diag circle.v{fill:var(--accent);fill-opacity:.12;stroke:var(--accent);stroke-width:1.5}
+.diag circle.v2{fill:var(--warn);fill-opacity:.12;stroke:var(--warn);stroke-width:1.5}
+.diag circle.v3{fill:var(--ok);fill-opacity:.12;stroke:var(--ok);stroke-width:1.5}
+li input[type=checkbox]{margin-right:8px;accent-color:var(--accent)}
+ul:has(> li > input[type=checkbox]){list-style:none;padding-left:4px}
+.pn{display:flex;gap:16px;max-width:768px;margin:0 auto;padding:16px 16px 48px}
+.pn a{flex:1;padding:16px;border:1px solid var(--line);border-radius:12px;background:var(--card);text-decoration:none;color:var(--ink);box-shadow:var(--shadow-sm);transition:transform .2s ease-in-out,border-color .2s ease-in-out,box-shadow .2s ease-in-out}
+.pn a:hover{transform:translateY(-2px);border-color:var(--accent);box-shadow:var(--shadow-md)}
+.pn a span{display:block;color:var(--muted);font-size:14px;margin-bottom:4px}
+.pn a.next{text-align:right}
+.idx{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin-top:24px}
+.idx a{display:block;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;text-decoration:none;color:var(--ink);box-shadow:var(--shadow-sm);transition:transform .2s ease-in-out,border-color .2s ease-in-out,box-shadow .2s ease-in-out}
+.idx a:hover{transform:translateY(-2px);border-color:var(--accent);box-shadow:var(--shadow-md)}
+.idx a p{margin:4px 0 0;color:var(--muted);font-size:14px}
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{transition:none!important;transform:none!important}}
+</style>
+</head>
+<body>
+<header class="top"><a href="index.html">Corso AI Engineering</a><div class="top-r"><span>Moduli 1-8</span><nav class="lang" aria-label="Lingua"><a href="modulo-8-produzione-sicurezza-governance.html" lang="it" hreflang="it" aria-current="page">IT</a><a href="en/modulo-8-produzione-sicurezza-governance.html" lang="en" hreflang="en">EN</a></nav></div></header>
+<main class="page"><h1>Modulo 8: Produzione, Sicurezza e Governance</h1>
+<h2>Obiettivi di apprendimento</h2>
+<p>Al termine del modulo sarai in grado di:</p>
+<ul>
+<li>descrivere un&#39;architettura di riferimento per un&#39;applicazione LLM in produzione;</li>
+<li>versionare e osservare prompt, modelli, indici e dataset come parti del software;</li>
+<li>controllare i costi con budget, routing e cache;</li>
+<li>costruire un threat model per un&#39;applicazione LLM usando la OWASP Top 10 per applicazioni LLM;</li>
+<li>individuare gli obblighi principali su dati personali e trasparenza (GDPR, AI Act) e sapere quando coinvolgere i referenti legali e privacy;</li>
+<li>scegliere tra prompt engineering, RAG e fine-tuning con criteri espliciti;</li>
+<li>preparare una checklist di rilascio.</li>
+</ul>
+<h2>1. Dal prototipo alla produzione</h2>
+<p>Il prototipo del modulo 5 risponde bene in demo. In produzione cambiano le domande:</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Prototipo</th>
+<th>Produzione</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Funziona sulle mie dieci domande?</td>
+<td>Funziona sulla distribuzione reale delle domande, che cambia nel tempo?</td>
+</tr>
+<tr>
+<td>Quanto costa una chiamata?</td>
+<td>Quanto costa al mese con mille utenti, e chi viene avvisato se il costo esplode?</td>
+</tr>
+<tr>
+<td>Il modello risponde?</td>
+<td>Cosa succede se il provider è lento, irraggiungibile o ritira la versione del modello?</td>
+</tr>
+<tr>
+<td>La risposta è corretta?</td>
+<td>Possiamo ricostruire perché una risposta di tre settimane fa era sbagliata?</td>
+</tr>
+<tr>
+<td>Chi lo usa?</td>
+<td>Chi può vedere quali documenti? Dove finiscono i dati personali nei prompt e nei log?</td>
+</tr>
+</tbody></table></div>
+<p>Il resto del modulo affronta queste domande una per una.</p>
+<h2>2. Architettura di riferimento</h2><figure class="fig"><div class="diagwrap"><svg class="diag" viewBox="0 0 720 316" role="img" aria-label="Architettura di produzione"><defs><marker id="arr29" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk" d="M0,0 L10,5 L0,10 z"/></marker></defs><rect class="n" x="10" y="120" width="90" height="50" rx="10"/><text class="t" x="55" y="150" text-anchor="middle">Utente</text><line class="ar" x1="100" y1="145" x2="130" y2="145" marker-end="url(#arr29)"/><rect class="a" x="130" y="100" width="150" height="90" rx="10"/><text class="t" x="205" y="122" text-anchor="middle">Backend</text><text class="s" x="205" y="142" text-anchor="middle">auth, permessi, limiti</text><text class="s" x="205" y="159" text-anchor="middle">orchestrazione</text><line class="ar" x1="280" y1="120" x2="330" y2="60" marker-end="url(#arr29)"/><line class="ar" x1="280" y1="170" x2="330" y2="230" marker-end="url(#arr29)"/><rect class="n" x="330" y="30" width="160" height="60" rx="10"/><text class="t" x="410" y="52" text-anchor="middle">Gateway modelli</text><text class="s" x="410" y="72" text-anchor="middle">retry, fallback, budget</text><rect class="n" x="330" y="200" width="160" height="60" rx="10"/><text class="t" x="410" y="222" text-anchor="middle">Retrieval</text><text class="s" x="410" y="242" text-anchor="middle">vector DB + permessi</text><line class="ar" x1="490" y1="60" x2="540" y2="32" marker-end="url(#arr29)"/><line class="ar" x1="490" y1="60" x2="540" y2="88" marker-end="url(#arr29)"/><rect class="n" x="540" y="10" width="170" height="44" rx="10"/><text class="t" x="625" y="37" text-anchor="middle">Provider principale</text><rect class="n" x="540" y="66" width="170" height="44" rx="10"/><text class="t" x="625" y="93" text-anchor="middle">Modello di riserva</text><rect class="n" x="540" y="200" width="170" height="60" rx="10"/><text class="t" x="625" y="222" text-anchor="middle">Ingestione</text><text class="s" x="625" y="242" text-anchor="middle">indice versionato</text><line class="ar" x1="540" y1="230" x2="490" y2="230" marker-end="url(#arr29)"/><rect class="w" x="130" y="270" width="580" height="36" rx="10"/><text class="t" x="420" y="293" text-anchor="middle">Osservabilità e valutazione continua: tracce, costi, feedback</text></svg></div><figcaption>Architettura di riferimento: un solo punto di uscita verso i modelli e ingestione separata dal servizio</figcaption></figure>
+<p>Componenti tipici di un&#39;applicazione LLM in produzione:</p>
+<ul>
+<li><strong>Interfaccia</strong> (web, chat, integrazione in un prodotto esistente).</li>
+<li><strong>Backend applicativo</strong>: autentica l&#39;utente, applica permessi e limiti, orchestra il flusso. È l&#39;harness del modulo 1.</li>
+<li><strong>Gateway verso i modelli</strong>: unico punto di uscita verso i provider. Gestisce chiavi, retry, fallback tra modelli, limiti di spesa, logging uniforme. Può essere una libreria interna o un componente dedicato.</li>
+<li><strong>Servizio di retrieval</strong>: vector database, ricerca ibrida, filtri per permessi.</li>
+<li><strong>Pipeline di ingestione</strong>: separata dal servizio, eseguita quando i documenti cambiano; produce un indice versionato.</li>
+<li><strong>Osservabilità</strong>: tracing di ogni richiesta, metriche di costo e latenza, feedback degli utenti.</li>
+<li><strong>Valutazione continua</strong>: la suite del modulo 6, eseguita su ogni modifica e periodicamente su un campione del traffico reale.</li>
+</ul>
+<h3>Fallback e degradazione</h3>
+<p>Definisci in anticipo cosa succede quando qualcosa non funziona:</p>
+<ul>
+<li>provider principale non disponibile → modello alternativo (di un altro provider o open-weight), con la stessa suite di valutazione già superata;</li>
+<li>retrieval lento o in errore → messaggio esplicito, non una risposta generata senza contesto;</li>
+<li>budget giornaliero esaurito → modalità ridotta o messaggio all&#39;utente, e avviso al team.</li>
+</ul>
+<h3>Esercizio</h3>
+<p>Disegna l&#39;architettura del tuo progetto finale con i componenti sopra. Per ogni freccia tra componenti indica: cosa succede se il componente di destinazione non risponde?</p>
+<h2>3. LLMOps: versionare e osservare</h2>
+<h3>Cosa versionare</h3>
+<p>In un&#39;applicazione LLM il comportamento dipende da più elementi del solo codice. Ognuno va versionato e registrato nei log di ogni richiesta:</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Elemento</th>
+<th>Esempio di versione</th>
+<th>Perché</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Prompt</td>
+<td><code>risposta_manuale@v7</code></td>
+<td>Una modifica di una riga cambia il comportamento</td>
+</tr>
+<tr>
+<td>Modello</td>
+<td>identificativo completo con data o versione</td>
+<td>Il provider può aggiornare o ritirare i modelli</td>
+</tr>
+<tr>
+<td>Indice</td>
+<td><code>manuale_2026-11-10</code></td>
+<td>Documenti, chunking ed embedding cambiano il retrieval</td>
+</tr>
+<tr>
+<td>Dataset di valutazione</td>
+<td><code>eval@v3</code></td>
+<td>Confrontare metriche su dataset diversi non ha senso</td>
+</tr>
+<tr>
+<td>Parametri</td>
+<td>temperatura, k, soglia</td>
+<td>Fanno parte del comportamento quanto il prompt</td>
+</tr>
+</tbody></table></div>
+<h3>Tracing</h3>
+<p>Una traccia raccoglie tutti i passi di una richiesta: input dell&#39;utente, riscrittura della query, frammenti recuperati con punteggi, prompt finale, risposta, token, costo, latenza di ogni passo, versioni usate. Strumenti di osservabilità per LLM (ad esempio Langfuse, o le funzioni equivalenti delle piattaforme cloud) offrono questa vista; in alternativa un log strutturato in JSON con un identificativo di richiesta è già un ottimo inizio.</p>
+<h3>Rilascio graduale</h3>
+<ul>
+<li><strong>Valutazione offline</strong>: la suite del modulo 6 deve passare prima del rilascio, come i test automatici.</li>
+<li><strong>Shadow</strong>: la nuova versione elabora le richieste reali in parallelo, ma le sue risposte non vengono mostrate; si confrontano offline.</li>
+<li><strong>Canary</strong>: la nuova versione serve una piccola percentuale degli utenti; si monitorano feedback, rifiuti, costi.</li>
+<li><strong>Rollback</strong>: deve essere possibile tornare alla versione precedente di prompt, modello o indice in pochi minuti.</li>
+</ul>
+<h2>4. Gestione dei costi</h2>
+<p>I costi di un&#39;applicazione LLM crescono con l&#39;uso in modo meno prevedibile di quelli di un servizio tradizionale. Leve principali:</p>
+<ul>
+<li><strong>Budget e allarmi</strong>: limite mensile per funzionalità, limite giornaliero per utente, allarme quando il consumo supera la media.</li>
+<li><strong>Routing per difficoltà</strong>: un modello piccolo gestisce le richieste semplici, quello grande solo quelle che lo richiedono (pattern di routing, modulo 7).</li>
+<li><strong>Prompt caching</strong>: prefissi stabili all&#39;inizio del prompt, per beneficiare della cache del provider (modulo 3).</li>
+<li><strong>Cache delle risposte</strong>: domande identiche ricevono la stessa risposta senza nuove chiamate. La cache &quot;semantica&quot; (domande simili) va usata con cautela: due domande simili possono richiedere risposte diverse, e le risposte non devono passare tra utenti con permessi diversi.</li>
+<li><strong>Batch</strong> per i lavori non interattivi.</li>
+<li><strong>Costo per esito, non per token</strong>: misura quanto costa un ticket risolto o un documento analizzato. È la metrica che interessa a chi decide.</li>
+</ul>
+<h3>Esercizio</h3>
+<p>Per il progetto finale, stima il costo mensile con tre scenari di traffico (basso, atteso, picco). Definisci i limiti di spesa e il comportamento dell&#39;applicazione quando vengono superati.</p>
+<h2>5. Sicurezza</h2>
+<h3>OWASP Top 10 per applicazioni LLM</h3>
+<p>L&#39;OWASP mantiene un elenco dei rischi principali per le applicazioni basate su LLM. È un buon punto di partenza per un threat model. I rischi più rilevanti per i progetti di questo corso:</p>
+<ul>
+<li><strong>Prompt injection</strong>: istruzioni nell&#39;input dell&#39;utente (diretta) o in contenuti letti dal sistema, come documenti e pagine web (indiretta), che alterano il comportamento. Non esiste una difesa completa a livello di prompt: servono permessi limitati e conferme (modulo 7).</li>
+<li><strong>Divulgazione di informazioni sensibili</strong>: il modello restituisce dati che l&#39;utente non dovrebbe vedere, perché erano nel contesto. Nel RAG, il filtro per permessi va applicato nel retrieval, non chiesto al modello.</li>
+<li><strong>Gestione insicura dell&#39;output</strong>: l&#39;output del modello usato senza controlli in HTML (XSS), in query SQL, in comandi di shell. L&#39;output del modello è input non fidato.</li>
+<li><strong>Eccesso di autonomia</strong>: strumenti con più permessi del necessario, azioni irreversibili senza conferma.</li>
+<li><strong>Fuga del system prompt</strong>: il system prompt può essere estratto. Non deve contenere segreti, chiavi o informazioni riservate.</li>
+<li><strong>Debolezze di vettori ed embedding</strong>: documenti avvelenati inseriti nell&#39;indice, accesso all&#39;indice senza controllo dei permessi.</li>
+<li><strong>Disinformazione</strong>: allucinazioni presentate come fatti, con utenti che si fidano troppo. Mitigazione: citazioni, rifiuto esplicito, valutazione (modulo 6).</li>
+<li><strong>Consumo illimitato</strong>: richieste molto lunghe o loop agentici che esauriscono budget e capacità. Mitigazione: limiti di input, di passi e di spesa.</li>
+</ul>
+<p>L&#39;elenco completo e le mitigazioni dettagliate sono nella documentazione OWASP, che viene aggiornata periodicamente.</p>
+<h3>Threat model in quattro domande</h3>
+<p>Per ogni funzionalità:</p>
+<ol>
+<li>Quali dati entrano nel contesto del modello, e da quali fonti non fidate?</li>
+<li>Quali azioni può innescare l&#39;output del modello (strumenti, scritture, invii, rendering)?</li>
+<li>Chi può vedere la risposta, e ha il diritto di vedere tutti i dati del contesto?</li>
+<li>Cosa succede nel caso peggiore se il modello esegue un&#39;istruzione malevola?</li>
+</ol>
+<h3>Esercizio</h3>
+<p>Compila il threat model del progetto finale con le quattro domande. Per ognuno dei rischi OWASP elencati sopra indica: si applica? Con quale mitigazione? Come la verifichi con un test?</p>
+<h2>6. Privacy e conformità</h2>
+<p>Questa sezione orienta, non sostituisce il parere dei referenti legali e del responsabile della protezione dei dati della tua organizzazione. Coinvolgili all&#39;inizio del progetto, non alla fine.</p>
+<h3>Dati personali (GDPR)</h3>
+<ul>
+<li><strong>Minimizzazione</strong>: invia al modello solo i dati necessari. Valuta il mascheramento o la pseudonimizzazione di nomi, codici fiscali, indirizzi prima della chiamata.</li>
+<li><strong>Base giuridica e finalità</strong>: il trattamento tramite LLM deve rientrare in una finalità e una base giuridica valide, come qualunque altro trattamento.</li>
+<li><strong>Fornitori</strong>: il provider del modello tratta i dati per tuo conto. Servono accordi sul trattamento, verifica della conservazione, dell&#39;uso per addestramento e della regione di elaborazione.</li>
+<li><strong>Log e tracce</strong>: contengono prompt e risposte, quindi spesso dati personali. Definisci chi vi accede, per quanto tempo restano e come si cancellano.</li>
+<li><strong>Diritti degli interessati</strong>: se un utente chiede la cancellazione, devi sapere dove sono i suoi dati: log, memoria a lungo termine dell&#39;agente, indice vettoriale.</li>
+</ul>
+<h3>AI Act europeo</h3>
+<p>Il regolamento europeo sull&#39;intelligenza artificiale (Regolamento UE 2024/1689) segue un approccio basato sul rischio e si applica in modo graduale. In sintesi:</p>
+<ul>
+<li>alcune pratiche sono vietate;</li>
+<li>i sistemi ad alto rischio (ad esempio in ambiti come selezione del personale, accesso al credito, servizi essenziali) hanno obblighi stringenti di gestione del rischio, qualità dei dati, documentazione, supervisione umana;</li>
+<li>molti sistemi hanno obblighi di trasparenza: ad esempio, le persone devono sapere che stanno interagendo con un sistema di AI, e alcuni contenuti generati devono essere riconoscibili come tali;</li>
+<li>i fornitori di modelli di uso generale hanno obblighi propri, distinti da quelli di chi li integra in un&#39;applicazione.</li>
+</ul>
+<p>Domanda pratica per ogni progetto: in quale categoria di rischio ricade il caso d&#39;uso? La risposta cambia in modo sostanziale i requisiti.</p>
+<h3>Esercizio</h3>
+<p>Per il progetto finale, compila una scheda di una pagina: dati personali trattati, provider e regione, durata di conservazione dei log, categoria di rischio ipotizzata secondo l&#39;AI Act, misure di trasparenza verso gli utenti. Indica le domande da porre ai referenti legali e privacy.</p>
+<h2>7. Prompt, RAG o fine-tuning?</h2><figure class="fig"><div class="diagwrap"><svg class="diag" viewBox="0 0 720 190" role="img" aria-label="Prompt, RAG o fine-tuning"><defs><marker id="arr30" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk" d="M0,0 L10,5 L0,10 z"/></marker></defs><rect class="g" x="20" y="40" width="180" height="100" rx="10"/><text class="t" x="110" y="62" text-anchor="middle">1. Prompt</text><text class="s" x="110" y="82" text-anchor="middle">formato, stile, istruzioni</text><text class="s" x="110" y="99" text-anchor="middle">costo minimo</text><text class="s" x="110" y="116" text-anchor="middle">si cambia in minuti</text><line class="ar" x1="200" y1="90" x2="275" y2="90" marker-end="url(#arr30)"/><text class="s" x="237.5" y="80" text-anchor="middle">non basta</text><rect class="a" x="275" y="40" width="180" height="100" rx="10"/><text class="t" x="365" y="62" text-anchor="middle">2. RAG</text><text class="s" x="365" y="82" text-anchor="middle">conoscenza che cambia</text><text class="s" x="365" y="99" text-anchor="middle">citazioni e verifica</text><text class="s" x="365" y="116" text-anchor="middle">aggiornare l'indice</text><line class="ar" x1="455" y1="90" x2="530" y2="90" marker-end="url(#arr30)"/><text class="s" x="492.5" y="80" text-anchor="middle">non basta</text><rect class="w" x="530" y="40" width="180" height="100" rx="10"/><text class="t" x="620" y="62" text-anchor="middle">3. Fine-tuning</text><text class="s" x="620" y="82" text-anchor="middle">compito ristretto, alto volume</text><text class="s" x="620" y="99" text-anchor="middle">serve dataset etichettato</text><text class="s" x="620" y="116" text-anchor="middle">da ripetere a ogni modello</text><text class="s" x="360" y="172" text-anchor="middle">Per far "conoscere fatti" al modello, il RAG è quasi sempre preferibile al fine-tuning</text></svg></div><figcaption>Ordine consigliato: si passa allo stadio successivo solo quando la valutazione mostra che il precedente non basta</figcaption></figure>
+<p>Una delle decisioni più frequenti, e più spesso sbagliate. Ordine consigliato: prima il prompt, poi il RAG, il fine-tuning solo se i primi due non bastano e i dati lo giustificano.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Esigenza</th>
+<th>Approccio adatto</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Il modello deve seguire un formato o uno stile</td>
+<td>Prompt con esempi; fine-tuning solo per volumi molto alti o stili molto specifici</td>
+</tr>
+<tr>
+<td>Il modello deve conoscere documenti aziendali che cambiano</td>
+<td>RAG</td>
+</tr>
+<tr>
+<td>Servono citazioni e verificabilità</td>
+<td>RAG</td>
+</tr>
+<tr>
+<td>Il modello deve imparare un compito ristretto ad alto volume, con costo e latenza minimi</td>
+<td>Fine-tuning di un modello piccolo, con un buon dataset etichettato</td>
+</tr>
+<tr>
+<td>Il modello deve &quot;imparare fatti&quot;</td>
+<td>Quasi mai fine-tuning: è costoso da aggiornare e non riduce le allucinazioni. Usa il RAG</td>
+</tr>
+</tbody></table></div>
+<p>Il fine-tuning richiede: un dataset di centinaia o migliaia di esempi di qualità, una suite di valutazione per confrontare prima e dopo, un processo per ripeterlo quando il modello di base cambia. Se manca uno di questi elementi, non è il momento.</p>
+<h2>8. Checklist di rilascio</h2>
+<p>Prima di andare in produzione, verifica:</p>
+<p><strong>Qualità</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> La suite di valutazione passa con le soglie concordate.</li>
+<li><input disabled="" type="checkbox"> I casi negativi e avversari sono inclusi.</li>
+<li><input disabled="" type="checkbox"> Esiste un meccanismo di feedback degli utenti.</li>
+</ul>
+<p><strong>Affidabilità</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Retry con backoff, timeout e fallback sono configurati.</li>
+<li><input disabled="" type="checkbox"> Il comportamento in caso di errore del provider o del retrieval è definito e testato.</li>
+<li><input disabled="" type="checkbox"> È possibile fare rollback di prompt, modello e indice.</li>
+</ul>
+<p><strong>Costi</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Limiti di spesa sul provider e per utente.</li>
+<li><input disabled="" type="checkbox"> Allarmi sul consumo anomalo.</li>
+<li><input disabled="" type="checkbox"> Stima del costo mensile approvata.</li>
+</ul>
+<p><strong>Sicurezza</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Threat model compilato e revisionato.</li>
+<li><input disabled="" type="checkbox"> Le chiavi sono in un secret manager.</li>
+<li><input disabled="" type="checkbox"> L&#39;output del modello è trattato come input non fidato.</li>
+<li><input disabled="" type="checkbox"> Le azioni irreversibili richiedono conferma.</li>
+<li><input disabled="" type="checkbox"> I permessi sui documenti sono applicati nel retrieval.</li>
+</ul>
+<p><strong>Dati e conformità</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Referenti legali e privacy coinvolti, scheda compilata.</li>
+<li><input disabled="" type="checkbox"> Conservazione e accesso ai log definiti.</li>
+<li><input disabled="" type="checkbox"> Gli utenti sono informati che interagiscono con un sistema di AI.</li>
+</ul>
+<p><strong>Osservabilità</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Ogni richiesta ha una traccia con versioni, token, costo e latenza.</li>
+<li><input disabled="" type="checkbox"> Un cruscotto mostra qualità, costi e errori nel tempo.</li>
+</ul>
+<h2>Consegna del modulo</h2>
+<p>Per il progetto finale:</p>
+<ul>
+<li>schema dell&#39;architettura con fallback;</li>
+<li>tabella delle versioni (prompt, modello, indice, dataset) e formato del log di traccia;</li>
+<li>stima dei costi in tre scenari, con limiti e allarmi;</li>
+<li>threat model con mitigazioni e test;</li>
+<li>scheda privacy e conformità;</li>
+<li>checklist di rilascio compilata, con le voci non ancora soddisfatte e il piano per completarle.</li>
+</ul>
+<h2>Letture di approfondimento</h2>
+<ul>
+<li><a href="https://genai.owasp.org/llm-top-10/" target="_blank" rel="noopener">OWASP, &quot;Top 10 for Large Language Model Applications&quot;</a>: i rischi più comuni delle applicazioni LLM (versione più recente).</li>
+<li><a href="https://eur-lex.europa.eu/eli/reg/2024/1689/oj" target="_blank" rel="noopener">Regolamento (UE) 2024/1689 sull&#39;intelligenza artificiale (AI Act)</a>: testo ufficiale su EUR-Lex.</li>
+<li><a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj" target="_blank" rel="noopener">Regolamento (UE) 2016/679 (GDPR)</a>: testo ufficiale su EUR-Lex; vedere anche le linee guida delle autorità di protezione dei dati sull&#39;uso dell&#39;AI.</li>
+<li><a href="https://www.nist.gov/itl/ai-risk-management-framework" target="_blank" rel="noopener">NIST, &quot;AI Risk Management Framework&quot;</a>: framework per identificare e gestire i rischi dei sistemi AI.</li>
+<li>Documentazione dei provider scelti: politiche di conservazione e uso dei dati.</li>
+</ul>
+</main>
+<nav class="pn"><a href="modulo-7-pattern-agentici.html"><span>Precedente</span>Agenti, workflow, pattern di composizione e controllo</a><a class="next" href="index.html"><span>Indice</span>Torna all'indice</a></nav>
+</body>
+</html>

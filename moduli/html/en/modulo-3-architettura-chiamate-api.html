@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="color-scheme" content="dark">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Module 3: Architecture and API Calls</title>
+<link rel="alternate" hreflang="it" href="../modulo-3-architettura-chiamate-api.html"><link rel="alternate" hreflang="en" href="modulo-3-architettura-chiamate-api.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#09090b;--card:#18181b;--surface-2:#1f1f23;--ink:#fafafa;--ink-2:#d4d4d8;--muted:#a1a1aa;--line:#27272a;--accent:#93c5fd;--accent-soft:#172033;--ok:#4ade80;--ok-soft:#0f2a1c;--warn:#fbbf24;--warn-soft:#2a2008;--code:#18181b;--shadow-sm:0 1px 2px rgba(0,0,0,.4);--shadow-md:0 4px 12px -2px rgba(0,0,0,.5);color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.625 Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--card);position:sticky;top:0;z-index:1;box-shadow:var(--shadow-sm)}
+.top a{color:var(--ink);font-weight:600;text-decoration:none;transition:color .2s ease-in-out}
+.top a:hover{color:var(--accent)}
+.top span{color:var(--muted);font-size:14px}
+.top{flex-wrap:wrap}
+.top-r{display:flex;align-items:center;gap:16px}
+.top .lang{display:flex;gap:4px}
+.top .lang a{color:var(--muted);font-size:13px;padding:4px 8px;border-radius:6px;transition:color .2s ease-in-out,background-color .2s ease-in-out}
+.top .lang a:hover{color:var(--ink);background:var(--surface-2)}
+.top .lang a[aria-current="page"]{color:var(--ink);background:var(--surface-2)}
+.page{max-width:768px;margin:0 auto;padding:32px 16px 16px}
+h1{font-size:clamp(2rem,1.6rem + 2vw,2.25rem);font-weight:700;line-height:1.2;letter-spacing:-.02em;margin:.25em 0 .5em}
+h2{font-size:1.5rem;font-weight:600;line-height:1.3;letter-spacing:-.01em;margin:48px 0 16px;padding-top:24px;border-top:1px solid var(--line)}
+h3{font-size:1.25rem;font-weight:600;line-height:1.35;margin:32px 0 12px;color:var(--ink-2)}
+ul,ol{padding-left:24px}
+li{margin:4px 0}
+a{color:var(--accent);text-underline-offset:3px;transition:color .2s ease-in-out}
+code{background:var(--code);padding:2px 6px;border-radius:6px;font-size:.9em;font-family:ui-monospace,"Cascadia Code",Consolas,monospace}
+pre{background:var(--code);padding:16px;border-radius:12px;overflow-x:auto;border:1px solid var(--line);font-size:14px;line-height:1.6;box-shadow:var(--shadow-sm)}
+pre code{background:none;padding:0;font-size:1em;border-radius:0}
+blockquote{margin:24px 0;padding:12px 16px;border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:0 8px 8px 0;color:var(--ink-2)}
+blockquote p{margin:4px 0}
+hr{border:0;border-top:1px solid var(--line);margin:48px 0}
+.tw{overflow-x:auto;margin:24px 0;border:1px solid var(--line);border-radius:12px;background:var(--card);box-shadow:var(--shadow-sm)}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:.95em}
+th,td{border-bottom:1px solid var(--line);padding:12px 16px;text-align:left;vertical-align:top}
+tr:last-child td{border-bottom:0}
+th{background:var(--surface-2);font-weight:600;color:var(--ink-2)}
+.fig{margin:32px 0;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:var(--shadow-sm)}
+.fig figcaption{color:var(--muted);font-size:14px;margin-top:12px;text-align:center}
+.diagwrap{overflow-x:auto}
+.diag{display:block;width:100%;min-width:520px;height:auto}
+.diag rect.n{fill:var(--card);stroke:var(--muted);stroke-width:1.2}
+.diag rect.a{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.5}
+.diag rect.g{fill:var(--ok-soft);stroke:var(--ok);stroke-width:1.5}
+.diag rect.w{fill:var(--warn-soft);stroke:var(--warn);stroke-width:1.5}
+.diag rect.b{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.2}
+.diag rect.ov{fill:var(--warn-soft);stroke:var(--warn);stroke-width:1.2;stroke-dasharray:4 3}
+.diag rect.dash{fill:none;stroke:var(--muted);stroke-width:1.3;stroke-dasharray:6 5}
+.diag text.t{fill:var(--ink);font:600 13.5px Inter,system-ui,sans-serif}
+.diag text.s{fill:var(--ink-2);font:12px Inter,system-ui,sans-serif}
+.diag line.ar,.diag path.ar{stroke:var(--muted);stroke-width:1.5;fill:none}
+.diag line.ac{stroke:var(--accent);stroke-width:1.5;stroke-dasharray:5 4}
+.diag .mk{fill:var(--muted)}
+.diag circle.dot.a{fill:var(--accent)}
+.diag circle.dot.w{fill:var(--warn)}
+.diag circle.q{fill:var(--ok);stroke:var(--card);stroke-width:2}
+.diag circle.v{fill:var(--accent);fill-opacity:.12;stroke:var(--accent);stroke-width:1.5}
+.diag circle.v2{fill:var(--warn);fill-opacity:.12;stroke:var(--warn);stroke-width:1.5}
+.diag circle.v3{fill:var(--ok);fill-opacity:.12;stroke:var(--ok);stroke-width:1.5}
+li input[type=checkbox]{margin-right:8px;accent-color:var(--accent)}
+ul:has(> li > input[type=checkbox]){list-style:none;padding-left:4px}
+.pn{display:flex;gap:16px;max-width:768px;margin:0 auto;padding:16px 16px 48px}
+.pn a{flex:1;padding:16px;border:1px solid var(--line);border-radius:12px;background:var(--card);text-decoration:none;color:var(--ink);box-shadow:var(--shadow-sm);transition:transform .2s ease-in-out,border-color .2s ease-in-out,box-shadow .2s ease-in-out}
+.pn a:hover{transform:translateY(-2px);border-color:var(--accent);box-shadow:var(--shadow-md)}
+.pn a span{display:block;color:var(--muted);font-size:14px;margin-bottom:4px}
+.pn a.next{text-align:right}
+.idx{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin-top:24px}
+.idx a{display:block;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;text-decoration:none;color:var(--ink);box-shadow:var(--shadow-sm);transition:transform .2s ease-in-out,border-color .2s ease-in-out,box-shadow .2s ease-in-out}
+.idx a:hover{transform:translateY(-2px);border-color:var(--accent);box-shadow:var(--shadow-md)}
+.idx a p{margin:4px 0 0;color:var(--muted);font-size:14px}
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{transition:none!important;transform:none!important}}
+</style>
+</head>
+<body>
+<header class="top"><a href="index.html">AI Engineering Course</a><div class="top-r"><span>Modules 1-8</span><nav class="lang" aria-label="Language"><a href="../modulo-3-architettura-chiamate-api.html" lang="it" hreflang="it">IT</a><a href="modulo-3-architettura-chiamate-api.html" lang="en" hreflang="en" aria-current="page">EN</a></nav></div></header>
+<main class="page"><h1>Module 3: Architecture and API Calls</h1>
+<h2>Learning objectives</h2>
+<p>By the end of the module you will be able to:</p>
+<ul>
+<li>build an LLM request through an API with the correct roles and the essential parameters;</li>
+<li>estimate the cost and latency of a call before running it;</li>
+<li>classify API errors and decide which ones to retry;</li>
+<li>implement a retry with exponential backoff and jitter;</li>
+<li>consume a streaming response and display it in real time;</li>
+<li>design an abstraction layer that lets you change provider without rewriting the application.</li>
+</ul>
+<h2>Introduction: an LLM call is an expensive and unpredictable network call</h2>
+<p>If you come from traditional software, you are used to HTTP calls with a latency of a few milliseconds, a fixed cost and a deterministic response. An LLM call is different: it can take anywhere from a few hundred milliseconds to tens of seconds, the cost depends on the number of tokens, the response changes from one call to the next, and the provider can return capacity errors even when your request is valid.</p>
+<p>Managing calls therefore means managing three things: costs, latency and failures.</p>
+<h2>1. Anatomy of a request</h2><figure class="fig"><div class="diagwrap"><svg class="diag" viewBox="0 0 720 260" role="img" aria-label="Anatomy of a request"><defs><marker id="arr9" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk" d="M0,0 L10,5 L0,10 z"/></marker></defs><rect class="n" x="20" y="30" width="430" height="226" rx="12"/><text class="t" x="36" y="54" text-anchor="start">Request</text><rect class="n" x="40" y="66" width="390" height="34" rx="10"/><text class="t" x="235" y="88" text-anchor="middle">model: from an environment variable</text><rect class="a" x="40" y="108" width="390" height="34" rx="10"/><text class="t" x="235" y="130" text-anchor="middle">system: persistent rules</text><rect class="n" x="40" y="150" width="390" height="34" rx="10"/><text class="t" x="235" y="172" text-anchor="middle">messages: user / assistant</text><rect class="n" x="40" y="192" width="390" height="34" rx="10"/><text class="t" x="235" y="214" text-anchor="middle">parameters: temperature, max_tokens</text><rect class="a" x="500" y="100" width="200" height="90" rx="10"/><text class="t" x="600" y="122" text-anchor="middle">Provider</text><text class="s" x="600" y="142" text-anchor="middle">Chat API</text><line class="ar" x1="450" y1="145" x2="500" y2="145" marker-end="url(#arr9)"/><text class="s" x="600" y="220" text-anchor="middle">response: text + tokens used</text></svg></div><figcaption>A request is a list of fields, not just a text</figcaption></figure>
+<p>Most chat APIs have a similar structure. Even though field names change between providers, the concepts are these:</p>
+<ul>
+<li><strong>Model</strong>: identifier of the version to use. It should be treated as a dependency: versioned, documented, replaceable.</li>
+<li><strong>Messages</strong>: an ordered list of turns, each with a role.<ul>
+<li><code>system</code>: persistent instructions and rules.</li>
+<li><code>user</code>: input from the user or the application.</li>
+<li><code>assistant</code>: previous model responses, when simulating a conversation.</li>
+</ul>
+</li>
+<li><strong>Generation parameters</strong>: temperature, top-p, maximum number of output tokens, stop sequences.</li>
+<li><strong>Tools (optional)</strong>: definitions of functions that the model can ask to invoke (see module 7).</li>
+<li><strong>Response format (optional)</strong>: expected JSON schema, see module 2.</li>
+</ul>
+<p>Minimal example in Python, with a generic client (the name of the client and of the fields varies from provider to provider; adapt it to the documentation you use):</p>
+<pre><code class="language-python">import os
+
+def chiedi_al_modello(client, domanda: str) -&gt; str:
+    risposta = client.chat(
+        model=os.environ[&quot;LLM_MODEL&quot;],   # the model is configuration, not code
+        system=&quot;Answer in English, concisely.&quot;,
+        messages=[{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: domanda}],
+        temperature=0.2,
+        max_tokens=400,
+    )
+    return risposta.text
+</code></pre>
+<p>Note: the model name comes from an environment variable. Changing model (or provider) should not require a change to the application code.</p>
+<h3>Exercise</h3>
+<p>Write the same prompt with and without <code>system</code>. Observe which rules the model follows better when they are in the system prompt compared to when they are in the first user message, and why.</p>
+<h2>2. Costs, latency and tokens</h2>
+<h3>Cost</h3>
+<p>The cost of a call is, in simplified form:</p>
+<pre><code>cost = (input_tokens × input_price) + (output_tokens × output_price)
+</code></pre>
+<p>Two details that are often ignored:</p>
+<ul>
+<li>output usually costs more than input;</li>
+<li>every call resends the conversation history: a twenty-turn chat pays for the previous turns every time. The cost grows more than linearly with the length of the session.</li>
+</ul>
+<p>Many providers offer discounts for prompt caching (reuse of identical prefixes) and for batch processing. Always check the up-to-date documentation: prices and conditions change often.</p>
+<h3>Latency</h3>
+<p>Two metrics to measure separately:</p>
+<ul>
+<li><strong>Time-to-first-token (TTFT)</strong>: how long it takes before the first piece of the response arrives. Dominated by the prompt prefill.</li>
+<li><strong>Throughput</strong>: tokens per second during generation. It determines how long a long response takes.</li>
+</ul>
+<p>For UX, TTFT matters most: a stream that starts quickly feels faster even if the total time is the same.</p>
+<h3>Estimation exercise</h3>
+<p>For an application that summarizes documents, estimate: average input tokens (document plus system prompt), average output tokens, number of requests per day. Calculate the monthly cost with the prices of the provider you choose. Then ask yourself: which part of the cost could you reduce by trimming the context without losing quality?</p>
+<h2>3. Error handling</h2>
+<p>API errors fall into categories with different behaviors:</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Example</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Request error</td>
+<td>400, malformed input, context too long</td>
+<td>Do not retry: fix the request</td>
+</tr>
+<tr>
+<td>Authentication</td>
+<td>401, 403</td>
+<td>Do not retry: check the credentials</td>
+</tr>
+<tr>
+<td>Rate limit</td>
+<td>429, quota exceeded</td>
+<td>Retry with backoff</td>
+</tr>
+<tr>
+<td>Provider-side error</td>
+<td>500, 502, 503, 529 (overloaded)</td>
+<td>Retry with backoff, then fallback</td>
+</tr>
+<tr>
+<td>Timeout</td>
+<td>The response does not arrive in time</td>
+<td>Retry with caution, limit the size</td>
+</tr>
+</tbody></table></div>
+<p>Warning: an aggressive retry on an overloaded provider makes the situation worse for everyone. This is why backoff is needed.</p>
+<h3>Exponential backoff with jitter</h3><figure class="fig"><div class="diagwrap"><svg class="diag" viewBox="0 0 720 280" role="img" aria-label="Exponential backoff with jitter"><defs><marker id="arr10" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk" d="M0,0 L10,5 L0,10 z"/></marker></defs><text class="t" x="40" y="28" text-anchor="start">Maximum wait per attempt</text><line class="ar" x1="60" y1="240" x2="700" y2="240"/><rect class="b" x="90" y="229" width="70" height="11" rx="4"/><text class="s" x="125" y="221" text-anchor="middle">max 1s</text><text class="s" x="125" y="262" text-anchor="middle">attempt 1</text><rect class="b" x="210" y="218" width="70" height="22" rx="4"/><text class="s" x="245" y="210" text-anchor="middle">max 2s</text><text class="s" x="245" y="262" text-anchor="middle">attempt 2</text><rect class="b" x="330" y="196" width="70" height="44" rx="4"/><text class="s" x="365" y="188" text-anchor="middle">max 4s</text><text class="s" x="365" y="262" text-anchor="middle">attempt 3</text><rect class="b" x="450" y="152" width="70" height="88" rx="4"/><text class="s" x="485" y="144" text-anchor="middle">max 8s</text><text class="s" x="485" y="262" text-anchor="middle">attempt 4</text><rect class="b" x="570" y="64" width="70" height="176" rx="4"/><text class="s" x="605" y="56" text-anchor="middle">max 16s</text><text class="s" x="605" y="262" text-anchor="middle">attempt 5</text></svg></div><figcaption>Increasing waits: each actual wait is drawn at random between zero and the maximum (jitter)</figcaption></figure>
+<pre><code class="language-python">import random
+import time
+
+def con_retry(operazione, max_tentativi=5, base=1.0, massimo=30.0):
+    for tentativo in range(max_tentativi):
+        try:
+            return operazione()
+        except ErroreRitentabile:          # 429, 5xx, timeout
+            if tentativo == max_tentativi - 1:
+                raise
+            attesa = min(massimo, base * (2 ** tentativo))
+            time.sleep(random.uniform(0, attesa))   # full jitter
+</code></pre>
+<p>Jitter prevents many clients from all retrying at the same instant, creating synchronized spikes. If the provider returns an explicit wait header (for example <code>retry-after</code>), it takes precedence over the local calculation.</p>
+<h3>Exercise</h3>
+<p>Simulate a service that fails with 70% probability and returns 429 or 503. Implement the retry above and measure: how many total calls are needed to get a response, and how much total time the client takes. Then compare with a retry without backoff.</p>
+<h2>4. Streaming</h2><figure class="fig"><div class="diagwrap"><svg class="diag" viewBox="0 0 720 200" role="img" aria-label="Streaming timeline"><defs><marker id="arr11" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk" d="M0,0 L10,5 L0,10 z"/></marker></defs><line class="ar" x1="40" y1="120" x2="690" y2="120"/><line class="ar" x1="40" y1="116" x2="40" y2="124"/><text class="s" x="40" y="140" text-anchor="middle">0s</text><line class="ar" x1="168" y1="116" x2="168" y2="124"/><text class="s" x="168" y="140" text-anchor="middle">1s</text><line class="ar" x1="296" y1="116" x2="296" y2="124"/><text class="s" x="296" y="140" text-anchor="middle">2s</text><line class="ar" x1="424" y1="116" x2="424" y2="124"/><text class="s" x="424" y="140" text-anchor="middle">3s</text><line class="ar" x1="552" y1="116" x2="552" y2="124"/><text class="s" x="552" y="140" text-anchor="middle">4s</text><line class="ar" x1="680" y1="116" x2="680" y2="124"/><text class="s" x="680" y="140" text-anchor="middle">5s</text><line class="ar" x1="40" y1="60" x2="40" y2="120"/><text class="s" x="44" y="52" text-anchor="start">request</text><line class="ac" x1="142" y1="60" x2="142" y2="120"/><text class="s" x="146" y="52" text-anchor="start">first token (TTFT)</text><line class="ar" x1="654" y1="60" x2="654" y2="120"/><text class="s" x="650" y="52" text-anchor="end">end</text><rect class="g" x="142.4" y="92" width="9" height="26" rx="2"/><rect class="g" x="174.4" y="92" width="9" height="26" rx="2"/><rect class="g" x="206.4" y="92" width="9" height="26" rx="2"/><rect class="g" x="238.4" y="92" width="9" height="26" rx="2"/><rect class="g" x="270.4" y="92" width="9" height="26" rx="2"/><rect class="g" x="302.4" y="92" width="9" height="26" rx="2"/><rect class="g" x="334.4" y="92" width="9" height="26" rx="2"/><rect class="g" x="366.4" y="92" width="9" height="26" rx="2"/><rect class="g" x="398.4" y="92" width="9" height="26" rx="2"/><rect class="g" x="430.4" y="92" width="9" height="26" rx="2"/><rect class="g" x="462.4" y="92" width="9" height="26" rx="2"/><rect class="g" x="494.4" y="92" width="9" height="26" rx="2"/><rect class="g" x="526.4" y="92" width="9" height="26" rx="2"/><rect class="g" x="558.4" y="92" width="9" height="26" rx="2"/><rect class="g" x="590.4" y="92" width="9" height="26" rx="2"/><rect class="g" x="622.4" y="92" width="9" height="26" rx="2"/><text class="s" x="360" y="180" text-anchor="middle">Each rectangle is a chunk received from the stream: the UI displays it immediately</text></svg></div><figcaption>Timeline of a streaming response: what matters is the time to first token, not just the total duration</figcaption></figure>
+<p>Streaming lets you receive the response while it is being generated, usually through Server-Sent Events or a similar protocol. The client receives events with small fragments of text that must be accumulated and displayed.</p>
+<p>Points to watch:</p>
+<ul>
+<li>handle the abnormal closing of the connection midway through a response;</li>
+<li>show an intermediate state (cursor, indicator) if the response is slow to start;</li>
+<li>decide what happens if the user cancels: interrupting the request on the client side does not always stop the computation on the provider side, so a server-side timeout can also make sense;</li>
+<li>do not apply structured output validation until the response is complete.</li>
+</ul>
+<p>Example flow in pseudocode:</p>
+<pre><code class="language-text">for each chunk received from the stream:
+    accumulate the text
+    send the chunk to the UI
+when finished:
+    validate the complete output (if structured)
+    save to the log: tokens used, TTFT, total duration
+</code></pre>
+<h3>Use case to develop</h3>
+<p>A web page with a chat that shows the response in streaming. Implement the server-side flow that forwards the chunks to the browser, records TTFT and tokens used for each request, and handles cancellation by the user.</p>
+<h2>5. Provider abstraction</h2><figure class="fig"><div class="diagwrap"><svg class="diag" viewBox="0 0 720 250" role="img" aria-label="Provider abstraction"><defs><marker id="arr12" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk" d="M0,0 L10,5 L0,10 z"/></marker></defs><rect class="n" x="230" y="20" width="260" height="50" rx="10"/><text class="t" x="360" y="42" text-anchor="middle">Application</text><text class="s" x="360" y="62" text-anchor="middle">uses only the interface</text><line class="ar" x1="360" y1="70" x2="360" y2="100" marker-end="url(#arr12)"/><rect class="a" x="230" y="100" width="260" height="50" rx="10"/><text class="t" x="360" y="122" text-anchor="middle">ModelloLLM (interface)</text><text class="s" x="360" y="142" text-anchor="middle">genera(system, messages, options)</text><line class="ar" x1="330" y1="150" x2="120" y2="180" marker-end="url(#arr12)"/><line class="ar" x1="360" y1="150" x2="360" y2="180" marker-end="url(#arr12)"/><line class="ar" x1="390" y1="150" x2="600" y2="180" marker-end="url(#arr12)"/><rect class="n" x="20" y="180" width="200" height="56" rx="10"/><text class="t" x="120" y="213" text-anchor="middle">Provider A adapter</text><rect class="n" x="260" y="180" width="200" height="56" rx="10"/><text class="t" x="360" y="213" text-anchor="middle">Provider B adapter</text><rect class="n" x="500" y="180" width="200" height="56" rx="10"/><text class="t" x="600" y="202" text-anchor="middle">Open source adapter</text><text class="s" x="600" y="222" text-anchor="middle">via third-party provider</text></svg></div><figcaption>The rest of the application depends only on the interface, not on the provider</figcaption></figure>
+<p>An application that calls a provider's APIs directly in a thousand places becomes expensive to change. A good practice is to define an internal interface:</p>
+<pre><code class="language-python">from typing import Protocol
+
+class ModelloLLM(Protocol):
+    def genera(self, system: str, messaggi: list[dict], **opzioni) -&gt; &quot;Risposta&quot;: ...
+</code></pre>
+<p>Each provider (OpenAI, Anthropic, an open source model served through Groq or Together AI) has an implementation of this interface. The rest of the application depends only on the interface.</p>
+<p>Be careful, though, not to hide too much: the real differences (tool handling, message format, behavior with structured output, context limits) exist and must be tested. An abstraction that ignores these differences produces bugs that are hard to diagnose.</p>
+<h3>Comparing providers: criteria, not verdicts</h3>
+<p>When you compare providers and models, evaluate at least:</p>
+<ul>
+<li>quality on your task (not on generic benchmarks): measure with your own dataset, module 6;</li>
+<li>cost per completed task, not per token;</li>
+<li>p50 and p95 latency in your scenario;</li>
+<li>availability, rate limits and data region;</li>
+<li>support for tools, structured output, streaming, context size;</li>
+<li>contractual terms on data use.</li>
+</ul>
+<p>Exercise: choose three models (a closed one, an open one served by a third-party provider, a smaller and cheaper one) and define the comparison table with these criteria. You do not need to fill it in with real data: the point is to decide which measures matter before looking at the results.</p>
+<h2>6. Observability</h2>
+<p>Every call should leave a trace: model used, prompt version, input and output tokens, TTFT, total duration, outcome, number of retries, estimated cost. Without this data you do not know how much a feature costs or where it breaks.</p>
+<p>Practical advice: assign an identifier to each request and record it together with the response. When a user reports a problem, you will be able to reconstruct exactly what happened.</p>
+<h2>7. Cost optimization</h2>
+<p>The cost of an LLM feature is controlled through architecture choices, not just by negotiating the price.</p>
+<ul>
+<li><strong>Prompt caching</strong>: if many requests share a long, identical prefix (system prompt, documentation, few-shot examples), many providers let you reuse its computation at a reduced cost. Rule of thumb: put the stable parts at the beginning of the prompt and the variable ones at the end.</li>
+<li><strong>Batch processing</strong>: for non-interactive tasks (classifying 50,000 historical tickets) batch APIs cost less, in exchange for longer completion times.</li>
+<li><strong>Right model for the task</strong>: a small model to classify and route, the large one only for complex generation.</li>
+<li><strong>Output control</strong>: an appropriate <code>max_tokens</code>, instructions on length, structured output instead of free text when the recipient is a program.</li>
+<li><strong>Essential context</strong>: in a long chat, summarize the history instead of resending it in full.</li>
+</ul>
+<h3>Exercise</h3>
+<p>Revisit the cost estimate from section 2. Calculate the effect of three interventions: caching the system prompt, switching to a small model for 70% of the simple requests, a 30% reduction in output tokens. Which intervention pays off most in your case?</p>
+<h2>8. Security of keys, data and budget</h2>
+<ul>
+<li><strong>API keys</strong>: never in the code or in the repository. Use environment variables in development and a secret manager in production. One key per environment (development, test, production) makes revocation easier.</li>
+<li><strong>Client-side keys</strong>: a web or mobile application must never call the provider directly with the key. Calls go through your backend, which authenticates the user and applies the limits.</li>
+<li><strong>Budget</strong>: set spending limits on the provider and per-user limits in the backend. A bug in a loop can generate thousands of calls in a few minutes.</li>
+<li><strong>Data sent</strong>: everything in the prompt is sent to the provider. Check the contractual terms (retention, use for training, region) and consider masking personal data before sending. The topic is covered in depth in module 8.</li>
+</ul>
+<h3>Exercise</h3>
+<p>Write a small backend (for example FastAPI) that exposes <code>/chat</code> and forwards the request to the provider. Add: reading the key from an environment variable, a limit of ten requests per minute per user, rejection of requests with input above a token threshold.</p>
+<h2>Further reading</h2>
+<ul>
+<li><a href="https://docs.claude.com" target="_blank" rel="noopener">Documentation of the chosen providers</a>: sections on rate limits, errors, streaming and pricing (always check the current version).</li>
+<li><a href="https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/" target="_blank" rel="noopener">AWS Architecture Blog, &quot;Exponential Backoff And Jitter&quot;</a>: the theory of retry with backoff and jitter.</li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events" target="_blank" rel="noopener">MDN, &quot;Using server-sent events&quot;</a>: how streaming responses from the server work.</li>
+<li><a href="https://opentelemetry.io/docs/specs/semconv/gen-ai/" target="_blank" rel="noopener">OpenTelemetry, &quot;Semantic conventions for Generative AI&quot;</a>: standard conventions for tracing calls to models.</li>
+</ul>
+</main>
+<nav class="pn"><a href="modulo-2-fondamenti-prompt-engineering.html"><span>Previous</span>Prompt anatomy, few-shot, CoT, structured output</a><a class="next" href="modulo-4-sistema-rag.html"><span>Next</span>Ingestion, chunking, embedding, retrieval</a></nav>
+</body>
+</html>

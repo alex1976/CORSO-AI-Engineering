@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="color-scheme" content="dark">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Module 1: Introduction - What an LLM is, how it works and what a Harness is</title>
+<link rel="alternate" hreflang="it" href="../modulo-1-introduzione-llm-e-harness.html"><link rel="alternate" hreflang="en" href="modulo-1-introduzione-llm-e-harness.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#09090b;--card:#18181b;--surface-2:#1f1f23;--ink:#fafafa;--ink-2:#d4d4d8;--muted:#a1a1aa;--line:#27272a;--accent:#93c5fd;--accent-soft:#172033;--ok:#4ade80;--ok-soft:#0f2a1c;--warn:#fbbf24;--warn-soft:#2a2008;--code:#18181b;--shadow-sm:0 1px 2px rgba(0,0,0,.4);--shadow-md:0 4px 12px -2px rgba(0,0,0,.5);color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.625 Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--card);position:sticky;top:0;z-index:1;box-shadow:var(--shadow-sm)}
+.top a{color:var(--ink);font-weight:600;text-decoration:none;transition:color .2s ease-in-out}
+.top a:hover{color:var(--accent)}
+.top span{color:var(--muted);font-size:14px}
+.top{flex-wrap:wrap}
+.top-r{display:flex;align-items:center;gap:16px}
+.top .lang{display:flex;gap:4px}
+.top .lang a{color:var(--muted);font-size:13px;padding:4px 8px;border-radius:6px;transition:color .2s ease-in-out,background-color .2s ease-in-out}
+.top .lang a:hover{color:var(--ink);background:var(--surface-2)}
+.top .lang a[aria-current="page"]{color:var(--ink);background:var(--surface-2)}
+.page{max-width:768px;margin:0 auto;padding:32px 16px 16px}
+h1{font-size:clamp(2rem,1.6rem + 2vw,2.25rem);font-weight:700;line-height:1.2;letter-spacing:-.02em;margin:.25em 0 .5em}
+h2{font-size:1.5rem;font-weight:600;line-height:1.3;letter-spacing:-.01em;margin:48px 0 16px;padding-top:24px;border-top:1px solid var(--line)}
+h3{font-size:1.25rem;font-weight:600;line-height:1.35;margin:32px 0 12px;color:var(--ink-2)}
+ul,ol{padding-left:24px}
+li{margin:4px 0}
+a{color:var(--accent);text-underline-offset:3px;transition:color .2s ease-in-out}
+code{background:var(--code);padding:2px 6px;border-radius:6px;font-size:.9em;font-family:ui-monospace,"Cascadia Code",Consolas,monospace}
+pre{background:var(--code);padding:16px;border-radius:12px;overflow-x:auto;border:1px solid var(--line);font-size:14px;line-height:1.6;box-shadow:var(--shadow-sm)}
+pre code{background:none;padding:0;font-size:1em;border-radius:0}
+blockquote{margin:24px 0;padding:12px 16px;border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:0 8px 8px 0;color:var(--ink-2)}
+blockquote p{margin:4px 0}
+hr{border:0;border-top:1px solid var(--line);margin:48px 0}
+.tw{overflow-x:auto;margin:24px 0;border:1px solid var(--line);border-radius:12px;background:var(--card);box-shadow:var(--shadow-sm)}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:.95em}
+th,td{border-bottom:1px solid var(--line);padding:12px 16px;text-align:left;vertical-align:top}
+tr:last-child td{border-bottom:0}
+th{background:var(--surface-2);font-weight:600;color:var(--ink-2)}
+.fig{margin:32px 0;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:var(--shadow-sm)}
+.fig figcaption{color:var(--muted);font-size:14px;margin-top:12px;text-align:center}
+.diagwrap{overflow-x:auto}
+.diag{display:block;width:100%;min-width:520px;height:auto}
+.diag rect.n{fill:var(--card);stroke:var(--muted);stroke-width:1.2}
+.diag rect.a{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.5}
+.diag rect.g{fill:var(--ok-soft);stroke:var(--ok);stroke-width:1.5}
+.diag rect.w{fill:var(--warn-soft);stroke:var(--warn);stroke-width:1.5}
+.diag rect.b{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.2}
+.diag rect.ov{fill:var(--warn-soft);stroke:var(--warn);stroke-width:1.2;stroke-dasharray:4 3}
+.diag rect.dash{fill:none;stroke:var(--muted);stroke-width:1.3;stroke-dasharray:6 5}
+.diag text.t{fill:var(--ink);font:600 13.5px Inter,system-ui,sans-serif}
+.diag text.s{fill:var(--ink-2);font:12px Inter,system-ui,sans-serif}
+.diag line.ar,.diag path.ar{stroke:var(--muted);stroke-width:1.5;fill:none}
+.diag line.ac{stroke:var(--accent);stroke-width:1.5;stroke-dasharray:5 4}
+.diag .mk{fill:var(--muted)}
+.diag circle.dot.a{fill:var(--accent)}
+.diag circle.dot.w{fill:var(--warn)}
+.diag circle.q{fill:var(--ok);stroke:var(--card);stroke-width:2}
+.diag circle.v{fill:var(--accent);fill-opacity:.12;stroke:var(--accent);stroke-width:1.5}
+.diag circle.v2{fill:var(--warn);fill-opacity:.12;stroke:var(--warn);stroke-width:1.5}
+.diag circle.v3{fill:var(--ok);fill-opacity:.12;stroke:var(--ok);stroke-width:1.5}
+li input[type=checkbox]{margin-right:8px;accent-color:var(--accent)}
+ul:has(> li > input[type=checkbox]){list-style:none;padding-left:4px}
+.pn{display:flex;gap:16px;max-width:768px;margin:0 auto;padding:16px 16px 48px}
+.pn a{flex:1;padding:16px;border:1px solid var(--line);border-radius:12px;background:var(--card);text-decoration:none;color:var(--ink);box-shadow:var(--shadow-sm);transition:transform .2s ease-in-out,border-color .2s ease-in-out,box-shadow .2s ease-in-out}
+.pn a:hover{transform:translateY(-2px);border-color:var(--accent);box-shadow:var(--shadow-md)}
+.pn a span{display:block;color:var(--muted);font-size:14px;margin-bottom:4px}
+.pn a.next{text-align:right}
+.idx{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin-top:24px}
+.idx a{display:block;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;text-decoration:none;color:var(--ink);box-shadow:var(--shadow-sm);transition:transform .2s ease-in-out,border-color .2s ease-in-out,box-shadow .2s ease-in-out}
+.idx a:hover{transform:translateY(-2px);border-color:var(--accent);box-shadow:var(--shadow-md)}
+.idx a p{margin:4px 0 0;color:var(--muted);font-size:14px}
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{transition:none!important;transform:none!important}}
+</style>
+</head>
+<body>
+<header class="top"><a href="index.html">AI Engineering Course</a><div class="top-r"><span>Modules 1-8</span><nav class="lang" aria-label="Language"><a href="../modulo-1-introduzione-llm-e-harness.html" lang="it" hreflang="it">IT</a><a href="modulo-1-introduzione-llm-e-harness.html" lang="en" hreflang="en" aria-current="page">EN</a></nav></div></header>
+<main class="page"><h1>Module 1: Introduction - What an LLM is, how it works and what a Harness is</h1>
+<h2>Learning objectives</h2>
+<p>By the end of the module you will be able to:</p>
+<ul>
+<li>explain what an LLM does in a single sentence, without resorting to magic formulas;</li>
+<li>describe the path of a prompt from tokenization to the generated token;</li>
+<li>tell training and inference apart, and say which of the two happens when you use a chatbot;</li>
+<li>define a harness and identify its components in a product you use every day;</li>
+<li>explain why the LLM alone cannot &quot;do&quot; anything in the world and what it takes to turn it into an agent.</li>
+</ul>
+<h2>1. What an LLM is</h2>
+<p>A Large Language Model is a very large mathematical function. It receives a sequence of tokens and returns a probability distribution over the next token. Everything else (answering questions, writing code, summarizing contracts) is a consequence of this operation repeated over and over.</p>
+<h3>Tokens</h3>
+<p>The model sees neither words nor characters, but tokens: fragments of text produced by a tokenizer. In English a token corresponds on average to about 3-4 characters; in Italian, with longer words and inflectional endings, the ratio is lower and a text takes up more tokens.</p>
+<p>Example exercise: open an online tokenizer (there are several for the most widespread model families) and compare how many tokens the same sentence takes in Italian and in English. Note the difference: you will need it in module 3 to estimate costs and context limits.</p>
+<h3>Parameters</h3>
+<p>Parameters are the weights of the neural network, floating-point numbers learned during training. A model with billions of parameters does not contain a readable &quot;knowledge base&quot;: the knowledge is distributed across all the weights together.</p>
+<h2>2. How it works: the Transformer</h2><figure class="fig"><div class="diagwrap"><svg class="diag" viewBox="0 0 720 190" role="img" aria-label="Transformer pipeline"><defs><marker id="arr1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk" d="M0,0 L10,5 L0,10 z"/></marker></defs><rect class="n" x="8" y="40" width="103.16666666666667" height="70" rx="10"/><text class="t" x="59.583333333333336" y="62" text-anchor="middle">Token</text><text class="s" x="59.583333333333336" y="82" text-anchor="middle">numeric ID</text><line class="ar" x1="111.16666666666667" y1="75" x2="128.16666666666669" y2="75" marker-end="url(#arr1)"/><rect class="n" x="128.16666666666669" y="40" width="103.16666666666667" height="70" rx="10"/><text class="t" x="179.75000000000003" y="62" text-anchor="middle">Embedding</text><text class="s" x="179.75000000000003" y="82" text-anchor="middle">vector</text><line class="ar" x1="231.33333333333337" y1="75" x2="248.33333333333337" y2="75" marker-end="url(#arr1)"/><rect class="a" x="248.33333333333334" y="40" width="103.16666666666667" height="70" rx="10"/><text class="t" x="299.9166666666667" y="62" text-anchor="middle">Self-attention</text><text class="s" x="299.9166666666667" y="82" text-anchor="middle">context</text><line class="ar" x1="351.5" y1="75" x2="368.5" y2="75" marker-end="url(#arr1)"/><rect class="n" x="368.5" y="40" width="103.16666666666667" height="70" rx="10"/><text class="t" x="420.0833333333333" y="62" text-anchor="middle">Feed-forward</text><text class="s" x="420.0833333333333" y="82" text-anchor="middle">non-linear</text><line class="ar" x1="471.6666666666667" y1="75" x2="488.6666666666667" y2="75" marker-end="url(#arr1)"/><rect class="a" x="488.6666666666667" y="40" width="103.16666666666667" height="70" rx="10"/><text class="t" x="540.25" y="62" text-anchor="middle">N layers</text><text class="s" x="540.25" y="82" text-anchor="middle">repeated</text><line class="ar" x1="591.8333333333334" y1="75" x2="608.8333333333334" y2="75" marker-end="url(#arr1)"/><rect class="g" x="608.8333333333334" y="40" width="103.16666666666667" height="70" rx="10"/><text class="t" x="660.4166666666667" y="62" text-anchor="middle">Probability</text><text class="s" x="660.4166666666667" y="82" text-anchor="middle">over the vocabulary</text><text class="s" x="360" y="160" text-anchor="middle">Each step produces a single token: the cycle repeats for every generated token</text></svg></div><figcaption>From token to probability distribution: the same block of layers is repeated</figcaption></figure>
+<p>The dominant architecture is the Transformer. The flow, simplified, is this:</p>
+<ol>
+<li><strong>Embedding</strong>: each token becomes a vector of hundreds or thousands of numbers.</li>
+<li><strong>Self-attention</strong>: in every layer, each token computes how much to &quot;look at&quot; the other tokens in the sequence. This is how the word &quot;it&quot; picks up the meaning of the noun it refers to, even when that noun is far away in the sentence.</li>
+<li><strong>Feed-forward networks</strong>: apply non-linear transformations at every position.</li>
+<li><strong>Repeated layers</strong>: the process repeats tens or hundreds of times, refining the representation.</li>
+<li><strong>Output</strong>: the last vector is projected onto the vocabulary, producing a score for every possible token, which is then converted into probabilities.</li>
+</ol>
+<p>Key concept to remember: the model does not &quot;plan&quot; the whole sentence before writing it. It always computes a single step, the next token. The coherence you observe is the result of this step repeated over a very rich distribution.</p>
+<h2>3. How it is trained</h2><figure class="fig"><div class="diagwrap"><svg class="diag" viewBox="0 0 720 230" role="img" aria-label="Training phases"><defs><marker id="arr2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk" d="M0,0 L10,5 L0,10 z"/></marker></defs><rect class="n" x="20" y="40" width="200" height="130" rx="10"/><text class="t" x="120" y="62" text-anchor="middle">1. Pre-training</text><text class="s" x="120" y="82" text-anchor="middle">text from huge corpora</text><text class="s" x="120" y="99" text-anchor="middle">predict the next token</text><text class="s" x="120" y="116" text-anchor="middle">cost: thousands of GPUs</text><line class="ar" x1="220" y1="105" x2="260" y2="105" marker-end="url(#arr2)"/><rect class="n" x="260" y="40" width="200" height="130" rx="10"/><text class="t" x="360" y="62" text-anchor="middle">2. SFT fine-tuning</text><text class="s" x="360" y="82" text-anchor="middle">instruction-response pairs</text><text class="s" x="360" y="99" text-anchor="middle">written by people</text><text class="s" x="360" y="116" text-anchor="middle">learns the assistant format</text><line class="ar" x1="460" y1="105" x2="500" y2="105" marker-end="url(#arr2)"/><rect class="a" x="500" y="40" width="200" height="130" rx="10"/><text class="t" x="600" y="62" text-anchor="middle">3. Alignment</text><text class="s" x="600" y="82" text-anchor="middle">comparisons between responses</text><text class="s" x="600" y="99" text-anchor="middle">reward model</text><text class="s" x="600" y="116" text-anchor="middle">helpful, honest, safe</text><rect class="w" x="160" y="195" width="400" height="28" rx="10"/><text class="t" x="360" y="214" text-anchor="middle">During use (inference): the weights are fixed</text></svg></div><figcaption>The three phases of training and the usage phase</figcaption></figure>
+<p>Training happens in distinct phases, each with a different goal and cost.</p>
+<h3>Pre-training</h3>
+<p>The model reads huge amounts of text (web pages, books, code, documentation) and, at every position, has to predict the next token. The loss function (cross-entropy) measures how far the prediction is from the real token. After each batch of examples, the weights are corrected with backpropagation and gradient descent.</p>
+<p>The result is a base model: an excellent text completer that does not yet know how to hold a dialogue. If you write &quot;What is the capital of France?&quot; it might answer with more questions, because in the training text questions are often followed by other questions.</p>
+<h3>Supervised Fine-Tuning (SFT)</h3>
+<p>People write high-quality instruction-response pairs. The model is trained on these examples and learns the assistant format: answering, following instructions, using an appropriate tone.</p>
+<h3>Alignment (RLHF, RLAIF, preference optimization)</h3>
+<p>For each prompt the model generates several responses, and raters (humans or other models) indicate which one they prefer. A reward model learns these preferences and steers the optimization of the main model toward more helpful, honest and safe responses. This phase explains why a model refuses certain requests or admits it does not know.</p>
+<p>A point not to be confused: none of these phases happens while you use the model. When you chat, the weights are fixed.</p>
+<h3>Reflection exercise</h3>
+<p>A colleague says: &quot;The model learned from my conversation yesterday&quot;. In three lines, write why this is wrong and which mechanism, instead, makes it look like the model remembers (hint: think about the context and what gets sent again with every call).</p>
+<h2>4. How inference works</h2><figure class="fig"><div class="diagwrap"><svg class="diag" viewBox="0 0 720 230" role="img" aria-label="Autoregressive inference cycle"><defs><marker id="arr3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk" d="M0,0 L10,5 L0,10 z"/></marker></defs><rect class="n" x="8" y="40" width="118.4" height="64" rx="10"/><text class="t" x="67.2" y="62" text-anchor="middle">Prompt</text><text class="s" x="67.2" y="82" text-anchor="middle">text</text><line class="ar" x1="126.4" y1="72" x2="154.4" y2="72" marker-end="url(#arr3)"/><rect class="n" x="154.4" y="40" width="118.4" height="64" rx="10"/><text class="t" x="213.60000000000002" y="62" text-anchor="middle">Tokenization</text><text class="s" x="213.60000000000002" y="82" text-anchor="middle">numeric IDs</text><line class="ar" x1="272.8" y1="72" x2="300.8" y2="72" marker-end="url(#arr3)"/><rect class="a" x="300.8" y="40" width="118.4" height="64" rx="10"/><text class="t" x="360" y="62" text-anchor="middle">Prefill + KV cache</text><text class="s" x="360" y="82" text-anchor="middle">parallel computation</text><line class="ar" x1="419.20000000000005" y1="72" x2="447.20000000000005" y2="72" marker-end="url(#arr3)"/><rect class="a" x="447.20000000000005" y="40" width="118.4" height="64" rx="10"/><text class="t" x="506.40000000000003" y="62" text-anchor="middle">Sample token</text><text class="s" x="506.40000000000003" y="82" text-anchor="middle">temperature, top-p</text><line class="ar" x1="565.6" y1="72" x2="593.6" y2="72" marker-end="url(#arr3)"/><rect class="g" x="593.6" y="40" width="118.4" height="64" rx="10"/><text class="t" x="652.8000000000001" y="62" text-anchor="middle">Output token</text><text class="s" x="652.8000000000001" y="82" text-anchor="middle">one at a time</text><path class="ar" d="M652.8000000000001,104 L652.8000000000001,168 L506.40000000000003,168 L506.40000000000003,106" marker-end="url(#arr3)"/><text class="s" x="579.6" y="186" text-anchor="middle">the generated token re-enters the context</text><text class="s" x="360" y="218" text-anchor="middle">Stop: end-of-sequence token or output limit</text></svg></div><figcaption>The autoregressive cycle: one token per step, the result re-enters the context</figcaption></figure>
+<p>Inference is the use of the already trained model. Every request goes through these steps.</p>
+<ol>
+<li><strong>Tokenization</strong>: the prompt becomes a sequence of token IDs.</li>
+<li><strong>Prefill</strong>: the model processes all the prompt tokens in parallel. During this computation it saves the attention keys and values in a <strong>KV cache</strong>, so they do not have to be recomputed at every following token. The time taken by this phase affects perceived latency, in particular the time-to-first-token.</li>
+<li><strong>Autoregressive decoding</strong>: the model generates one token at a time. The chosen token is appended to the sequence and the cycle starts again. Every step requires a full computation: this is why long output takes more time.</li>
+<li><strong>Sampling</strong>: the next token is chosen from the distribution.<ul>
+<li>Low <em>temperature</em>: almost always picks the most probable token, stable and repeatable responses.</li>
+<li>High <em>temperature</em>: spreads the choice over less probable tokens as well, more variability and more risk of incoherence.</li>
+<li><em>Top-p</em> (nucleus sampling) and <em>top-k</em>: limit the set of candidates before sampling.</li>
+</ul>
+</li>
+<li><strong>Stop</strong>: generation ends with an end-of-sequence token, when the output limit is reached, or with a stop sequence defined by the caller.</li>
+</ol>
+<h3>Practical consequences you must remember</h3>
+<ul>
+<li><strong>Stateless</strong>: the model keeps nothing between one call and the next. Every request includes everything the model needs to know. The chat &quot;memory&quot; is the history that the application sends again at every turn.</li>
+<li><strong>Finite context window</strong>: whatever does not fit in the context does not exist for the model, neither for the current response nor for the following ones.</li>
+<li><strong>Hallucinations</strong>: the model produces the most plausible text, even when it does not have the information. There is no internal fact check: verification has to be designed from the outside (module 4 and module 6).</li>
+<li><strong>Non-determinism</strong>: with a temperature greater than zero the same prompt can produce different outputs. Keep this in mind in testing.</li>
+</ul>
+<h3>Use case to develop</h3>
+<p>Take a task you already do (for example summarizing the team's emails). Write the prompt as you would send it to the model, then note down: how many tokens you estimate for input and output, which temperature you would choose and why, and which missing piece of information could lead to a hallucination.</p>
+<h2>5. What a harness is</h2><figure class="fig"><div class="diagwrap"><svg class="diag" viewBox="0 0 720 300" role="img" aria-label="Components of a harness"><defs><marker id="arr4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk" d="M0,0 L10,5 L0,10 z"/></marker></defs><rect class="dash" x="20" y="20" width="680" height="260" rx="16"/><text class="t" x="40" y="44" text-anchor="start">HARNESS: builds, runs, controls</text><rect class="a" x="250" y="110" width="220" height="80" rx="10"/><text class="t" x="360" y="132" text-anchor="middle">LLM</text><text class="s" x="360" y="152" text-anchor="middle">decides and generates text</text><rect class="n" x="40" y="66" width="170" height="50" rx="10"/><text class="t" x="125" y="96" text-anchor="middle">System prompt</text><line class="ar" x1="210" y1="91" x2="250" y2="150" marker-end="url(#arr4)"/><rect class="n" x="40" y="141" width="170" height="50" rx="10"/><text class="t" x="125" y="171" text-anchor="middle">Context management</text><line class="ar" x1="210" y1="166" x2="250" y2="150" marker-end="url(#arr4)"/><rect class="n" x="40" y="216" width="170" height="50" rx="10"/><text class="t" x="125" y="246" text-anchor="middle">Tool registry</text><line class="ar" x1="210" y1="241" x2="250" y2="150" marker-end="url(#arr4)"/><rect class="n" x="510" y="66" width="170" height="50" rx="10"/><text class="t" x="595" y="96" text-anchor="middle">Execution loop</text><line class="ar" x1="510" y1="91" x2="470" y2="150" marker-end="url(#arr4)"/><rect class="n" x="510" y="141" width="170" height="50" rx="10"/><text class="t" x="595" y="171" text-anchor="middle">Permissions and security</text><line class="ar" x1="510" y1="166" x2="470" y2="150" marker-end="url(#arr4)"/><rect class="n" x="510" y="216" width="170" height="50" rx="10"/><text class="t" x="595" y="246" text-anchor="middle">Observability</text><line class="ar" x1="510" y1="241" x2="470" y2="150" marker-end="url(#arr4)"/><text class="s" x="360" y="240" text-anchor="middle">Tools, files, network, databases: executed by the harness</text></svg></div><figcaption>The harness surrounds the model: the model decides, the harness executes and controls</figcaption></figure>
+<p>A harness is the software that surrounds the model and orchestrates its use. The name conveys the idea: the model is the powerful horse, the harness is the tack that guides it, gives it a direction and keeps it from doing damage.</p>
+<p>A harness, in practice:</p>
+<ul>
+<li>builds the prompt, including the system prompt and the tool definitions;</li>
+<li>manages the context: what to include, when to summarize the history, when to truncate it;</li>
+<li>sends the request to the model and interprets its response;</li>
+<li>executes the tools requested by the model (tool calling) and puts the results back into the context;</li>
+<li>repeats the cycle until the task is completed or a limit is reached;</li>
+<li>applies permissions, validations, logging, and handling of errors and rate limits.</li>
+</ul>
+<p>Concrete examples: a chat assistant with retrieval over documents, a coding agent that reads and edits files, a bot that queries a database on request. In all these cases there is a program around the model that does the work &quot;outside the text&quot;.</p>
+<h3>Typical components</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Question it answers</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>System prompt</td>
+<td>Who is the assistant and which rules must it follow?</td>
+</tr>
+<tr>
+<td>Context management</td>
+<td>Which information goes into the window, and in what order?</td>
+</tr>
+<tr>
+<td>Tool registry</td>
+<td>Which actions can the model ask to perform, and with which parameters?</td>
+</tr>
+<tr>
+<td>Execution loop</td>
+<td>When to call the model again and when to stop?</td>
+</tr>
+<tr>
+<td>Security and permissions</td>
+<td>Which actions require confirmation or are forbidden?</td>
+</tr>
+<tr>
+<td>Observability</td>
+<td>What happened, how much did it cost, where did it go wrong?</td>
+</tr>
+</tbody></table></div>
+<h2>6. The relationship between LLM and harness</h2><figure class="fig"><div class="diagwrap"><svg class="diag" viewBox="0 0 720 230" role="img" aria-label="Harness-LLM cycle"><defs><marker id="arr5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk" d="M0,0 L10,5 L0,10 z"/></marker></defs><rect class="n" x="60" y="40" width="240" height="60" rx="10"/><text class="t" x="180" y="62" text-anchor="middle">1. Harness</text><text class="s" x="180" y="82" text-anchor="middle">sends context and tool definitions</text><rect class="a" x="420" y="40" width="240" height="60" rx="10"/><text class="t" x="540" y="62" text-anchor="middle">2. LLM</text><text class="s" x="540" y="82" text-anchor="middle">responds: call X(Y)</text><rect class="n" x="420" y="140" width="240" height="60" rx="10"/><text class="t" x="540" y="162" text-anchor="middle">3. Harness</text><text class="s" x="540" y="182" text-anchor="middle">executes X on the real system</text><rect class="g" x="60" y="140" width="240" height="60" rx="10"/><text class="t" x="180" y="162" text-anchor="middle">4. Harness + LLM</text><text class="s" x="180" y="182" text-anchor="middle">sends the result back</text><line class="ar" x1="300" y1="70" x2="420" y2="70" marker-end="url(#arr5)"/><line class="ar" x1="540" y1="100" x2="540" y2="140" marker-end="url(#arr5)"/><line class="ar" x1="420" y1="170" x2="300" y2="170" marker-end="url(#arr5)"/><line class="ar" x1="180" y1="140" x2="180" y2="100" marker-end="url(#arr5)"/><text class="s" x="360" y="124" text-anchor="middle">cycle repeated until the task is completed</text></svg></div><figcaption>The cycle between harness and model for a tool call</figcaption></figure>
+<p>The key distinction is this: the LLM decides, the harness acts.</p>
+<p>The model produces only text. When it &quot;uses a tool&quot;, it actually generates structured text describing the call (tool name and arguments). It is the harness that recognizes that request, actually executes the function and sends the result back to the model.</p>
+<p>Typical cycle, step by step:</p>
+<ol>
+<li>The harness sends the model: instructions, conversation history, tool definitions.</li>
+<li>The model responds: &quot;call <code>cerca_ordine</code> with <code>id = 4411</code>&quot;.</li>
+<li>The harness executes <code>cerca_ordine(4411)</code> on the real system.</li>
+<li>The harness sends the result back to the model, for example <code>{&quot;stato&quot;: &quot;spedito&quot;, &quot;data&quot;: &quot;2026-11-12&quot;}</code>.</li>
+<li>The model generates the final response for the user, or asks for another tool.</li>
+</ol>
+<p>Important consequences:</p>
+<ul>
+<li><strong>Same model, different harness</strong>: two products with the same LLM can behave very differently, because the prompt, tools, context management and controls change.</li>
+<li><strong>The model is not solely responsible for security</strong>: a malicious instruction in the data can lead it to request a dangerous action. It is the harness that must limit what can be executed.</li>
+<li><strong>Quality depends on the pair</strong>: if the model is good but the harness provides the wrong context, the result will be wrong. The same holds the other way around.</li>
+</ul>
+<h3>Exercise</h3>
+<p>Choose an application that uses an LLM (a writing assistant, a website chatbot, a coding tool). List: what the model does, what the harness does, which tools are available, and where the boundary between decision and action lies. If you cannot identify it, you are probably looking only at the model and not at the harness.</p>
+<h2>7. Model families and selection criteria</h2>
+<p>There is no such thing as &quot;the&quot; best model: there is the model suited to a task, a budget and a latency constraint. It is worth knowing the main families.</p>
+<h3>Closed and open-weight</h3>
+<ul>
+<li><strong>Closed models</strong>: accessible only through the provider's API. They usually offer the highest capabilities and no infrastructure to manage, but the data passes through the provider and the version can be retired.</li>
+<li><strong>Open-weight models</strong>: the weights can be downloaded. They can be run on your own servers or through third-party providers (for example Groq or Together AI). They give control over data, version and costs at volume, but require operational skills.</li>
+</ul>
+<h3>Size and cost</h3>
+<p>Large models are more capable on complex tasks; small ones are faster and cheaper and often sufficient for classifying, extracting fields or routing requests. A common architecture uses a small model for the simple steps and a large one only where needed (see the routing pattern in module 7).</p>
+<h3>Reasoning models</h3>
+<p>Some models generate internal reasoning before the final answer (often called thinking or reasoning). It is the Chain of Thought of module 2 built into the training. They improve on math, code and multi-step problems, but consume more tokens and increase latency. Many APIs let you adjust how much &quot;reasoning budget&quot; to grant.</p>
+<h3>Multimodality</h3>
+<p>Many models accept images, PDFs and sometimes audio as input. This changes how a RAG is designed: a manual with technical diagrams can be read in its figures too, not just in the extracted text.</p>
+<h3>Context window</h3>
+<p>The window ranges from tens of thousands to over a million tokens. A large window does not remove the need for retrieval: it costs more, slows things down, and the quality of attention tends to drop when the context is full of irrelevant material.</p>
+<h3>Selection table</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Need</th>
+<th>Guidance</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>High-volume classification</td>
+<td>Small model, low temperature, structured output</td>
+</tr>
+<tr>
+<td>Answers over company documents</td>
+<td>Medium or large model + RAG</td>
+</tr>
+<tr>
+<td>Complex multi-step analysis</td>
+<td>Reasoning model, controlled token budget</td>
+</tr>
+<tr>
+<td>Data that cannot leave the company</td>
+<td>Open-weight on your own infrastructure, or specific contractual agreements</td>
+</tr>
+<tr>
+<td>Very low latency</td>
+<td>Small model, streaming, short prompts and cache</td>
+</tr>
+</tbody></table></div>
+<h3>Exercise</h3>
+<p>For three use cases from your own work, fill in the table: task, estimated daily volume, acceptable latency, data sensitivity, chosen model family and rationale. You will come back to this table in module 3 to estimate costs and in module 8 for production choices.</p>
+<h2>Further reading</h2>
+<ul>
+<li><a href="https://arxiv.org/abs/1706.03762" target="_blank" rel="noopener">Vaswani et al., &quot;Attention Is All You Need&quot; (2017)</a>: the Transformer architecture.</li>
+<li><a href="https://arxiv.org/abs/2203.02155" target="_blank" rel="noopener">Ouyang et al., &quot;Training language models to follow instructions with human feedback&quot; (2022)</a>: the role of alignment.</li>
+<li><a href="https://jalammar.github.io/illustrated-transformer/" target="_blank" rel="noopener">Jay Alammar, &quot;The Illustrated Transformer&quot;</a>: a visual, step-by-step explanation of the Transformer.</li>
+<li><a href="https://www.youtube.com/watch?v=zjkBMFhNj_g" target="_blank" rel="noopener">Andrej Karpathy, &quot;Intro to Large Language Models&quot; (video, 2023)</a>: an overview of training, inference and the limits of models.</li>
+<li><a href="https://huggingface.co/learn/llm-course" target="_blank" rel="noopener">Hugging Face, &quot;LLM Course&quot;</a>: a free course on tokenization, models and inference.</li>
+</ul>
+</main>
+<nav class="pn"><span></span><a class="next" href="modulo-2-fondamenti-prompt-engineering.html"><span>Next</span>Anatomy of a prompt, few-shot, CoT, structured output</a></nav>
+</body>
+</html>

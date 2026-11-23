@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="color-scheme" content="dark">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Modulo 7: Pattern di Sviluppo Agentico</title>
+<link rel="alternate" hreflang="it" href="modulo-7-pattern-agentici.html"><link rel="alternate" hreflang="en" href="en/modulo-7-pattern-agentici.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#09090b;--card:#18181b;--surface-2:#1f1f23;--ink:#fafafa;--ink-2:#d4d4d8;--muted:#a1a1aa;--line:#27272a;--accent:#93c5fd;--accent-soft:#172033;--ok:#4ade80;--ok-soft:#0f2a1c;--warn:#fbbf24;--warn-soft:#2a2008;--code:#18181b;--shadow-sm:0 1px 2px rgba(0,0,0,.4);--shadow-md:0 4px 12px -2px rgba(0,0,0,.5);color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.625 Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--card);position:sticky;top:0;z-index:1;box-shadow:var(--shadow-sm)}
+.top a{color:var(--ink);font-weight:600;text-decoration:none;transition:color .2s ease-in-out}
+.top a:hover{color:var(--accent)}
+.top span{color:var(--muted);font-size:14px}
+.top{flex-wrap:wrap}
+.top-r{display:flex;align-items:center;gap:16px}
+.top .lang{display:flex;gap:4px}
+.top .lang a{color:var(--muted);font-size:13px;padding:4px 8px;border-radius:6px;transition:color .2s ease-in-out,background-color .2s ease-in-out}
+.top .lang a:hover{color:var(--ink);background:var(--surface-2)}
+.top .lang a[aria-current="page"]{color:var(--ink);background:var(--surface-2)}
+.page{max-width:768px;margin:0 auto;padding:32px 16px 16px}
+h1{font-size:clamp(2rem,1.6rem + 2vw,2.25rem);font-weight:700;line-height:1.2;letter-spacing:-.02em;margin:.25em 0 .5em}
+h2{font-size:1.5rem;font-weight:600;line-height:1.3;letter-spacing:-.01em;margin:48px 0 16px;padding-top:24px;border-top:1px solid var(--line)}
+h3{font-size:1.25rem;font-weight:600;line-height:1.35;margin:32px 0 12px;color:var(--ink-2)}
+ul,ol{padding-left:24px}
+li{margin:4px 0}
+a{color:var(--accent);text-underline-offset:3px;transition:color .2s ease-in-out}
+code{background:var(--code);padding:2px 6px;border-radius:6px;font-size:.9em;font-family:ui-monospace,"Cascadia Code",Consolas,monospace}
+pre{background:var(--code);padding:16px;border-radius:12px;overflow-x:auto;border:1px solid var(--line);font-size:14px;line-height:1.6;box-shadow:var(--shadow-sm)}
+pre code{background:none;padding:0;font-size:1em;border-radius:0}
+blockquote{margin:24px 0;padding:12px 16px;border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:0 8px 8px 0;color:var(--ink-2)}
+blockquote p{margin:4px 0}
+hr{border:0;border-top:1px solid var(--line);margin:48px 0}
+.tw{overflow-x:auto;margin:24px 0;border:1px solid var(--line);border-radius:12px;background:var(--card);box-shadow:var(--shadow-sm)}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:.95em}
+th,td{border-bottom:1px solid var(--line);padding:12px 16px;text-align:left;vertical-align:top}
+tr:last-child td{border-bottom:0}
+th{background:var(--surface-2);font-weight:600;color:var(--ink-2)}
+.fig{margin:32px 0;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:var(--shadow-sm)}
+.fig figcaption{color:var(--muted);font-size:14px;margin-top:12px;text-align:center}
+.diagwrap{overflow-x:auto}
+.diag{display:block;width:100%;min-width:520px;height:auto}
+.diag rect.n{fill:var(--card);stroke:var(--muted);stroke-width:1.2}
+.diag rect.a{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.5}
+.diag rect.g{fill:var(--ok-soft);stroke:var(--ok);stroke-width:1.5}
+.diag rect.w{fill:var(--warn-soft);stroke:var(--warn);stroke-width:1.5}
+.diag rect.b{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.2}
+.diag rect.ov{fill:var(--warn-soft);stroke:var(--warn);stroke-width:1.2;stroke-dasharray:4 3}
+.diag rect.dash{fill:none;stroke:var(--muted);stroke-width:1.3;stroke-dasharray:6 5}
+.diag text.t{fill:var(--ink);font:600 13.5px Inter,system-ui,sans-serif}
+.diag text.s{fill:var(--ink-2);font:12px Inter,system-ui,sans-serif}
+.diag line.ar,.diag path.ar{stroke:var(--muted);stroke-width:1.5;fill:none}
+.diag line.ac{stroke:var(--accent);stroke-width:1.5;stroke-dasharray:5 4}
+.diag .mk{fill:var(--muted)}
+.diag circle.dot.a{fill:var(--accent)}
+.diag circle.dot.w{fill:var(--warn)}
+.diag circle.q{fill:var(--ok);stroke:var(--card);stroke-width:2}
+.diag circle.v{fill:var(--accent);fill-opacity:.12;stroke:var(--accent);stroke-width:1.5}
+.diag circle.v2{fill:var(--warn);fill-opacity:.12;stroke:var(--warn);stroke-width:1.5}
+.diag circle.v3{fill:var(--ok);fill-opacity:.12;stroke:var(--ok);stroke-width:1.5}
+li input[type=checkbox]{margin-right:8px;accent-color:var(--accent)}
+ul:has(> li > input[type=checkbox]){list-style:none;padding-left:4px}
+.pn{display:flex;gap:16px;max-width:768px;margin:0 auto;padding:16px 16px 48px}
+.pn a{flex:1;padding:16px;border:1px solid var(--line);border-radius:12px;background:var(--card);text-decoration:none;color:var(--ink);box-shadow:var(--shadow-sm);transition:transform .2s ease-in-out,border-color .2s ease-in-out,box-shadow .2s ease-in-out}
+.pn a:hover{transform:translateY(-2px);border-color:var(--accent);box-shadow:var(--shadow-md)}
+.pn a span{display:block;color:var(--muted);font-size:14px;margin-bottom:4px}
+.pn a.next{text-align:right}
+.idx{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin-top:24px}
+.idx a{display:block;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;text-decoration:none;color:var(--ink);box-shadow:var(--shadow-sm);transition:transform .2s ease-in-out,border-color .2s ease-in-out,box-shadow .2s ease-in-out}
+.idx a:hover{transform:translateY(-2px);border-color:var(--accent);box-shadow:var(--shadow-md)}
+.idx a p{margin:4px 0 0;color:var(--muted);font-size:14px}
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{transition:none!important;transform:none!important}}
+</style>
+</head>
+<body>
+<header class="top"><a href="index.html">Corso AI Engineering</a><div class="top-r"><span>Moduli 1-8</span><nav class="lang" aria-label="Lingua"><a href="modulo-7-pattern-agentici.html" lang="it" hreflang="it" aria-current="page">IT</a><a href="en/modulo-7-pattern-agentici.html" lang="en" hreflang="en">EN</a></nav></div></header>
+<main class="page"><h1>Modulo 7: Pattern di Sviluppo Agentico</h1>
+<h2>Obiettivi di apprendimento</h2>
+<p>Al termine del modulo sarai in grado di:</p>
+<ul>
+<li>distinguere un agente da un workflow e scegliere il livello di autonomia adeguato al problema;</li>
+<li>implementare il loop ReAct con tool calling e limiti di esecuzione;</li>
+<li>scegliere tra i pattern di composizione (chaining, routing, parallelizzazione, orchestrator-workers, evaluator-optimizer);</li>
+<li>progettare i meccanismi di controllo: conferme umane, permessi, guardrail, osservabilità;</li>
+<li>gestire memoria e contesto di un agente per compiti lunghi;</li>
+<li>valutare quando un sistema multi-agente è giustificato e quando è complessità inutile.</li>
+</ul>
+<h2>1. Agente o workflow?</h2><figure class="fig"><div class="diagwrap"><svg class="diag" viewBox="0 0 720 270" role="img" aria-label="Workflow contro agente"><defs><marker id="arr23" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk" d="M0,0 L10,5 L0,10 z"/></marker></defs><rect class="n" x="10" y="10" width="350" height="250" rx="12"/><text class="t" x="25" y="36" text-anchor="start">Workflow: percorso fisso</text><rect class="n" x="25" y="80" width="72" height="44" rx="10"/><text class="t" x="61" y="107" text-anchor="middle">Estrai</text><line class="ar" x1="97" y1="102" x2="106" y2="102" marker-end="url(#arr23)"/><rect class="n" x="106" y="80" width="72" height="44" rx="10"/><text class="t" x="142" y="107" text-anchor="middle">Valida</text><line class="ar" x1="178" y1="102" x2="187" y2="102" marker-end="url(#arr23)"/><rect class="n" x="187" y="80" width="72" height="44" rx="10"/><text class="t" x="223" y="107" text-anchor="middle">Salva</text><line class="ar" x1="259" y1="102" x2="268" y2="102" marker-end="url(#arr23)"/><rect class="n" x="268" y="80" width="72" height="44" rx="10"/><text class="t" x="304" y="107" text-anchor="middle">Notifica</text><text class="s" x="25" y="160" text-anchor="start">Il codice decide l'ordine dei passi</text><rect class="n" x="370" y="10" width="340" height="250" rx="12"/><text class="t" x="385" y="36" text-anchor="start">Agente: percorso deciso dal modello</text><rect class="a" x="500" y="70" width="120" height="50" rx="10"/><text class="t" x="560" y="100" text-anchor="middle">LLM</text><rect class="n" x="385" y="190" width="96" height="44" rx="10"/><text class="t" x="433" y="217" text-anchor="middle">Ordini</text><rect class="n" x="497" y="190" width="96" height="44" rx="10"/><text class="t" x="545" y="217" text-anchor="middle">Contratti</text><rect class="n" x="609" y="190" width="96" height="44" rx="10"/><text class="t" x="657" y="217" text-anchor="middle">Anagrafica</text><line class="ar" x1="560" y1="120" x2="433" y2="190" marker-end="url(#arr23)"/><line class="ar" x1="560" y1="120" x2="545" y2="190" marker-end="url(#arr23)"/><line class="ar" x1="560" y1="120" x2="657" y2="190" marker-end="url(#arr23)"/><text class="s" x="385" y="260" text-anchor="start">Strumenti scelti a runtime, passo dopo passo</text></svg></div><figcaption>Workflow: il codice fissa i passi. Agente: il modello sceglie gli strumenti</figcaption></figure>
+<p>Il punto di partenza è una distinzione che evita molti errori di progettazione:</p>
+<ul>
+<li><strong>Workflow</strong>: il percorso dei passaggi è definito dal codice. L&#39;LLM esegue singoli passi (classifica, estrae, riassume). Il flusso è prevedibile, testabile, economico.</li>
+<li><strong>Agente</strong>: l&#39;LLM decide dinamicamente quali strumenti usare, in quale ordine, quando fermarsi. Il flusso emerge dalla conversazione con gli strumenti.</li>
+</ul>
+<p>Un agente non è &quot;più intelligente&quot; di un workflow. È più flessibile e meno prevedibile. Quando il percorso è noto, il workflow vince quasi sempre.</p>
+<p>Esempio. Per l&#39;elaborazione di una fattura ricevuta via email:</p>
+<ul>
+<li><em>Workflow</em>: estrai il PDF → estrai i campi → valida l&#39;IVA → salva nel gestionale → notifica. Ogni passo è fisso.</li>
+<li><em>Agente</em>: ricevi la richiesta &quot;controlla questa fattura e segnala se qualcosa non torna&quot;. Il percorso dipende da ciò che trovi: se il fornitore non è in anagrafica cerchi un ordine, se l&#39;importo non corrisponde cerchi il contratto, eccetera.</li>
+</ul>
+<p>Esercizio: prendi cinque attività del tuo lavoro e classificale come workflow, agente o &quot;non serve un LLM&quot;. Per ogni agente, spiega quale decisione il modello prende che il codice non può prendere in anticipo.</p>
+<h2>2. Il loop base: ReAct e tool use</h2><figure class="fig"><div class="diagwrap"><svg class="diag" viewBox="0 0 720 215" role="img" aria-label="Loop ReAct"><defs><marker id="arr24" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk" d="M0,0 L10,5 L0,10 z"/></marker></defs><rect class="n" x="8" y="60" width="153.5" height="60" rx="10"/><text class="t" x="84.75" y="82" text-anchor="middle">Ragiona</text><text class="s" x="84.75" y="102" text-anchor="middle">decide il passo</text><line class="ar" x1="161.5" y1="90" x2="191.5" y2="90" marker-end="url(#arr24)"/><rect class="a" x="191.5" y="60" width="153.5" height="60" rx="10"/><text class="t" x="268.25" y="82" text-anchor="middle">Agisci</text><text class="s" x="268.25" y="102" text-anchor="middle">chiama un tool</text><line class="ar" x1="345" y1="90" x2="375" y2="90" marker-end="url(#arr24)"/><rect class="n" x="375" y="60" width="153.5" height="60" rx="10"/><text class="t" x="451.75" y="82" text-anchor="middle">Osserva</text><text class="s" x="451.75" y="102" text-anchor="middle">legge il risultato</text><line class="ar" x1="528.5" y1="90" x2="558.5" y2="90" marker-end="url(#arr24)"/><rect class="g" x="558.5" y="60" width="153.5" height="60" rx="10"/><text class="t" x="635.25" y="82" text-anchor="middle">Risposta finale</text><text class="s" x="635.25" y="102" text-anchor="middle">fine del ciclo</text><path class="ar" d="M451.75,120 L451.75,170 L84.75,170 L84.75,122" marker-end="url(#arr24)"/><text class="s" x="268" y="192" text-anchor="middle">nuovo passo: il modello ragiona di nuovo</text></svg></div><figcaption>Il loop ReAct: ragiona, agisce, osserva, finché non risponde</figcaption></figure>
+<p>ReAct (Reason + Act) è il ciclo su cui si basa la maggior parte degli agenti. Il modello alterna tre fasi:</p>
+<ol>
+<li><strong>Ragionamento</strong>: decide il prossimo passo.</li>
+<li><strong>Azione</strong>: chiama uno strumento con argomenti strutturati.</li>
+<li><strong>Osservazione</strong>: riceve il risultato e aggiorna la sua comprensione.</li>
+</ol>
+<p>Il ciclo termina quando il modello produce una risposta finale invece di una chiamata a uno strumento.</p>
+<h3>Implementazione minima</h3>
+<pre><code class="language-python">def esegui_agente(llm, strumenti: dict, richiesta: str, max_passi: int = 8) -&gt; str:
+    messaggi = [{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: richiesta}]
+
+    for _ in range(max_passi):
+        risposta = llm.genera(
+            system=SYSTEM_PROMPT,
+            messaggi=messaggi,
+            strumenti=descrizioni(strumenti),   # nome, scopo, schema dei parametri
+        )
+
+        if not risposta.chiamate_strumenti:
+            return risposta.testo               # risposta finale
+
+        for chiamata in risposta.chiamate_strumenti:
+            funzione = strumenti[chiamata.nome]
+            try:
+                esito = funzione(**chiamata.argomenti)
+            except Exception as errore:
+                esito = {&quot;errore&quot;: str(errore)}  # il modello può correggersi
+            messaggi.append({&quot;role&quot;: &quot;tool&quot;, &quot;nome&quot;: chiamata.nome, &quot;contenuto&quot;: esito})
+
+    raise RuntimeError(&quot;Limite di passi raggiunto senza risposta finale&quot;)
+</code></pre>
+<p>Elementi da notare:</p>
+<ul>
+<li>il <strong>limite di passi</strong> è obbligatorio: senza di esso un loop può non terminare e consumare budget;</li>
+<li>gli <strong>errori degli strumenti</strong> tornano al modello come osservazione, non fanno crollare il loop: spesso il modello corregge gli argomenti;</li>
+<li>la <strong>descrizione degli strumenti</strong> è parte del prompt. Un nome vago o uno schema ambiguo producono chiamate sbagliate.</li>
+</ul>
+<h3>Progettare uno strumento</h3>
+<p>Uno strumento ben progettato:</p>
+<ul>
+<li>ha un nome verbo-oggetto chiaro (<code>cerca_ordine</code>, non <code>gestisci</code>);</li>
+<li>descrive quando usarlo e quando non usarlo;</li>
+<li>ha parametri tipizzati con valori ammessi espliciti;</li>
+<li>restituisce risultati compatti e strutturati, non interi database;</li>
+<li>non ha effetti collaterali nascosti: un&#39;azione irreversibile deve essere dichiarata come tale.</li>
+</ul>
+<p>Esercizio: progetta tre strumenti per un assistente di helpdesk (ad esempio <code>cerca_cliente</code>, <code>leggi_stato_ticket</code>, <code>apri_ticket</code>). Scrivi per ciascuno la descrizione per il modello e lo schema dei parametri. Poi chiediti: quale di questi può fare danni se il modello lo usa male?</p>
+<h2>3. Pattern di composizione</h2>
+<p>Non tutti i problemi richiedono un agente. I pattern seguenti sono mattoni da combinare.</p>
+<h3>Prompt chaining</h3>
+<p>Il compito è spezzato in passi sequenziali, ciascuno con un prompt dedicato. L&#39;output di un passo è l&#39;input del successivo.</p>
+<p>Caso d&#39;uso: generare una risposta a una recensione negativa in tre passi: (1) classifica il problema, (2) verifica nelle policy quale rimedio applicare, (3) scrive la risposta nel tono del brand. Ogni passo è testabile separatamente.</p>
+<h3>Routing</h3>
+<p>Un classificatore smista la richiesta verso un percorso specializzato: un prompt, un modello più piccolo o più economico per i casi semplici, un flusso dedicato per i casi sensibili.</p>
+<p>Caso d&#39;uso: un helpdesk che manda le domande sulle fatture al RAG documentale, le richieste di rimborso a un workflow con approvazione, e le richieste fuori ambito a un operatore umano.</p>
+<h3>Parallelizzazione</h3>
+<p>Più chiamate indipendenti vengono eseguite in parallelo:</p>
+<ul>
+<li><strong>Sectioning</strong>: il compito è diviso in parti indipendenti (analizzare sezioni diverse di un contratto) e i risultati sono aggregati.</li>
+<li><strong>Voting</strong>: lo stesso compito è eseguito più volte, con risultati confrontati o votati, per aumentare l&#39;affidabilità su decisioni critiche.</li>
+</ul>
+<h3>Orchestrator-workers</h3><figure class="fig"><div class="diagwrap"><svg class="diag" viewBox="0 0 720 260" role="img" aria-label="Orchestrator-workers"><defs><marker id="arr25" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk" d="M0,0 L10,5 L0,10 z"/></marker></defs><rect class="a" x="250" y="20" width="220" height="50" rx="10"/><text class="t" x="360" y="42" text-anchor="middle">Orchestratore</text><text class="s" x="360" y="62" text-anchor="middle">scompone e sintetizza</text><line class="ar" x1="360" y1="70" x2="120" y2="120" marker-end="url(#arr25)"/><line class="ar" x1="360" y1="70" x2="360" y2="120" marker-end="url(#arr25)"/><line class="ar" x1="360" y1="70" x2="600" y2="120" marker-end="url(#arr25)"/><rect class="n" x="20" y="120" width="200" height="56" rx="10"/><text class="t" x="120" y="142" text-anchor="middle">Worker A</text><text class="s" x="120" y="162" text-anchor="middle">requisiti tecnici</text><rect class="n" x="260" y="120" width="200" height="56" rx="10"/><text class="t" x="360" y="142" text-anchor="middle">Worker B</text><text class="s" x="360" y="162" text-anchor="middle">requisiti economici</text><rect class="n" x="500" y="120" width="200" height="56" rx="10"/><text class="t" x="600" y="142" text-anchor="middle">Worker C</text><text class="s" x="600" y="162" text-anchor="middle">scadenze e penali</text><line class="ar" x1="120" y1="176" x2="330" y2="210" marker-end="url(#arr25)"/><line class="ar" x1="360" y1="176" x2="360" y2="210" marker-end="url(#arr25)"/><line class="ar" x1="600" y1="176" x2="390" y2="210" marker-end="url(#arr25)"/><rect class="g" x="250" y="210" width="220" height="40" rx="10"/><text class="t" x="360" y="235" text-anchor="middle">Sintesi finale</text></svg></div><figcaption>Un orchestratore delega a worker specializzati e sintetizza i risultati</figcaption></figure>
+<p>Un orchestratore analizza la richiesta, decide quali sotto-task servono e li assegna a worker, che possono essere agenti specializzati o chiamate semplici. L&#39;orchestratore sintetizza i risultati.</p>
+<p>Caso d&#39;uso: analisi di un bando di gara. L&#39;orchestratore delega ai worker: requisiti tecnici, requisiti economici, scadenze, penali. Ogni worker lavora su un sottoinsieme del documento, l&#39;orchestratore produce la sintesi.</p>
+<h3>Evaluator-optimizer</h3>
+<p>Un generatore produce una bozza, un valutatore la confronta con criteri espliciti e rimanda un feedback. Il ciclo continua fino a un criterio di accettazione o a un limite di iterazioni.</p>
+<p>Caso d&#39;uso: generare una descrizione prodotto per un e-commerce, con valutatore che controlla lunghezza, presenza delle caratteristiche obbligatorie, assenza di claim non verificati. Il valutatore dovrebbe usare controlli deterministici dove possibile (lunghezza, parole vietate) e il modello solo per i criteri semantici.</p>
+<h2>4. Pattern di controllo e affidabilità</h2><figure class="fig"><div class="diagwrap"><svg class="diag" viewBox="0 0 720 280" role="img" aria-label="Controlli a strati"><defs><marker id="arr26" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk" d="M0,0 L10,5 L0,10 z"/></marker></defs><rect class="dash" x="20" y="20" width="680" height="240" rx="14"/><text class="t" x="34" y="42" text-anchor="start">Limiti: passi massimi, budget, timeout</text><rect class="dash" x="60" y="50" width="600" height="180" rx="14"/><text class="t" x="74" y="72" text-anchor="start">Permessi: minimo privilegio</text><rect class="dash" x="100" y="80" width="520" height="120" rx="14"/><text class="t" x="114" y="102" text-anchor="start">Guardrail: schemi di input e output</text><rect class="a" x="140" y="110" width="440" height="60" rx="14"/><text class="t" x="154" y="132" text-anchor="start">Conferma umana</text><text class="t" x="360" y="160" text-anchor="middle">Azione sensibile (es. invio email)</text></svg></div><figcaption>Controlli a strati: ogni azione attraversa tutte le barriere prima di essere eseguita</figcaption></figure>
+<p>Un agente che agisce nel mondo (invia email, modifica dati, esegue codice) richiede controlli. Il modello non deve essere l&#39;unico responsabile della sicurezza.</p>
+<h3>Human-in-the-loop</h3>
+<p>L&#39;agente si ferma e chiede conferma prima di azioni irreversibili o costose. Il punto di approvazione va progettato:</p>
+<ul>
+<li>quali azioni richiedono conferma (invio, cancellazione, pagamento, modifica di permessi);</li>
+<li>che cosa vede l&#39;approvatore (azione proposta, motivazione, dati coinvolti);</li>
+<li>che cosa succede se nessuno approva entro un tempo (annullamento, non esecuzione di default).</li>
+</ul>
+<p>Errore comune: chiedere conferma per ogni passo, fino a rendere l&#39;agente inutile. Chiedi conferma per le azioni che hanno effetti esterni o irreversibili, non per la lettura.</p>
+<h3>Permessi e minimo privilegio</h3><figure class="fig"><div class="diagwrap"><svg class="diag" viewBox="0 0 720 350" role="img" aria-label="Tre capacità a rischio"><defs><marker id="arr27" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk" d="M0,0 L10,5 L0,10 z"/></marker></defs><circle class="v" cx="300" cy="130" r="105"/><circle class="v2" cx="420" cy="130" r="105"/><circle class="v3" cx="360" cy="230" r="105"/><text class="t" x="255" y="105" text-anchor="middle">Dati privati</text><text class="t" x="468" y="98" text-anchor="middle">Contenuti</text><text class="t" x="468" y="116" text-anchor="middle">non fidati</text><text class="t" x="360" y="300" text-anchor="middle">Comunicazione esterna</text><text class="t" x="360" y="172" text-anchor="middle">rischio</text></svg></div><figcaption>Le tre capacità che, combinate, espongono un agente all'esfiltrazione di dati</figcaption></figure>
+<p>Ogni strumento dichiara cosa può fare e l&#39;harness ne limita l&#39;accesso: solo lettura o anche scrittura, solo certe tabelle, solo certe cartelle, credenziali di servizio limitate. Un agente che legge email non deve poter anche inviarle, a meno che sia necessario.</p>
+<p>Attenzione alla prompt injection (già introdotta nel modulo 2): se l&#39;agente legge contenuti non fidati (pagine web, email, documenti), questi possono contenere istruzioni per usare gli strumenti in modo dannoso. La difesa efficace non è nel prompt ma nei permessi e nelle conferme.</p>
+<p>Una regola utile per valutare il rischio: un agente è particolarmente esposto quando combina tre capacità insieme:</p>
+<ol>
+<li>accesso a dati privati (email, documenti interni, database);</li>
+<li>esposizione a contenuti non fidati (pagine web, allegati, messaggi di terzi);</li>
+<li>possibilità di comunicare verso l&#39;esterno (inviare email, chiamare URL, scrivere su sistemi condivisi).</li>
+</ol>
+<p>Con tutte e tre, un&#39;istruzione nascosta in un contenuto letto può portare l&#39;agente a esfiltrare dati privati. Se il caso d&#39;uso le richiede tutte, almeno una va mediata da una conferma umana o da un controllo deterministico, ad esempio una lista di destinatari ammessi.</p>
+<h3>Guardrail</h3>
+<p>Validazioni sull&#39;input e sull&#39;output:</p>
+<ul>
+<li>schema dei parametri prima dell&#39;esecuzione dello strumento;</li>
+<li>filtri di policy sulle azioni (ad esempio, nessun invio a domini esterni);</li>
+<li>controllo dell&#39;output finale prima di mostrarlo o inviarlo.</li>
+</ul>
+<h3>Limiti e budget</h3>
+<ul>
+<li>numero massimo di passi;</li>
+<li>budget di token e di costo per richiesta;</li>
+<li>timeout per ogni strumento e per l&#39;intera esecuzione;</li>
+<li>condizioni di uscita esplicite (ad esempio: dopo due tentativi falliti, consegna all&#39;umano con il riepilogo).</li>
+</ul>
+<h3>Osservabilità</h3>
+<p>Per un agente, il log non è opzionale. Registra ogni passo: ragionamento visibile, chiamata, argomenti, esito, token, durata. Quando un agente sbaglia, senza la traccia completa non puoi capire se il problema era il modello, lo strumento o la descrizione dello strumento.</p>
+<p>Esercizio: prendi l&#39;esempio di loop della sezione 2 e aggiungi: un limite di budget in token, una conferma umana per uno strumento a scelta, e un log strutturato di ogni passo. Scrivi un caso di test che verifica che l&#39;agente si fermi quando il budget è esaurito.</p>
+<h2>5. Memoria e contesto</h2>
+<p>Un agente che lavora su compiti lunghi accumula messaggi, risultati di strumenti e ragionamenti. Il contesto cresce e il costo sale. Servono strategie di gestione.</p>
+<h3>Memoria a breve termine</h3>
+<p>La storia della sessione nel contesto. Strategie:</p>
+<ul>
+<li><strong>troncamento</strong>: si scartano i messaggi più vecchi (semplice, ma si perde informazione);</li>
+<li><strong>riassunto</strong>: ogni N passi il modello riassume la storia in un blocco compatto che sostituisce i messaggi originali;</li>
+<li><strong>risultati compatti</strong>: lo strumento restituisce solo i campi utili, non interi oggetti.</li>
+</ul>
+<h3>Memoria a lungo termine</h3>
+<p>Fatti e preferenze salvati all&#39;esterno (file, database, vector store) e recuperati quando servono. Esempio: le preferenze di un utente sul formato dei report, salvate e caricate all&#39;inizio della sessione.</p>
+<p>Attenzione: una memoria a lungo termine può memorizzare informazioni errate o obsolete. Serve una politica di aggiornamento e, se contiene dati personali, una base giuridica e una possibilità di cancellazione.</p>
+<h3>Context engineering</h3>
+<p>Scegliere con cura cosa mettere nel contesto a ogni passo. Ciò che il modello non vede non può usarlo, ma ciò che vede in eccesso lo distrae. È la competenza che collega il modulo 2 (prompt), il modulo 4 (retrieval) e questo modulo (memoria).</p>
+<h3>Sub-agenti</h3>
+<p>Un compito isolato viene affidato a un agente con un contesto proprio e pulito. Il sub-agente esplora (ad esempio cerca nel codice o nei documenti), poi restituisce all&#39;agente principale solo il risultato sintetico. Il contesto principale resta leggero.</p>
+<p>Caso d&#39;uso: un agente di coding che deve capire come funziona un modulo grande. Un sub-agente legge decine di file e restituisce una descrizione di una pagina; l&#39;agente principale non deve caricare tutti i file nel proprio contesto.</p>
+<h2>6. Protocolli e riuso</h2>
+<h3>MCP (Model Context Protocol)</h3>
+<p>Standard aperto con cui un harness scopre e usa tool, risorse e prompt esposti da server esterni. Il vantaggio è il riuso: un server che espone i dati di un CRM può essere usato da qualunque client compatibile, senza integrazione custom per ogni coppia modello-applicazione.</p>
+<p>Esercizio: cerca la documentazione del protocollo e descrivi con parole tue, in mezza pagina, la differenza tra l&#39;integrazione di uno strumento costruita direttamente nel codice e l&#39;integrazione tramite un server MCP. Quali vantaggi e quali rischi introduce l&#39;uso di server di terze parti?</p>
+<h3>Skill e istruzioni riusabili</h3>
+<p>Procedure e conoscenza di dominio raccolte in file (una descrizione, istruzioni, eventuali script) che l&#39;agente carica solo quando il compito le richiede. Questo tiene il contesto leggero e rende le competenze condivisibili tra progetti.</p>
+<p>Caso d&#39;uso: una skill &quot;redazione verbale di riunione&quot; con il formato aziendale, la lista degli elementi obbligatori e le regole di tono. L&#39;agente la carica quando riceve una trascrizione, non in ogni conversazione.</p>
+<h2>7. Multi-agent: quando e perché</h2><figure class="fig"><div class="diagwrap"><svg class="diag" viewBox="0 0 720 300" role="img" aria-label="Supervisor e handoff"><defs><marker id="arr28" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk" d="M0,0 L10,5 L0,10 z"/></marker></defs><rect class="a" x="260" y="20" width="200" height="50" rx="10"/><text class="t" x="360" y="42" text-anchor="middle">Supervisor</text><text class="s" x="360" y="62" text-anchor="middle">smista e decide la fine</text><line class="ar" x1="360" y1="70" x2="130" y2="120" marker-end="url(#arr28)"/><line class="ar" x1="360" y1="70" x2="360" y2="120" marker-end="url(#arr28)"/><line class="ar" x1="360" y1="70" x2="590" y2="120" marker-end="url(#arr28)"/><rect class="n" x="40" y="120" width="180" height="50" rx="10"/><text class="t" x="130" y="150" text-anchor="middle">Worker: ricerca</text><rect class="n" x="270" y="120" width="180" height="50" rx="10"/><text class="t" x="360" y="150" text-anchor="middle">Worker: scrittura</text><rect class="n" x="500" y="120" width="180" height="50" rx="10"/><text class="t" x="590" y="150" text-anchor="middle">Worker: verifica</text><text class="t" x="20" y="220" text-anchor="start">Handoff: il controllo passa di mano</text><rect class="n" x="40" y="236" width="170" height="44" rx="10"/><text class="t" x="125" y="263" text-anchor="middle">Agente A</text><line class="ar" x1="210" y1="258" x2="275" y2="258" marker-end="url(#arr28)"/><rect class="n" x="275" y="236" width="170" height="44" rx="10"/><text class="t" x="360" y="263" text-anchor="middle">Agente B</text><line class="ar" x1="445" y1="258" x2="510" y2="258" marker-end="url(#arr28)"/><rect class="n" x="510" y="236" width="170" height="44" rx="10"/><text class="t" x="595" y="263" text-anchor="middle">Agente C</text></svg></div><figcaption>Supervisor che smista il lavoro, e handoff tra agenti in sequenza</figcaption></figure>
+<p>Un sistema multi-agente ha più agenti con ruoli distinti che collaborano. Le forme più comuni:</p>
+<ul>
+<li><strong>Supervisor</strong>: un coordinatore riceve la richiesta, smista ai worker e decide quando il compito è completo.</li>
+<li><strong>Handoff</strong>: un agente, riconoscendo che un&#39;altra competenza serve, passa il controllo della conversazione a un altro agente.</li>
+<li><strong>Pipeline di ruoli</strong>: ad esempio un pianificatore, un esecutore e un revisore in sequenza.</li>
+</ul>
+<p>Vantaggi: specializzazione dei prompt e degli strumenti, contesti separati, possibilità di usare modelli diversi per ruoli diversi.</p>
+<p>Costi: più chiamate (quindi più costo e latenza), più punti di fallimento, comunicazione tra agenti che può perdere informazione, debugging più difficile.</p>
+<p>Regola pratica: parti da un singolo agente con strumenti ben progettati. Passa al multi-agente solo quando misuri che il singolo agente non regge per ragioni chiare: contesto troppo grande per un solo agente, ruoli con permessi incompatibili, parallelismo necessario.</p>
+<h3>Caso d&#39;uso da sviluppare</h3>
+<p>Un assistente per l&#39;analisi di un bando di gara. Confronta tre architetture: (a) un singolo agente con quattro strumenti (legge documento, cerca requisiti, calcola scadenze, scrive sintesi); (b) orchestrator-workers con tre worker; (c) workflow fisso con chaining. Per ciascuna definisci: costo stimato, latenza, rischi di errore e come li misureresti con il dataset del modulo 6.</p>
+<h2>8. Valutare un agente</h2>
+<p>Un agente si valuta come un sistema RAG (modulo 6), con due differenze: il risultato dipende da una sequenza di decisioni, e il percorso conta quanto la risposta finale.</p>
+<h3>Metriche</h3>
+<ul>
+<li><strong>Tasso di successo</strong>: percentuale di compiti completati correttamente. Il criterio di successo va definito per ogni caso, possibilmente verificabile dal codice (il ticket è stato creato con i campi giusti, il file contiene il risultato atteso).</li>
+<li><strong>Efficienza</strong>: numero di passi, token e costo per compito completato. Due agenti con lo stesso tasso di successo possono differire di un ordine di grandezza nel costo.</li>
+<li><strong>Traiettoria</strong>: l&#39;agente ha usato gli strumenti giusti, con argomenti corretti, senza azioni superflue o pericolose?</li>
+<li><strong>Robustezza</strong>: lo stesso compito eseguito più volte dà esiti coerenti? Con temperatura maggiore di zero, un agente che riesce 1 volta su 3 non è affidabile.</li>
+<li><strong>Sicurezza</strong>: sui casi avversari (istruzioni nascoste in un documento letto), l&#39;agente non deve compiere azioni non autorizzate.</li>
+</ul>
+<h3>Struttura di un caso di test</h3>
+<pre><code class="language-json">{
+  &quot;id&quot;: &quot;helpdesk-007&quot;,
+  &quot;richiesta&quot;: &quot;Il cliente 4411 dice che l&#39;ordine non è arrivato, verifica e apri un ticket se serve&quot;,
+  &quot;stato_iniziale&quot;: {&quot;ordine_4411&quot;: {&quot;stato&quot;: &quot;spedito&quot;, &quot;giorni_dalla_spedizione&quot;: 12}},
+  &quot;atteso&quot;: {
+    &quot;strumenti_obbligatori&quot;: [&quot;cerca_ordine&quot;, &quot;apri_ticket&quot;],
+    &quot;strumenti_vietati&quot;: [&quot;rimborsa_ordine&quot;],
+    &quot;verifica_finale&quot;: &quot;esiste un ticket con categoria SPEDIZIONE per il cliente 4411&quot;
+  },
+  &quot;max_passi&quot;: 6
+}
+</code></pre>
+<p>Gli strumenti, nei test, lavorano su un ambiente simulato (database di prova, servizi finti): l&#39;agente non deve toccare sistemi reali durante la valutazione.</p>
+<h3>Esercizio</h3>
+<p>Scrivi dieci casi di test nel formato sopra per l&#39;agente del progetto finale, inclusi due casi avversari. Esegui ciascun caso tre volte e riporta: tasso di successo, passi medi, costo medio, e i casi in cui la traiettoria contiene uno strumento vietato.</p>
+<h2>9. Quando NON usare un agente</h2>
+<ul>
+<li>Il percorso dei passaggi è noto in anticipo: un workflow deterministico è più affidabile.</li>
+<li>Il costo di un errore è alto e il compito è ripetibile: una pipeline con validazioni e test vale più di un agente autonomo.</li>
+<li>Serve una risposta immediata e a bassa latenza: ogni passo di ragionamento e strumento aggiunge tempo.</li>
+<li>Non esiste ancora un modo di valutare il comportamento: senza dataset e metriche non puoi sapere se l&#39;agente migliora o peggiora.</li>
+</ul>
+<p>Principio guida: parti dal workflow più semplice che funziona, aumenta l&#39;autonomia solo dove serve e misura l&#39;effetto con la valutazione del modulo 6.</p>
+<h2>Progetto finale suggerito</h2>
+<p>Costruisci un agente per un problema reale del tuo ambito (helpdesk, gestione ordini, supporto HR, ricerca documentale). Consegna:</p>
+<ul>
+<li>la motivazione della scelta agente vs workflow, con un confronto onesto;</li>
+<li>la lista degli strumenti con descrizioni e permessi;</li>
+<li>il loop con limiti di passi e budget;</li>
+<li>almeno una conferma umana per un&#39;azione sensibile;</li>
+<li>il log di tre esecuzioni complete;</li>
+<li>una suite di dieci casi di test, incluso un tentativo di prompt injection tramite un contenuto letto dall&#39;agente.</li>
+</ul>
+<h2>Letture di approfondimento</h2>
+<ul>
+<li><a href="https://arxiv.org/abs/2210.03629" target="_blank" rel="noopener">Yao et al., &quot;ReAct: Synergizing Reasoning and Acting in Language Models&quot; (2022)</a>: il loop ragionamento-azione alla base del tool use.</li>
+<li><a href="https://www.anthropic.com/research/building-effective-agents" target="_blank" rel="noopener">Anthropic, &quot;Building effective agents&quot; (2024)</a>: distinzione tra workflow e agenti e rassegna dei pattern discussi in questo modulo.</li>
+<li><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" target="_blank" rel="noopener">Anthropic, &quot;Effective context engineering for AI agents&quot;</a>: gestione del contesto, memoria e sub-agenti.</li>
+<li><a href="https://lilianweng.github.io/posts/2023-06-23-agent/" target="_blank" rel="noopener">Lilian Weng, &quot;LLM Powered Autonomous Agents&quot; (2023)</a>: panoramica su pianificazione, memoria e uso di strumenti.</li>
+<li><a href="https://modelcontextprotocol.io" target="_blank" rel="noopener">Model Context Protocol</a>: specifica e documentazione del protocollo MCP.</li>
+</ul>
+</main>
+<nav class="pn"><a href="modulo-6-valutazione-ottimizzazione.html"><span>Precedente</span>Dataset, metriche, RAGAS, allucinazioni, tuning</a><a class="next" href="modulo-8-produzione-sicurezza-governance.html"><span>Successivo</span>Architettura, LLMOps, costi, sicurezza, privacy e AI Act</a></nav>
+</body>
+</html>

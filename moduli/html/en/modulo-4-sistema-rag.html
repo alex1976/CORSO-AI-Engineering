@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="color-scheme" content="dark">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Module 4: The Heart of the Project - Building a RAG System</title>
+<link rel="alternate" hreflang="it" href="../modulo-4-sistema-rag.html"><link rel="alternate" hreflang="en" href="modulo-4-sistema-rag.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#09090b;--card:#18181b;--surface-2:#1f1f23;--ink:#fafafa;--ink-2:#d4d4d8;--muted:#a1a1aa;--line:#27272a;--accent:#93c5fd;--accent-soft:#172033;--ok:#4ade80;--ok-soft:#0f2a1c;--warn:#fbbf24;--warn-soft:#2a2008;--code:#18181b;--shadow-sm:0 1px 2px rgba(0,0,0,.4);--shadow-md:0 4px 12px -2px rgba(0,0,0,.5);color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.625 Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--card);position:sticky;top:0;z-index:1;box-shadow:var(--shadow-sm)}
+.top a{color:var(--ink);font-weight:600;text-decoration:none;transition:color .2s ease-in-out}
+.top a:hover{color:var(--accent)}
+.top span{color:var(--muted);font-size:14px}
+.top{flex-wrap:wrap}
+.top-r{display:flex;align-items:center;gap:16px}
+.top .lang{display:flex;gap:4px}
+.top .lang a{color:var(--muted);font-size:13px;padding:4px 8px;border-radius:6px;transition:color .2s ease-in-out,background-color .2s ease-in-out}
+.top .lang a:hover{color:var(--ink);background:var(--surface-2)}
+.top .lang a[aria-current="page"]{color:var(--ink);background:var(--surface-2)}
+.page{max-width:768px;margin:0 auto;padding:32px 16px 16px}
+h1{font-size:clamp(2rem,1.6rem + 2vw,2.25rem);font-weight:700;line-height:1.2;letter-spacing:-.02em;margin:.25em 0 .5em}
+h2{font-size:1.5rem;font-weight:600;line-height:1.3;letter-spacing:-.01em;margin:48px 0 16px;padding-top:24px;border-top:1px solid var(--line)}
+h3{font-size:1.25rem;font-weight:600;line-height:1.35;margin:32px 0 12px;color:var(--ink-2)}
+ul,ol{padding-left:24px}
+li{margin:4px 0}
+a{color:var(--accent);text-underline-offset:3px;transition:color .2s ease-in-out}
+code{background:var(--code);padding:2px 6px;border-radius:6px;font-size:.9em;font-family:ui-monospace,"Cascadia Code",Consolas,monospace}
+pre{background:var(--code);padding:16px;border-radius:12px;overflow-x:auto;border:1px solid var(--line);font-size:14px;line-height:1.6;box-shadow:var(--shadow-sm)}
+pre code{background:none;padding:0;font-size:1em;border-radius:0}
+blockquote{margin:24px 0;padding:12px 16px;border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:0 8px 8px 0;color:var(--ink-2)}
+blockquote p{margin:4px 0}
+hr{border:0;border-top:1px solid var(--line);margin:48px 0}
+.tw{overflow-x:auto;margin:24px 0;border:1px solid var(--line);border-radius:12px;background:var(--card);box-shadow:var(--shadow-sm)}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:.95em}
+th,td{border-bottom:1px solid var(--line);padding:12px 16px;text-align:left;vertical-align:top}
+tr:last-child td{border-bottom:0}
+th{background:var(--surface-2);font-weight:600;color:var(--ink-2)}
+.fig{margin:32px 0;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:var(--shadow-sm)}
+.fig figcaption{color:var(--muted);font-size:14px;margin-top:12px;text-align:center}
+.diagwrap{overflow-x:auto}
+.diag{display:block;width:100%;min-width:520px;height:auto}
+.diag rect.n{fill:var(--card);stroke:var(--muted);stroke-width:1.2}
+.diag rect.a{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.5}
+.diag rect.g{fill:var(--ok-soft);stroke:var(--ok);stroke-width:1.5}
+.diag rect.w{fill:var(--warn-soft);stroke:var(--warn);stroke-width:1.5}
+.diag rect.b{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.2}
+.diag rect.ov{fill:var(--warn-soft);stroke:var(--warn);stroke-width:1.2;stroke-dasharray:4 3}
+.diag rect.dash{fill:none;stroke:var(--muted);stroke-width:1.3;stroke-dasharray:6 5}
+.diag text.t{fill:var(--ink);font:600 13.5px Inter,system-ui,sans-serif}
+.diag text.s{fill:var(--ink-2);font:12px Inter,system-ui,sans-serif}
+.diag line.ar,.diag path.ar{stroke:var(--muted);stroke-width:1.5;fill:none}
+.diag line.ac{stroke:var(--accent);stroke-width:1.5;stroke-dasharray:5 4}
+.diag .mk{fill:var(--muted)}
+.diag circle.dot.a{fill:var(--accent)}
+.diag circle.dot.w{fill:var(--warn)}
+.diag circle.q{fill:var(--ok);stroke:var(--card);stroke-width:2}
+.diag circle.v{fill:var(--accent);fill-opacity:.12;stroke:var(--accent);stroke-width:1.5}
+.diag circle.v2{fill:var(--warn);fill-opacity:.12;stroke:var(--warn);stroke-width:1.5}
+.diag circle.v3{fill:var(--ok);fill-opacity:.12;stroke:var(--ok);stroke-width:1.5}
+li input[type=checkbox]{margin-right:8px;accent-color:var(--accent)}
+ul:has(> li > input[type=checkbox]){list-style:none;padding-left:4px}
+.pn{display:flex;gap:16px;max-width:768px;margin:0 auto;padding:16px 16px 48px}
+.pn a{flex:1;padding:16px;border:1px solid var(--line);border-radius:12px;background:var(--card);text-decoration:none;color:var(--ink);box-shadow:var(--shadow-sm);transition:transform .2s ease-in-out,border-color .2s ease-in-out,box-shadow .2s ease-in-out}
+.pn a:hover{transform:translateY(-2px);border-color:var(--accent);box-shadow:var(--shadow-md)}
+.pn a span{display:block;color:var(--muted);font-size:14px;margin-bottom:4px}
+.pn a.next{text-align:right}
+.idx{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin-top:24px}
+.idx a{display:block;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;text-decoration:none;color:var(--ink);box-shadow:var(--shadow-sm);transition:transform .2s ease-in-out,border-color .2s ease-in-out,box-shadow .2s ease-in-out}
+.idx a:hover{transform:translateY(-2px);border-color:var(--accent);box-shadow:var(--shadow-md)}
+.idx a p{margin:4px 0 0;color:var(--muted);font-size:14px}
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{transition:none!important;transform:none!important}}
+</style>
+</head>
+<body>
+<header class="top"><a href="index.html">AI Engineering Course</a><div class="top-r"><span>Modules 1-8</span><nav class="lang" aria-label="Language"><a href="../modulo-4-sistema-rag.html" lang="it" hreflang="it">IT</a><a href="modulo-4-sistema-rag.html" lang="en" hreflang="en" aria-current="page">EN</a></nav></div></header>
+<main class="page"><h1>Module 4: The Heart of the Project - Building a RAG System</h1>
+<h2>Learning objectives</h2>
+<p>By the end of this module you will be able to:</p>
+<ul>
+<li>explain why an LLM alone cannot answer questions about private documents, and what alternatives exist;</li>
+<li>design the ingestion pipeline: loading, cleaning, chunking, embedding, indexing;</li>
+<li>choose a chunking strategy justified by the type of document;</li>
+<li>implement the retrieval loop: question, vector, search, context building, generation;</li>
+<li>recognize the points where a RAG system fails and know where to intervene.</li>
+</ul>
+<h2>1. Why RAG</h2>
+<p>An LLM knows what it saw during training, up to a certain date, and it does not know your company&#39;s internal documents. There are three ways to bridge this gap:</p>
+<ol>
+<li><strong>Fine-tuning</strong>: retraining the model on the documents. Expensive, slow to update, hard to verify, and it does not eliminate hallucinations.</li>
+<li><strong>Long context</strong>: pasting the whole document into the prompt. It works for small documents, but it is costly, slows things down, and often degrades accuracy when the context is full of irrelevant information.</li>
+<li><strong>RAG (Retrieval-Augmented Generation)</strong>: searching the documents for only the fragments relevant to the question and passing them to the model as context.</li>
+</ol>
+<p>RAG is the most common choice when data changes often, when you need to cite sources, and when the volume is too large to fit in the context. However, the quality of its answers is limited by the quality of retrieval: if the right fragment is not found, the model will answer poorly even if it is excellent.</p>
+<h2>2. The two-phase pipeline</h2>
+<p>A RAG system has two paths.</p>
+<p><strong>Offline (ingestion)</strong>, run when the documents change:
+loading → cleaning → chunking → embedding → indexing in the vector database.</p>
+<p><strong>Online (querying)</strong>, run on every question:
+question → question embedding → search for the most similar chunks → prompt building → generation → answer with sources.</p>
+<p>Many problems originate in the first path and show up in the second. When an answer is wrong, the first question to ask is: did the right chunk exist in the index?</p>
+<h2>3. Ingestion</h2>
+<h3>Loading and cleaning</h3>
+<p>Real documents are messy: PDFs with repeated headers and footers, split tables, scans, multi-column text, page numbers, tables of contents. Before chunking you need to decide what to keep.</p>
+<p>Exercise: take a real PDF (a manual, a contract, a company policy) and extract the text with two different tools. Compare the results on tables and headers. Note what should be removed and what should be kept as metadata.</p>
+<h3>Metadata</h3>
+<p>Every chunk should carry information needed for filtering and citation:</p>
+<ul>
+<li>source document and version;</li>
+<li>page or section;</li>
+<li>publication or update date;</li>
+<li>document type or department;</li>
+<li>chunk identifier.</li>
+</ul>
+<p>Without metadata you cannot filter (for example: &quot;only the policies currently in force&quot;) nor show the user where the answer comes from.</p>
+<h3>Chunking</h3><figure class="fig"><div class="diagwrap"><svg class="diag" viewBox="0 0 720 205" role="img" aria-label="Chunking with overlap"><defs><marker id="arr13" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk" d="M0,0 L10,5 L0,10 z"/></marker></defs><text class="t" x="20" y="30" text-anchor="start">2400-character text split into 1000-character blocks with a 200 overlap</text><rect class="a" x="20" y="50" width="283.3333333333333" height="34" rx="4"/><rect class="g" x="246.66666666666666" y="94" width="283.3333333333333" height="34" rx="4"/><rect class="w" x="473.3333333333333" y="138" width="226.66666666666666" height="34" rx="4"/><rect class="ov" x="246.66666666666666" y="50" width="56.666666666666664" height="34"/><rect class="ov" x="246.66666666666666" y="94" width="56.666666666666664" height="34"/><rect class="ov" x="473.3333333333333" y="94" width="56.666666666666664" height="34"/><rect class="ov" x="473.3333333333333" y="138" width="56.666666666666664" height="34"/><text class="s" x="20" y="196" text-anchor="start">chunk 1: 0-1000 · chunk 2: 800-1800 · chunk 3: 1600-2400 (highlighted areas: overlap)</text></svg></div><figcaption>Size 1000 and overlap 200: the highlighted areas belong to two fragments</figcaption></figure>
+<p>Chunking splits the text into blocks. The choice of size and strategy affects results more than almost any other parameter.</p>
+<p>Common strategies:</p>
+<ul>
+<li><strong>Fixed size with overlap</strong>: blocks of fixed length (for example 1000 characters) with an overlap (for example 200 characters), so that a concept is not split between two blocks without a point of contact. This is the starting strategy recommended in the course.</li>
+<li><strong>Recursive by separators</strong>: tries to split on paragraphs, then sentences, then words, preserving units of meaning when possible.</li>
+<li><strong>By structure</strong>: uses headings, sections and articles as natural boundaries. Ideal for legal documents or numbered manuals.</li>
+<li><strong>Semantic</strong>: splits where the topic changes, measured with embeddings. More expensive, not always better.</li>
+</ul>
+<p>Trade-offs:</p>
+<ul>
+<li>small chunks: more precise retrieval, but a single fragment may not contain the context it needs;</li>
+<li>large chunks: more context per fragment, but more noise and more tokens in the prompt;</li>
+<li>high overlap: less information lost at the boundary, but more duplication and higher indexing cost.</li>
+</ul>
+<p>The 1000/200 value is a starting point, not a rule. It must be validated on your own corpus.</p>
+<h3>Chunking exercise</h3>
+<p>Take a document of at least ten pages with numbered sections. Create three versions of the index: fixed size 500, 1000 and 2000 characters, with overlap 200. For ten questions whose answer you already know, check whether the correct chunk appears among the top three results. Note which configuration works best and why.</p>
+<h2>4. Embeddings and vector database</h2><figure class="fig"><div class="diagwrap"><svg class="diag" viewBox="0 0 720 285" role="img" aria-label="Semantic space of embeddings"><defs><marker id="arr14" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk" d="M0,0 L10,5 L0,10 z"/></marker></defs><rect class="n" x="40" y="30" width="640" height="220" rx="8"/><text class="t" x="60" y="52" text-anchor="start">refunds and returns</text><text class="t" x="440" y="236" text-anchor="start">technical problems</text><circle class="dot a" cx="120" cy="110" r="6"/><circle class="dot a" cx="135" cy="92" r="6"/><circle class="dot a" cx="160" cy="118" r="6"/><circle class="dot a" cx="108" cy="132" r="6"/><circle class="dot a" cx="148" cy="140" r="6"/><circle class="dot a" cx="176" cy="100" r="6"/><circle class="dot a" cx="128" cy="158" r="6"/><circle class="dot a" cx="168" cy="150" r="6"/><circle class="dot w" cx="480" cy="150" r="6"/><circle class="dot w" cx="500" cy="170" r="6"/><circle class="dot w" cx="520" cy="140" r="6"/><circle class="dot w" cx="545" cy="160" r="6"/><circle class="dot w" cx="510" cy="190" r="6"/><circle class="dot w" cx="560" cy="185" r="6"/><circle class="dot w" cx="535" cy="120" r="6"/><circle class="q" cx="190" cy="128" r="8"/><text class="s" x="205" y="168" text-anchor="start">question: how do I ask for a return?</text><text class="s" x="360" y="276" text-anchor="middle">Similar texts → nearby vectors</text></svg></div><figcaption>Texts with similar meaning end up close together in the semantic space (here in 2 dimensions)</figcaption></figure>
+<h3>Embeddings</h3>
+<p>An embedding is a vector of numbers (from a few hundred to a few thousand dimensions) that represents the meaning of a text. Texts with similar meaning produce nearby vectors, usually measured with cosine similarity.</p>
+<p>Two sentences such as &quot;How do I request a refund?&quot; and &quot;Procedure for getting my money back&quot; share few words but have nearby vectors: this is what makes semantic search more useful than keyword search.</p>
+<p>Note: the embedding model is a separate choice from the generation model. It must be chosen for the language of the documents (Italian, multilingual) and must be used identically in ingestion and in querying. Changing the embedding model requires reindexing everything.</p>
+<h3>Vector database</h3>
+<p>A vector database stores vectors together with their metadata and lets you search for the vectors closest to a given vector. Tools mentioned in the course:</p>
+<ul>
+<li><strong>ChromaDB</strong>: simple, suited to prototypes and local environments;</li>
+<li><strong>Qdrant</strong>: performance and metadata filters, suited to production;</li>
+<li><strong>Pinecone</strong>: managed service, no infrastructure to administer.</li>
+</ul>
+<p>A local database is enough for the course. The choice matters less than attention to metadata, filters and reindexing.</p>
+<h3>Similarity and hybrid search</h3>
+<p>Pure vector search does not always find exact codes, acronyms or proper names (for example &quot;error E18&quot; or &quot;article 17-bis&quot;). For this reason, real systems often combine vector search with keyword search (BM25 or similar), merging the results. It is one of the first improvements to consider.</p>
+<h2>5. Retrieval loop</h2><figure class="fig"><div class="diagwrap"><svg class="diag" viewBox="0 0 720 190" role="img" aria-label="Retrieval loop"><defs><marker id="arr16" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk" d="M0,0 L10,5 L0,10 z"/></marker></defs><rect class="n" x="8" y="40" width="92" height="74" rx="10"/><text class="t" x="54" y="62" text-anchor="middle">Question</text><text class="s" x="54" y="82" text-anchor="middle">user</text><line class="ar" x1="100" y1="77" x2="110" y2="77" marker-end="url(#arr16)"/><rect class="n" x="110" y="40" width="92" height="74" rx="10"/><text class="t" x="156" y="62" text-anchor="middle">Embedding</text><text class="s" x="156" y="82" text-anchor="middle">same model</text><line class="ar" x1="202" y1="77" x2="212" y2="77" marker-end="url(#arr16)"/><rect class="n" x="212" y="40" width="92" height="74" rx="10"/><text class="t" x="258" y="62" text-anchor="middle">Top-k chunks</text><text class="s" x="258" y="82" text-anchor="middle">3-5 results</text><line class="ar" x1="304" y1="77" x2="314" y2="77" marker-end="url(#arr16)"/><rect class="a" x="314" y="40" width="92" height="74" rx="10"/><text class="t" x="360" y="62" text-anchor="middle">Threshold</text><text class="s" x="360" y="82" text-anchor="middle">below threshold?</text><line class="ar" x1="406" y1="77" x2="416" y2="77" marker-end="url(#arr16)"/><rect class="n" x="416" y="40" width="92" height="74" rx="10"/><text class="t" x="462" y="62" text-anchor="middle">Prompt + sources</text><text class="s" x="462" y="82" text-anchor="middle">instructions</text><line class="ar" x1="508" y1="77" x2="518" y2="77" marker-end="url(#arr16)"/><rect class="n" x="518" y="40" width="92" height="74" rx="10"/><text class="t" x="564" y="62" text-anchor="middle">Generation</text><text class="s" x="564" y="82" text-anchor="middle">LLM</text><line class="ar" x1="610" y1="77" x2="620" y2="77" marker-end="url(#arr16)"/><rect class="g" x="620" y="40" width="92" height="74" rx="10"/><text class="t" x="666" y="62" text-anchor="middle">Answer</text><text class="s" x="666" y="82" text-anchor="middle">with sources</text><text class="s" x="360" y="160" text-anchor="middle">If no fragment passes the threshold, the system does not make things up: it states that the information is missing</text></svg></div><figcaption>The path of a question, from input to answer with sources</figcaption></figure>
+<p>The online path, step by step:</p>
+<ol>
+<li>The user asks a question.</li>
+<li>The question is turned into a vector with the same embedding model.</li>
+<li>The vector database is searched for the k most similar fragments (typically 3-5, optionally filtered by metadata).</li>
+<li>Optional: a reranker reorders the fragments with a more accurate model, discarding the less relevant ones.</li>
+<li>The prompt is built: instruction, numbered fragments with their source, question.</li>
+<li>The model generates the answer, citing the fragments it used.</li>
+<li>If no fragment passes a relevance threshold, the system answers that it does not have the information instead of making it up.</li>
+</ol>
+<p>Example generation prompt:</p>
+<pre><code class="language-text">Answer the question using only the provided fragments.
+If the answer is not present in the fragments, write: &quot;I did not find this information in the available documents.&quot;
+Cite the source of every claim with [fragment_number].
+
+Fragments:
+[1] (manuale_lavatrice.pdf, p. 12) ...
+[2] (manuale_lavatrice.pdf, p. 13) ...
+
+Question: {{domanda}}
+</code></pre>
+<h3>The value of the threshold</h3>
+<p>Without a threshold, retrieval always returns k fragments, even when none is relevant. At that point the model tries to answer anyway. A similarity threshold, or a relevance check, is often the difference between a reliable system and one that hallucinates with confidence.</p>
+<h2>6. Advanced retrieval techniques</h2><figure class="fig"><div class="diagwrap"><svg class="diag" viewBox="0 0 720 220" role="img" aria-label="Advanced retrieval"><defs><marker id="arr15" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk" d="M0,0 L10,5 L0,10 z"/></marker></defs><rect class="n" x="10" y="80" width="90" height="56" rx="10"/><text class="t" x="55" y="102" text-anchor="middle">Question</text><text class="s" x="55" y="122" text-anchor="middle">user</text><line class="ar" x1="100" y1="108" x2="125" y2="108" marker-end="url(#arr15)"/><rect class="a" x="125" y="80" width="110" height="56" rx="10"/><text class="t" x="180" y="102" text-anchor="middle">Rewriting</text><text class="s" x="180" y="122" text-anchor="middle">better query</text><line class="ar" x1="235" y1="108" x2="270" y2="56" marker-end="url(#arr15)"/><line class="ar" x1="235" y1="108" x2="270" y2="160" marker-end="url(#arr15)"/><rect class="n" x="270" y="30" width="120" height="52" rx="10"/><text class="t" x="330" y="52" text-anchor="middle">Vector</text><text class="s" x="330" y="72" text-anchor="middle">meaning</text><rect class="n" x="270" y="134" width="120" height="52" rx="10"/><text class="t" x="330" y="156" text-anchor="middle">BM25</text><text class="s" x="330" y="176" text-anchor="middle">exact terms</text><line class="ar" x1="390" y1="56" x2="425" y2="100" marker-end="url(#arr15)"/><line class="ar" x1="390" y1="160" x2="425" y2="116" marker-end="url(#arr15)"/><rect class="n" x="425" y="80" width="90" height="56" rx="10"/><text class="t" x="470" y="102" text-anchor="middle">Fusion</text><text class="s" x="470" y="122" text-anchor="middle">RRF</text><line class="ar" x1="515" y1="108" x2="540" y2="108" marker-end="url(#arr15)"/><rect class="a" x="540" y="80" width="90" height="56" rx="10"/><text class="t" x="585" y="102" text-anchor="middle">Reranking</text><text class="s" x="585" y="122" text-anchor="middle">cross-encoder</text><line class="ar" x1="630" y1="108" x2="650" y2="108" marker-end="url(#arr15)"/><rect class="g" x="650" y="80" width="62" height="56" rx="10"/><text class="t" x="681" y="113" text-anchor="middle">Top 5</text><text class="s" x="360" y="210" text-anchor="middle">Each stage is added only if evaluation shows it is needed</text></svg></div><figcaption>An advanced retrieval pipeline: every stage is optional and must be measured</figcaption></figure>
+<p>Basic RAG (question embedding, top-k, generation) is a good starting point. When the evaluation in module 6 shows insufficient recall, more sophisticated techniques come into play. Each one adds cost or latency: introduce them one at a time and measure them.</p>
+<h3>Hybrid search</h3>
+<p>It combines vector search (meaning) with keyword search, for example BM25 (exact terms). The two result lists are merged, often with Reciprocal Rank Fusion: each document receives a score based on its position in each list.</p>
+<p>When it helps: error codes, product names, legal articles, acronyms. &quot;E18&quot; has little semantic meaning, but it is a valuable exact match.</p>
+<h3>Query rewriting</h3>
+<p>The user&#39;s question is often incomplete or colloquial. Before retrieval, a model rephrases it.</p>
+<ul>
+<li><strong>Rewriting with history</strong>: &quot;What if the filter is already clean?&quot; becomes &quot;Persistent error E18 after cleaning the drain filter&quot;.</li>
+<li><strong>Multi-query</strong>: several variants are generated from the question and the results are merged.</li>
+<li><strong>HyDE (Hypothetical Document Embeddings)</strong>: the model writes a hypothetical answer and the search uses the embedding of that answer, which often resembles the documents more than the question does.</li>
+</ul>
+<h3>Reranking</h3>
+<p>Vector retrieval is fast but approximate. A reranker (usually a cross-encoder model) evaluates each question-fragment pair more carefully and reorders the results. Typical scheme: retrieve 20-50 candidates, rerank them, pass the best 3-5 to the model.</p>
+<h3>Hierarchical chunking (small-to-big)</h3>
+<p>Small fragments are indexed, precise in retrieval, but the model is given the larger block that contains them (the whole paragraph or section). It combines the precision of small chunks with the context of large chunks.</p>
+<h3>Contextual enrichment of chunks</h3>
+<p>An isolated fragment such as &quot;Clean the filter every three months&quot; does not say which product or section it is about. Before embedding, a short description of the context (document, chapter, topic) is prepended to each chunk, generated only once at ingestion. It improves retrieval when documents contain many fragments that are similar to each other.</p>
+<h3>Metadata filters</h3>
+<p>Restrict the search before computing similarity: only the indicated washing machine model, only the policies in force, only the documents of the user&#39;s department. It is also a security mechanism: a user must not retrieve documents they do not have access to.</p>
+<h3>Which technique, for which symptom</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Measured symptom</th>
+<th>Technique to try first</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Codes and acronyms not found</td>
+<td>Hybrid search</td>
+</tr>
+<tr>
+<td>Colloquial or follow-up questions fail</td>
+<td>Query rewriting</td>
+</tr>
+<tr>
+<td>The right fragment is retrieved but ranked low</td>
+<td>Reranking</td>
+</tr>
+<tr>
+<td>The right fragment is found but lacks context</td>
+<td>Hierarchical chunking</td>
+</tr>
+<tr>
+<td>Many near-identical fragments across different documents</td>
+<td>Contextual enrichment, metadata filters</td>
+</tr>
+</tbody></table></div>
+<h3>Exercise</h3>
+<p>On your prototype, measure recall@3 with the dataset from module 6. Add hybrid search and measure again; then add reranking and measure once more. Report the three values and the average time per request in each configuration.</p>
+<h2>7. Where a RAG system fails</h2>
+<p>When the answer is wrong, classify the problem before fixing it:</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely cause</th>
+<th>Where to intervene</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>The right fragment is not among the results</td>
+<td>Chunking, embedding, query too different from the text</td>
+<td>Chunking, hybrid search, query rewriting</td>
+</tr>
+<tr>
+<td>The right fragment is found but ranked low</td>
+<td>Weak ranking</td>
+<td>Reranker, number of results</td>
+</tr>
+<tr>
+<td>The right fragment is in the context but the answer is wrong</td>
+<td>The model ignores the context or misreads it</td>
+<td>Prompt, instructions, fragment format</td>
+</tr>
+<tr>
+<td>Correct answer but no source</td>
+<td>Prompt without a citation requirement</td>
+<td>Generation prompt</td>
+</tr>
+<tr>
+<td>Question spanning multiple documents, partial answer</td>
+<td>Retrieval with k too low or without aggregation</td>
+<td>Multiple queries, higher k, synthesis</td>
+</tr>
+<tr>
+<td>Outdated information</td>
+<td>Index not updated, version metadata missing</td>
+<td>Update pipeline, date filters</td>
+</tr>
+</tbody></table></div>
+<p>Module 6 shows how to measure these causes separately.</p>
+<h2>8. Use cases to develop</h2>
+<p>Choose one of the following and build it as a small prototype with a Streamlit interface.</p>
+<ul>
+<li><strong>HR policy assistant</strong>: vacation, expense reimbursements, remote work. Documents with different versions; the answer must report the version in force on the date of the question.</li>
+<li><strong>Chatbot on the documentation of an open-source API</strong>: questions about endpoints and parameters. Check its ability to handle acronyms and function names (hybrid search).</li>
+<li><strong>Meeting minutes assistant</strong>: questions such as &quot;What decisions did we make about X?&quot; over an archive of minutes with date and participants as metadata.</li>
+<li><strong>Advisor for a municipal regulation or a contract</strong>: answers that cite article and paragraph. Here the structure of the document should be used as the chunking criterion.</li>
+</ul>
+<p>For each one, deliverable: metadata schema, justified chunking strategy, ten test questions with the expected answer and the expected source, and a failure analysis using the table in section 7.</p>
+<h2>Further reading</h2>
+<ul>
+<li><a href="https://arxiv.org/abs/2005.11401" target="_blank" rel="noopener">Lewis et al., &quot;Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks&quot; (2020)</a>: the paper that defined RAG.</li>
+<li><a href="https://arxiv.org/abs/2312.10997" target="_blank" rel="noopener">Gao et al., &quot;Retrieval-Augmented Generation for Large Language Models: A Survey&quot; (2023)</a>: a survey of RAG techniques, from the basics to advanced variants.</li>
+<li><a href="https://www.anthropic.com/news/contextual-retrieval" target="_blank" rel="noopener">Anthropic, &quot;Introducing Contextual Retrieval&quot; (2024)</a>: contextual enrichment of chunks, as discussed in the module.</li>
+<li><a href="https://docs.trychroma.com" target="_blank" rel="noopener">ChromaDB documentation</a>: sections on collections, metadata and filters.</li>
+<li><a href="https://qdrant.tech/documentation/" target="_blank" rel="noopener">Qdrant documentation</a>: sections on hybrid search and payload filters.</li>
+</ul>
+</main>
+<nav class="pn"><a href="modulo-3-architettura-chiamate-api.html"><span>Previous</span>Requests, costs, retries, streaming, providers</a><a class="next" href="modulo-5-esempio-pratico-rag.html"><span>Next</span>Assistant for a washing machine manual</a></nav>
+</body>
+</html>

@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="color-scheme" content="dark">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Module 8: Production, Security and Governance</title>
+<link rel="alternate" hreflang="it" href="../modulo-8-produzione-sicurezza-governance.html"><link rel="alternate" hreflang="en" href="modulo-8-produzione-sicurezza-governance.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#09090b;--card:#18181b;--surface-2:#1f1f23;--ink:#fafafa;--ink-2:#d4d4d8;--muted:#a1a1aa;--line:#27272a;--accent:#93c5fd;--accent-soft:#172033;--ok:#4ade80;--ok-soft:#0f2a1c;--warn:#fbbf24;--warn-soft:#2a2008;--code:#18181b;--shadow-sm:0 1px 2px rgba(0,0,0,.4);--shadow-md:0 4px 12px -2px rgba(0,0,0,.5);color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.625 Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--card);position:sticky;top:0;z-index:1;box-shadow:var(--shadow-sm)}
+.top a{color:var(--ink);font-weight:600;text-decoration:none;transition:color .2s ease-in-out}
+.top a:hover{color:var(--accent)}
+.top span{color:var(--muted);font-size:14px}
+.top{flex-wrap:wrap}
+.top-r{display:flex;align-items:center;gap:16px}
+.top .lang{display:flex;gap:4px}
+.top .lang a{color:var(--muted);font-size:13px;padding:4px 8px;border-radius:6px;transition:color .2s ease-in-out,background-color .2s ease-in-out}
+.top .lang a:hover{color:var(--ink);background:var(--surface-2)}
+.top .lang a[aria-current="page"]{color:var(--ink);background:var(--surface-2)}
+.page{max-width:768px;margin:0 auto;padding:32px 16px 16px}
+h1{font-size:clamp(2rem,1.6rem + 2vw,2.25rem);font-weight:700;line-height:1.2;letter-spacing:-.02em;margin:.25em 0 .5em}
+h2{font-size:1.5rem;font-weight:600;line-height:1.3;letter-spacing:-.01em;margin:48px 0 16px;padding-top:24px;border-top:1px solid var(--line)}
+h3{font-size:1.25rem;font-weight:600;line-height:1.35;margin:32px 0 12px;color:var(--ink-2)}
+ul,ol{padding-left:24px}
+li{margin:4px 0}
+a{color:var(--accent);text-underline-offset:3px;transition:color .2s ease-in-out}
+code{background:var(--code);padding:2px 6px;border-radius:6px;font-size:.9em;font-family:ui-monospace,"Cascadia Code",Consolas,monospace}
+pre{background:var(--code);padding:16px;border-radius:12px;overflow-x:auto;border:1px solid var(--line);font-size:14px;line-height:1.6;box-shadow:var(--shadow-sm)}
+pre code{background:none;padding:0;font-size:1em;border-radius:0}
+blockquote{margin:24px 0;padding:12px 16px;border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:0 8px 8px 0;color:var(--ink-2)}
+blockquote p{margin:4px 0}
+hr{border:0;border-top:1px solid var(--line);margin:48px 0}
+.tw{overflow-x:auto;margin:24px 0;border:1px solid var(--line);border-radius:12px;background:var(--card);box-shadow:var(--shadow-sm)}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:.95em}
+th,td{border-bottom:1px solid var(--line);padding:12px 16px;text-align:left;vertical-align:top}
+tr:last-child td{border-bottom:0}
+th{background:var(--surface-2);font-weight:600;color:var(--ink-2)}
+.fig{margin:32px 0;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:var(--shadow-sm)}
+.fig figcaption{color:var(--muted);font-size:14px;margin-top:12px;text-align:center}
+.diagwrap{overflow-x:auto}
+.diag{display:block;width:100%;min-width:520px;height:auto}
+.diag rect.n{fill:var(--card);stroke:var(--muted);stroke-width:1.2}
+.diag rect.a{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.5}
+.diag rect.g{fill:var(--ok-soft);stroke:var(--ok);stroke-width:1.5}
+.diag rect.w{fill:var(--warn-soft);stroke:var(--warn);stroke-width:1.5}
+.diag rect.b{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.2}
+.diag rect.ov{fill:var(--warn-soft);stroke:var(--warn);stroke-width:1.2;stroke-dasharray:4 3}
+.diag rect.dash{fill:none;stroke:var(--muted);stroke-width:1.3;stroke-dasharray:6 5}
+.diag text.t{fill:var(--ink);font:600 13.5px Inter,system-ui,sans-serif}
+.diag text.s{fill:var(--ink-2);font:12px Inter,system-ui,sans-serif}
+.diag line.ar,.diag path.ar{stroke:var(--muted);stroke-width:1.5;fill:none}
+.diag line.ac{stroke:var(--accent);stroke-width:1.5;stroke-dasharray:5 4}
+.diag .mk{fill:var(--muted)}
+.diag circle.dot.a{fill:var(--accent)}
+.diag circle.dot.w{fill:var(--warn)}
+.diag circle.q{fill:var(--ok);stroke:var(--card);stroke-width:2}
+.diag circle.v{fill:var(--accent);fill-opacity:.12;stroke:var(--accent);stroke-width:1.5}
+.diag circle.v2{fill:var(--warn);fill-opacity:.12;stroke:var(--warn);stroke-width:1.5}
+.diag circle.v3{fill:var(--ok);fill-opacity:.12;stroke:var(--ok);stroke-width:1.5}
+li input[type=checkbox]{margin-right:8px;accent-color:var(--accent)}
+ul:has(> li > input[type=checkbox]){list-style:none;padding-left:4px}
+.pn{display:flex;gap:16px;max-width:768px;margin:0 auto;padding:16px 16px 48px}
+.pn a{flex:1;padding:16px;border:1px solid var(--line);border-radius:12px;background:var(--card);text-decoration:none;color:var(--ink);box-shadow:var(--shadow-sm);transition:transform .2s ease-in-out,border-color .2s ease-in-out,box-shadow .2s ease-in-out}
+.pn a:hover{transform:translateY(-2px);border-color:var(--accent);box-shadow:var(--shadow-md)}
+.pn a span{display:block;color:var(--muted);font-size:14px;margin-bottom:4px}
+.pn a.next{text-align:right}
+.idx{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin-top:24px}
+.idx a{display:block;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;text-decoration:none;color:var(--ink);box-shadow:var(--shadow-sm);transition:transform .2s ease-in-out,border-color .2s ease-in-out,box-shadow .2s ease-in-out}
+.idx a:hover{transform:translateY(-2px);border-color:var(--accent);box-shadow:var(--shadow-md)}
+.idx a p{margin:4px 0 0;color:var(--muted);font-size:14px}
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{transition:none!important;transform:none!important}}
+</style>
+</head>
+<body>
+<header class="top"><a href="index.html">AI Engineering Course</a><div class="top-r"><span>Modules 1-8</span><nav class="lang" aria-label="Language"><a href="../modulo-8-produzione-sicurezza-governance.html" lang="it" hreflang="it">IT</a><a href="modulo-8-produzione-sicurezza-governance.html" lang="en" hreflang="en" aria-current="page">EN</a></nav></div></header>
+<main class="page"><h1>Module 8: Production, Security and Governance</h1>
+<h2>Learning objectives</h2>
+<p>By the end of the module you will be able to:</p>
+<ul>
+<li>describe a reference architecture for an LLM application in production;</li>
+<li>version and observe prompts, models, indexes and datasets as parts of the software;</li>
+<li>control costs with budgets, routing and caching;</li>
+<li>build a threat model for an LLM application using the OWASP Top 10 for LLM Applications;</li>
+<li>identify the main obligations on personal data and transparency (GDPR, AI Act) and know when to involve your legal and privacy contacts;</li>
+<li>choose between prompt engineering, RAG and fine-tuning using explicit criteria;</li>
+<li>prepare a release checklist.</li>
+</ul>
+<h2>1. From prototype to production</h2>
+<p>The prototype from module 5 answers well in a demo. In production the questions change:</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Prototype</th>
+<th>Production</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Does it work on my ten questions?</td>
+<td>Does it work on the real distribution of questions, which changes over time?</td>
+</tr>
+<tr>
+<td>How much does one call cost?</td>
+<td>How much does it cost per month with a thousand users, and who is alerted if the cost explodes?</td>
+</tr>
+<tr>
+<td>Does the model respond?</td>
+<td>What happens if the provider is slow, unreachable or retires the model version?</td>
+</tr>
+<tr>
+<td>Is the answer correct?</td>
+<td>Can we reconstruct why an answer from three weeks ago was wrong?</td>
+</tr>
+<tr>
+<td>Who uses it?</td>
+<td>Who can see which documents? Where does personal data end up in prompts and logs?</td>
+</tr>
+</tbody></table></div>
+<p>The rest of the module tackles these questions one by one.</p>
+<h2>2. Reference architecture</h2><figure class="fig"><div class="diagwrap"><svg class="diag" viewBox="0 0 720 316" role="img" aria-label="Production architecture"><defs><marker id="arr29" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk" d="M0,0 L10,5 L0,10 z"/></marker></defs><rect class="n" x="10" y="120" width="90" height="50" rx="10"/><text class="t" x="55" y="150" text-anchor="middle">User</text><line class="ar" x1="100" y1="145" x2="130" y2="145" marker-end="url(#arr29)"/><rect class="a" x="130" y="100" width="150" height="90" rx="10"/><text class="t" x="205" y="122" text-anchor="middle">Backend</text><text class="s" x="205" y="142" text-anchor="middle">auth, permissions, limits</text><text class="s" x="205" y="159" text-anchor="middle">orchestration</text><line class="ar" x1="280" y1="120" x2="330" y2="60" marker-end="url(#arr29)"/><line class="ar" x1="280" y1="170" x2="330" y2="230" marker-end="url(#arr29)"/><rect class="n" x="330" y="30" width="160" height="60" rx="10"/><text class="t" x="410" y="52" text-anchor="middle">Model gateway</text><text class="s" x="410" y="72" text-anchor="middle">retry, fallback, budget</text><rect class="n" x="330" y="200" width="160" height="60" rx="10"/><text class="t" x="410" y="222" text-anchor="middle">Retrieval</text><text class="s" x="410" y="242" text-anchor="middle">vector DB + permissions</text><line class="ar" x1="490" y1="60" x2="540" y2="32" marker-end="url(#arr29)"/><line class="ar" x1="490" y1="60" x2="540" y2="88" marker-end="url(#arr29)"/><rect class="n" x="540" y="10" width="170" height="44" rx="10"/><text class="t" x="625" y="37" text-anchor="middle">Primary provider</text><rect class="n" x="540" y="66" width="170" height="44" rx="10"/><text class="t" x="625" y="93" text-anchor="middle">Backup model</text><rect class="n" x="540" y="200" width="170" height="60" rx="10"/><text class="t" x="625" y="222" text-anchor="middle">Ingestion</text><text class="s" x="625" y="242" text-anchor="middle">versioned index</text><line class="ar" x1="540" y1="230" x2="490" y2="230" marker-end="url(#arr29)"/><rect class="w" x="130" y="270" width="580" height="36" rx="10"/><text class="t" x="420" y="293" text-anchor="middle">Observability and continuous evaluation: traces, costs, feedback</text></svg></div><figcaption>Reference architecture: a single exit point to the models and ingestion separated from the service</figcaption></figure>
+<p>Typical components of an LLM application in production:</p>
+<ul>
+<li><strong>Interface</strong> (web, chat, integration into an existing product).</li>
+<li><strong>Application backend</strong>: authenticates the user, applies permissions and limits, orchestrates the flow. It is the harness from module 1.</li>
+<li><strong>Model gateway</strong>: the single exit point to the providers. It manages keys, retries, fallback between models, spending limits, uniform logging. It can be an internal library or a dedicated component.</li>
+<li><strong>Retrieval service</strong>: vector database, hybrid search, permission filters.</li>
+<li><strong>Ingestion pipeline</strong>: separate from the service, run when documents change; it produces a versioned index.</li>
+<li><strong>Observability</strong>: tracing of every request, cost and latency metrics, user feedback.</li>
+<li><strong>Continuous evaluation</strong>: the suite from module 6, run on every change and periodically on a sample of real traffic.</li>
+</ul>
+<h3>Fallback and degradation</h3>
+<p>Define in advance what happens when something fails:</p>
+<ul>
+<li>primary provider unavailable → alternative model (from another provider or open-weight), with the same evaluation suite already passed;</li>
+<li>retrieval slow or failing → explicit message, not an answer generated without context;</li>
+<li>daily budget exhausted → reduced mode or a message to the user, and an alert to the team.</li>
+</ul>
+<h3>Exercise</h3>
+<p>Draw the architecture of your final project with the components above. For each arrow between components, state: what happens if the destination component does not respond?</p>
+<h2>3. LLMOps: versioning and observing</h2>
+<h3>What to version</h3>
+<p>In an LLM application, behavior depends on more than just the code. Each element must be versioned and recorded in the logs of every request:</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Version example</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Prompt</td>
+<td><code>risposta_manuale@v7</code></td>
+<td>A one-line change alters the behavior</td>
+</tr>
+<tr>
+<td>Model</td>
+<td>full identifier with date or version</td>
+<td>The provider can update or retire models</td>
+</tr>
+<tr>
+<td>Index</td>
+<td><code>manuale_2026-11-10</code></td>
+<td>Documents, chunking and embeddings change the retrieval</td>
+</tr>
+<tr>
+<td>Evaluation dataset</td>
+<td><code>eval@v3</code></td>
+<td>Comparing metrics across different datasets is meaningless</td>
+</tr>
+<tr>
+<td>Parameters</td>
+<td>temperature, k, threshold</td>
+<td>They are as much a part of the behavior as the prompt</td>
+</tr>
+</tbody></table></div>
+<h3>Tracing</h3>
+<p>A trace collects all the steps of a request: user input, query rewriting, retrieved chunks with scores, final prompt, answer, tokens, cost, latency of each step, versions used. LLM observability tools (for example Langfuse, or the equivalent features of cloud platforms) provide this view; alternatively, a structured JSON log with a request identifier is already an excellent start.</p>
+<h3>Gradual rollout</h3>
+<ul>
+<li><strong>Offline evaluation</strong>: the module 6 suite must pass before release, like automated tests.</li>
+<li><strong>Shadow</strong>: the new version processes real requests in parallel, but its answers are not shown; they are compared offline.</li>
+<li><strong>Canary</strong>: the new version serves a small percentage of users; you monitor feedback, refusals, costs.</li>
+<li><strong>Rollback</strong>: it must be possible to return to the previous version of prompt, model or index within minutes.</li>
+</ul>
+<h2>4. Cost management</h2>
+<p>The costs of an LLM application grow with usage in a less predictable way than those of a traditional service. Main levers:</p>
+<ul>
+<li><strong>Budgets and alarms</strong>: monthly limit per feature, daily limit per user, alarm when consumption exceeds the average.</li>
+<li><strong>Routing by difficulty</strong>: a small model handles simple requests, the large one only those that require it (routing pattern, module 7).</li>
+<li><strong>Prompt caching</strong>: stable prefixes at the start of the prompt, to benefit from the provider's cache (module 3).</li>
+<li><strong>Response cache</strong>: identical questions get the same answer without new calls. The &quot;semantic&quot; cache (similar questions) must be used with caution: two similar questions may require different answers, and answers must not pass between users with different permissions.</li>
+<li><strong>Batch</strong> for non-interactive jobs.</li>
+<li><strong>Cost per outcome, not per token</strong>: measure how much a resolved ticket or an analyzed document costs. It is the metric that matters to decision makers.</li>
+</ul>
+<h3>Exercise</h3>
+<p>For the final project, estimate the monthly cost under three traffic scenarios (low, expected, peak). Define the spending limits and the behavior of the application when they are exceeded.</p>
+<h2>5. Security</h2>
+<h3>OWASP Top 10 for LLM Applications</h3>
+<p>OWASP maintains a list of the main risks for LLM-based applications. It is a good starting point for a threat model. The most relevant risks for the projects in this course:</p>
+<ul>
+<li><strong>Prompt injection</strong>: instructions in the user's input (direct) or in content read by the system, such as documents and web pages (indirect), that alter the behavior. There is no complete defense at the prompt level: you need limited permissions and confirmations (module 7).</li>
+<li><strong>Sensitive information disclosure</strong>: the model returns data the user should not see, because it was in the context. In RAG, the permission filter must be applied in retrieval, not delegated to the model by asking it.</li>
+<li><strong>Insecure output handling</strong>: model output used without checks in HTML (XSS), in SQL queries, in shell commands. Model output is untrusted input.</li>
+<li><strong>Excessive agency</strong>: tools with more permissions than necessary, irreversible actions without confirmation.</li>
+<li><strong>System prompt leakage</strong>: the system prompt can be extracted. It must not contain secrets, keys or confidential information.</li>
+<li><strong>Vector and embedding weaknesses</strong>: poisoned documents inserted into the index, access to the index without permission checks.</li>
+<li><strong>Misinformation</strong>: hallucinations presented as facts, with users who trust them too much. Mitigation: citations, explicit refusal, evaluation (module 6).</li>
+<li><strong>Unbounded consumption</strong>: very long requests or agentic loops that exhaust budget and capacity. Mitigation: limits on input, steps and spending.</li>
+</ul>
+<p>The full list and the detailed mitigations are in the OWASP documentation, which is updated periodically.</p>
+<h3>Threat model in four questions</h3>
+<p>For each feature:</p>
+<ol>
+<li>What data enters the model's context, and from which untrusted sources?</li>
+<li>What actions can the model's output trigger (tools, writes, sends, rendering)?</li>
+<li>Who can see the answer, and are they entitled to see all the data in the context?</li>
+<li>What happens in the worst case if the model carries out a malicious instruction?</li>
+</ol>
+<h3>Exercise</h3>
+<p>Fill in the threat model of the final project using the four questions. For each of the OWASP risks listed above, state: does it apply? With what mitigation? How do you verify it with a test?</p>
+<h2>6. Privacy and compliance</h2>
+<p>This section provides orientation; it does not replace the opinion of the legal contacts and the data protection officer of your organization. Involve them at the start of the project, not at the end.</p>
+<h3>Personal data (GDPR)</h3>
+<ul>
+<li><strong>Minimization</strong>: send the model only the data that is necessary. Consider masking or pseudonymizing names, tax codes and addresses before the call.</li>
+<li><strong>Legal basis and purpose</strong>: processing through an LLM must fall within a valid purpose and legal basis, like any other processing.</li>
+<li><strong>Vendors</strong>: the model provider processes data on your behalf. You need data processing agreements, and you need to check retention, use for training and the processing region.</li>
+<li><strong>Logs and traces</strong>: they contain prompts and answers, and therefore often personal data. Define who accesses them, how long they are kept and how they are deleted.</li>
+<li><strong>Data subject rights</strong>: if a user requests deletion, you must know where their data is: logs, the agent's long-term memory, the vector index.</li>
+</ul>
+<h3>The European AI Act</h3>
+<p>The European regulation on artificial intelligence (Regulation (EU) 2024/1689) follows a risk-based approach and applies gradually. In short:</p>
+<ul>
+<li>some practices are prohibited;</li>
+<li>high-risk systems (for example in areas such as personnel selection, access to credit, essential services) have stringent obligations on risk management, data quality, documentation, human oversight;</li>
+<li>many systems have transparency obligations: for example, people must know they are interacting with an AI system, and some generated content must be recognizable as such;</li>
+<li>providers of general-purpose models have their own obligations, distinct from those of whoever integrates them into an application.</li>
+</ul>
+<p>Practical question for every project: which risk category does the use case fall into? The answer substantially changes the requirements.</p>
+<h3>Exercise</h3>
+<p>For the final project, fill in a one-page sheet: personal data processed, provider and region, log retention period, hypothesized risk category under the AI Act, transparency measures toward users. List the questions to ask your legal and privacy contacts.</p>
+<h2>7. Prompt, RAG or fine-tuning?</h2><figure class="fig"><div class="diagwrap"><svg class="diag" viewBox="0 0 720 190" role="img" aria-label="Prompt, RAG or fine-tuning"><defs><marker id="arr30" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk" d="M0,0 L10,5 L0,10 z"/></marker></defs><rect class="g" x="20" y="40" width="180" height="100" rx="10"/><text class="t" x="110" y="62" text-anchor="middle">1. Prompt</text><text class="s" x="110" y="82" text-anchor="middle">format, style, instructions</text><text class="s" x="110" y="99" text-anchor="middle">lowest cost</text><text class="s" x="110" y="116" text-anchor="middle">changed in minutes</text><line class="ar" x1="200" y1="90" x2="275" y2="90" marker-end="url(#arr30)"/><text class="s" x="237.5" y="80" text-anchor="middle">not enough</text><rect class="a" x="275" y="40" width="180" height="100" rx="10"/><text class="t" x="365" y="62" text-anchor="middle">2. RAG</text><text class="s" x="365" y="82" text-anchor="middle">knowledge that changes</text><text class="s" x="365" y="99" text-anchor="middle">citations and verification</text><text class="s" x="365" y="116" text-anchor="middle">update the index</text><line class="ar" x1="455" y1="90" x2="530" y2="90" marker-end="url(#arr30)"/><text class="s" x="492.5" y="80" text-anchor="middle">not enough</text><rect class="w" x="530" y="40" width="180" height="100" rx="10"/><text class="t" x="620" y="62" text-anchor="middle">3. Fine-tuning</text><text class="s" x="620" y="82" text-anchor="middle">narrow task, high volume</text><text class="s" x="620" y="99" text-anchor="middle">needs labeled dataset</text><text class="s" x="620" y="116" text-anchor="middle">repeat for every model</text><text class="s" x="360" y="172" text-anchor="middle">To make the model "know facts", RAG is almost always preferable to fine-tuning</text></svg></div><figcaption>Recommended order: move to the next stage only when evaluation shows that the previous one is not enough</figcaption></figure>
+<p>One of the most frequent decisions, and the one most often gotten wrong. Recommended order: prompt first, then RAG, and fine-tuning only if the first two are not enough and the data justifies it.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Need</th>
+<th>Suitable approach</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>The model must follow a format or a style</td>
+<td>Prompt with examples; fine-tuning only for very high volumes or very specific styles</td>
+</tr>
+<tr>
+<td>The model must know company documents that change</td>
+<td>RAG</td>
+</tr>
+<tr>
+<td>Citations and verifiability are needed</td>
+<td>RAG</td>
+</tr>
+<tr>
+<td>The model must learn a narrow, high-volume task, with minimal cost and latency</td>
+<td>Fine-tuning of a small model, with a good labeled dataset</td>
+</tr>
+<tr>
+<td>The model must &quot;learn facts&quot;</td>
+<td>Almost never fine-tuning: it is expensive to update and does not reduce hallucinations. Use RAG</td>
+</tr>
+</tbody></table></div>
+<p>Fine-tuning requires: a dataset of hundreds or thousands of quality examples, an evaluation suite to compare before and after, a process to repeat it when the base model changes. If any of these elements is missing, it is not the time.</p>
+<h2>8. Release checklist</h2>
+<p>Before going to production, check:</p>
+<p><strong>Quality</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> The evaluation suite passes with the agreed thresholds.</li>
+<li><input disabled="" type="checkbox"> Negative and adversarial cases are included.</li>
+<li><input disabled="" type="checkbox"> A user feedback mechanism exists.</li>
+</ul>
+<p><strong>Reliability</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Retry with backoff, timeouts and fallback are configured.</li>
+<li><input disabled="" type="checkbox"> The behavior in case of provider or retrieval errors is defined and tested.</li>
+<li><input disabled="" type="checkbox"> Prompt, model and index can be rolled back.</li>
+</ul>
+<p><strong>Costs</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Spending limits on the provider and per user.</li>
+<li><input disabled="" type="checkbox"> Alarms on abnormal consumption.</li>
+<li><input disabled="" type="checkbox"> Monthly cost estimate approved.</li>
+</ul>
+<p><strong>Security</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Threat model completed and reviewed.</li>
+<li><input disabled="" type="checkbox"> Keys are in a secret manager.</li>
+<li><input disabled="" type="checkbox"> Model output is treated as untrusted input.</li>
+<li><input disabled="" type="checkbox"> Irreversible actions require confirmation.</li>
+<li><input disabled="" type="checkbox"> Document permissions are applied in retrieval.</li>
+</ul>
+<p><strong>Data and compliance</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Legal and privacy contacts involved, sheet completed.</li>
+<li><input disabled="" type="checkbox"> Log retention and access defined.</li>
+<li><input disabled="" type="checkbox"> Users are informed that they are interacting with an AI system.</li>
+</ul>
+<p><strong>Observability</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Every request has a trace with versions, tokens, cost and latency.</li>
+<li><input disabled="" type="checkbox"> A dashboard shows quality, costs and errors over time.</li>
+</ul>
+<h2>Module deliverable</h2>
+<p>For the final project:</p>
+<ul>
+<li>architecture diagram with fallback;</li>
+<li>version table (prompt, model, index, dataset) and trace log format;</li>
+<li>cost estimate in three scenarios, with limits and alarms;</li>
+<li>threat model with mitigations and tests;</li>
+<li>privacy and compliance sheet;</li>
+<li>completed release checklist, with the items not yet satisfied and the plan to complete them.</li>
+</ul>
+<h2>Further reading</h2>
+<ul>
+<li><a href="https://genai.owasp.org/llm-top-10/" target="_blank" rel="noopener">OWASP, &quot;Top 10 for Large Language Model Applications&quot;</a>: the most common risks of LLM applications (latest version).</li>
+<li><a href="https://eur-lex.europa.eu/eli/reg/2024/1689/oj" target="_blank" rel="noopener">Regulation (EU) 2024/1689 on artificial intelligence (AI Act)</a>: official text on EUR-Lex.</li>
+<li><a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj" target="_blank" rel="noopener">Regulation (EU) 2016/679 (GDPR)</a>: official text on EUR-Lex; see also the guidelines of data protection authorities on the use of AI.</li>
+<li><a href="https://www.nist.gov/itl/ai-risk-management-framework" target="_blank" rel="noopener">NIST, &quot;AI Risk Management Framework&quot;</a>: a framework for identifying and managing the risks of AI systems.</li>
+<li>Documentation of the chosen providers: data retention and usage policies.</li>
+</ul>
+</main>
+<nav class="pn"><a href="modulo-7-pattern-agentici.html"><span>Previous</span>Agents, workflows, composition patterns and control</a><a class="next" href="index.html"><span>Index</span>Back to the index</a></nav>
+</body>
+</html>
